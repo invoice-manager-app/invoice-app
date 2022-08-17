@@ -8,22 +8,12 @@
     <meta charset="utf-8">
 	<title>{% block title %} Maine Page {% endblock %}</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{% static 'mainme.css' %}" rel="stylesheet" >
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Material+Icons"rel="stylesheet">
+    <link href="{% static 'style.css' %}" rel="stylesheet" >
 </head>
-
-<body class="bg-dark">
-
-
+<body>
     {% block content %}
 
     {% endblock content %}
-
-    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-
 </body>
 
 

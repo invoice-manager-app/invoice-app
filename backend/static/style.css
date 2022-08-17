@@ -1,0 +1,68 @@
+body {
+    background-color: rgb(4, 8, 52);
+}
+
+.activate-response {
+    margin-top: 20vh;
+    text-align: center;
+    background-color: rgb(160, 160, 186);
+    padding: 30px;
+    font-size:xx-large;
+    border-radius: 15%;
+    border: 1px solid rgb(0, 0, 0);
+    width: fit-content;
+    margin: auto;
+    margin-top: 50px;
+
+}
+
+.reset-from-container {
+    text-align: center;
+    margin: auto;
+    margin-top: 50px;
+    background-color: rgb(160, 160, 186);
+    padding: 30px;
+    border-radius: 15px;
+    width: fit-content;
+    border: 1px solid rgb(0, 0, 0);
+    font-size:x-large;
+    margin-top: 20vh;
+}
+.reset-form {
+    display: grid;
+    justify-content: center;
+    gap: 10px;
+}
+/* .reset-form input {
+    background-color: transparent;
+    border: none;
+    border-bottom: black;
+} */
+
+
+.reset-form  input[type="password"] {
+    border: none;
+    background-color: transparent;
+    border-bottom: 1px solid rgb(0, 0, 0);
+}
+.reset-form  input[type="password"]:focus {
+    outline: none;
+}
+.reset-form  ::placeholder {
+    color: rgb(0, 0, 0);
+}
+.reset-form  button {
+    background-color:  rgb(24, 30, 103);
+    color: rgb(255, 255, 255);
+    padding: 0.5rem 1rem;
+    border-radius: 15px;
+}
+.reset-form button:hover{
+    color: yellow;
+}
+
+
+.error-message {
+    color: red;
+    font-size: small;
+}
