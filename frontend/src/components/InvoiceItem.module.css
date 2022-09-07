@@ -1,0 +1,45 @@
+.bar {
+  border-bottom: 1px solid #2b2b40;
+  /* background-color: var(--secondary-color); */
+  color: #fff;
+  padding: 10px;
+  font-size: 14px;
+  text-transform: capitalize;
+  margin-top: 20px;
+}
+.bar ul {
+  display: flex;
+  align-items: center;
+}
+.button {
+  background-color: transparent;
+  width: 100%;
+  border: none;
+  color: var(--text-gray);
+}
+.button.active {
+  color: #00b2ff;
+}
+.link {
+  font-size: 25px;
+}
+.link svg {
+  color: var(--main-color);
+}
+.bar li {
+  width: 20%;
+}
+.bar li:nth-child(6) {
+  width: 30px;
+}
+.bar li:last-of-type {
+  width: 30px;
+}
+.categories li {
+  color: var(--text-gray);
+  font-size: 0.8rem;
+}
+.item li {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+}

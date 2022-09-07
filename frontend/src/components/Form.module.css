@@ -1,0 +1,136 @@
+.wrapper {
+  position: fixed;
+  left: -100%;
+  top: 0;
+  height: 100vh;
+  z-index: 11;
+  overflow-y: scroll;
+  box-shadow: 10px 4px 6px -1px rgb(0 0 0 / 20%), 0 2px 4px -1px rgb(0 0 0 / 6%);
+  transition: 0.5s;
+}
+.payment_terms select {
+  background-color: var(--secondary-color);
+  width: 100%;
+  color: #fff;
+  border-radius: 4px;
+  padding: 12px 4px;
+  border: none;
+  margin-bottom: 24px;
+}
+.payment_terms label {
+  font-size: 12px;
+  margin-bottom: 6px;
+  display: inline-block;
+}
+.active {
+  left: 90px;
+}
+.wrapper::-webkit-scrollbar {
+  width: 0;
+}
+.wrapper h1 {
+  margin-bottom: 50px;
+}
+.wrapper h4 {
+  color: var(--main-color);
+  font-size: 12px;
+  margin-bottom: 24px;
+}
+.form {
+  position: relative;
+  padding: 56px;
+  max-width: 700px;
+  width: 100%;
+  background-color: var(--form-color);
+  color: #fff;
+}
+.form > div {
+  margin-bottom: 48px;
+}
+.date {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+.date > div {
+  flex: 1;
+}
+
+.footer {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.item h3 {
+  margin-bottom: 16px;
+  font-size: 18px;
+  color: #777f98;
+}
+.item ul {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+}
+.item ul li input {
+  margin: 0;
+}
+.item ul:last-of-type {
+  margin: 20px 0;
+}
+.item ul li:nth-child(1) {
+  flex-basis: 50%;
+}
+.item ul li:nth-child(2) {
+  flex-basis: 10%;
+}
+.item ul li:nth-child(3) {
+  flex-basis: 20%;
+}
+.item ul li:nth-child(4) {
+  flex-basis: 15%;
+}
+.item ul li:nth-child(5) {
+  flex-basis: 5%;
+  font-size: 20px;
+}
+.item button {
+  width: 100%;
+  background: var(--secondary-color);
+  border: none;
+  padding: 15px;
+  border-radius: 30px;
+  color: #fff;
+}
+.item button svg {
+  color: var(--main-color);
+}
+.actions {
+  display: flex;
+  justify-content: space-between;
+}
+.actions button {
+  cursor: pointer;
+  padding: 16px 24px;
+  border-radius: 30px;
+  border: none;
+  font-size: 12px;
+  margin-right: 8px;
+  color: #fff;
+}
+.actions div:first-of-type {
+  flex-basis: 50%;
+}
+.actions div:first-of-type button:first-of-type {
+  background-color: var(--danger);
+}
+.actions div:last-of-type {
+  display: flex;
+  justify-content: end;
+  flex-basis: 50%;
+}
+.actions div:last-of-type button:first-of-type {
+  background-color: var(--secondary-color);
+}
+.actions div:last-of-type button:last-of-type {
+  background-color: var(--main-color);
+}

@@ -1,0 +1,49 @@
+.invoices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-gray);
+  text-transform: capitalize;
+  margin-bottom: 70px;
+}
+.invoices p {
+  color: var(--category-color);
+}
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+.actions > div select {
+  background: transparent;
+  color: #fff;
+  border: none;
+}
+.actions > div select option {
+  background-color: var(--secondary-color);
+  padding: 10px;
+  border: none;
+}
+.button {
+  padding: 8px 10px;
+  background-color: var(--main-color);
+  border-radius: 40px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.icon {
+  width: 23px;
+  height: 23px;
+  background: #fff;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  color: var(--main-color);
+}
+.icon > svg {
+  font-size: 23px;
+}

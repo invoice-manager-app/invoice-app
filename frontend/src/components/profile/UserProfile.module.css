@@ -1,0 +1,113 @@
+:root {
+  --marign-Y: 20px;
+}
+.user-profile {
+  color: #fff;
+  background-color: var(--secondary-color);
+  border-radius: 25px;
+  border-end-start-radius: 0;
+  border-start-start-radius: 0;
+  min-height: 850px;
+  position: relative;
+}
+.user-profile h1 {
+  margin-top: var(--marign-Y);
+}
+.content {
+  display: flex;
+  gap: 30px;
+}
+.aside {
+  width: 250px;
+  padding: 20px;
+}
+
+.aside li {
+  display: inline-block;
+  padding: 5px;
+  width: 100%;
+  margin-bottom: 5px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.aside li:hover {
+  background-color: #303151;
+}
+.active {
+  background-color: #303151;
+}
+.profile-content {
+  width: 100%;
+  margin-top: var(--marign-Y);
+}
+.profile-content h3 {
+  color: #958993;
+  margin-bottom: var(--marign-Y);
+}
+.profile-pic {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  margin-bottom: var(--marign-Y);
+}
+.profile-pic div:first-of-type {
+  width: 150px;
+}
+.profile-pic img {
+  width: 100%;
+  border: 5px solid #000;
+  border-radius: 50%;
+}
+.profile-pic button {
+  padding: 10px;
+  background-color: var(--main-color);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+.info div {
+  margin-bottom: var(--marign-Y);
+}
+.info div span {
+  color: var(--text-gray);
+}
+/*************/
+.company-info {
+  width: 100;
+}
+.card {
+  padding: 30px;
+  text-align: center;
+  border: 1px solid var(--main-color);
+  width: 100%;
+}
+.card_btn {
+  cursor: pointer;
+}
+.back {
+  background-color: transparent;
+  border: none;
+  color: var(--main-color);
+  cursor: pointer;
+  font-size: 25px;
+}
+.edit,
+.change_password {
+  position: absolute;
+  width: 150px;
+
+  padding: 10px 0px;
+  background-color: var(--main-color);
+  color: #fff;
+  font-size: 15px;
+  bottom: 50px;
+}
+.edit {
+  right: 50px;
+}
+.change_password {
+  left: 260px;
+}

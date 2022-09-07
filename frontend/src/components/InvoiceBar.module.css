@@ -1,0 +1,10 @@
+.categories {
+  display: flex;
+  justify-content: space-between;
+  color: var(--category-color);
+  border-bottom: 1px solid #2b2b40;
+  padding: 10px;
+}
+.categories li {
+  flex-basis: 20%;
+}

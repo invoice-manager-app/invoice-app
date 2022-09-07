@@ -1,0 +1,42 @@
+.layout {
+  padding: 0 15px;
+  padding: 40px 10px;
+  padding-top: 72px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/*small screens*/
+@media (min-width: 576px) {
+  .layout {
+    max-width: 540px;
+  }
+}
+
+/*medium screens*/
+@media (min-width: 768px) {
+  .layout {
+    max-width: 720px;
+  }
+}
+
+/*large screens */
+@media (min-width: 992px) {
+  .layout {
+    max-width: 960px;
+  }
+}
+
+/*x-large screens*/
+@media (min-width: 1200px) {
+  .layout {
+    max-width: 1140px;
+  }
+}
+
+/* extra large screens*/
+@media (min-width: 1440px) {
+  .layout {
+    max-width: 1426px;
+  }
+}

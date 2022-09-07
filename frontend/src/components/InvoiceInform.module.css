@@ -1,0 +1,117 @@
+.icon {
+  color: var(--main-color);
+  font-size: 13px;
+  cursor: pointer;
+}
+.icon span {
+  display: inline-block;
+  margin-left: 10px;
+  color: #fff;
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+.navActions,
+.details,
+.bot > div:first-of-type,
+.amount {
+  background-color: var(--secondary-color);
+  padding: 20px 30px;
+  border-radius: 25px;
+}
+
+.state {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+  font-size: 12px;
+}
+.actions button {
+  cursor: pointer;
+  padding: 16px 24px;
+  border-radius: 30px;
+  border: none;
+  font-size: 12px;
+  margin-right: 8px;
+  color: #fff;
+}
+.edit {
+  background-color: var(--dark-purple);
+}
+.delete {
+  background-color: var(--danger);
+}
+.paid {
+  background-color: var(--paid-logo);
+}
+/*details*/
+.details {
+  color: #fff;
+}
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.left p:last-of-type,
+.left span {
+  color: var(--text);
+}
+.right p {
+  font-size: 12px;
+  color: var(--text);
+}
+
+/*mid*/
+.mid {
+  display: flex;
+  gap: 90px;
+  color: var(--text);
+  margin-top: 40px;
+}
+.mid h4 {
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+.date h4:last-of-type {
+  margin-top: 30px;
+}
+.bot {
+  margin-top: 50px;
+}
+.bot > div:first-of-type {
+  background-color: var(--dark-purple);
+  border-radius: 25px 25px 0 0;
+}
+.bot > div div {
+  margin-bottom: 30px;
+}
+.bot > div div:first-of-type ul {
+  color: var(--text);
+}
+.bot ul {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+.bot ul li {
+  width: 120px;
+  text-align: center;
+}
+.amount {
+  background-color: var(--background-color);
+  border-radius: 0 0 25px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.pending {
+  background-color: var(--pending-logo);
+}

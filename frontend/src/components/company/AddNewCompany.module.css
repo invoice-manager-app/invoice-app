@@ -1,0 +1,11 @@
+.form button {
+  padding: 10px;
+  color: #fff;
+  border: none;
+  background-color: var(--main-color);
+  cursor: pointer;
+  width: 100%;
+}
+.form input {
+  border: 1px solid #fff;
+}

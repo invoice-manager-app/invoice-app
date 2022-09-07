@@ -1,0 +1,62 @@
+header {
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: var(--secondary-color);
+  min-width: 90px;
+  height: 100%;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  z-index: 99;
+}
+.icon {
+  color: #fff;
+  width: 100%;
+  padding: 25px;
+  background-color: var(--main-color);
+  border-top-right-radius: 30px;
+}
+.header svg {
+  font-size: 30px;
+}
+.nav {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+
+  height: 100%;
+}
+.nav ul {
+  text-align: center;
+}
+.nav ul li {
+  margin-top: 40px;
+}
+.nav a {
+  color: #fff;
+}
+
+.active {
+  color: red !important;
+}
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+.tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
