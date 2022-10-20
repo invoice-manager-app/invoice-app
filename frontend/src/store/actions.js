@@ -4,8 +4,7 @@ const actionSlice = createSlice({
   name: "invoiceAction",
   initialState: {
     value: [],
-    companyInfo: [],
-    userInfo: [],
+    userInfo: null,
     filteredInvoices: [],
     length: 0,
     newItem: [],
@@ -44,16 +43,7 @@ const actionSlice = createSlice({
       state.value = state.value.filter((item) => item.id !== id);
       state.length--;
     },
-    changePendingState: (state, action) => {
-      const { id, isPending } = action.payload;
-      const clickedItem = state.value.find((item) => item.id === id);
-      if (clickedItem.isPending === true) {
-        clickedItem.isPending = false;
-      } else {
-        clickedItem.isPending = true;
-      }
-      //const clickedItem = state.value.find((item) => item.id === id);
-    },
+
     editInvoice: (state, action) => {
       const {
         id,
@@ -91,39 +81,17 @@ const actionSlice = createSlice({
         existingInvoice.paymentDue = paymentDue;
       }
     },
-    createCompany: (state, action) => {
-      const newCompany = action.payload;
-      state.companyInfo.push({
-        id: newCompany.id,
-        email: newCompany.email,
-        companyName: newCompany.companyName,
-        owner: newCompany.owner,
-        about: newCompany.about,
-        number: newCompany.number,
-        address: newCompany.address,
-      });
-    },
-    createUser: (state, action) => {
+
+    editUser: (state, action) => {
       const newUser = action.payload;
-      state.userInfo.push({
-        id: newUser.id,
-        firstName: newUser.firstName,
-        lastName: newUser.lastName,
+      state.userInfo = {
+        first_name: newUser.first_name,
+        last_name: newUser.last_name,
         email: newUser.email,
-        userName: newUser.userName,
-      });
+        username: newUser.username,
+      };
     },
-    editUserInfo: (state, action) => {
-      const { firstName, lastName, email, userName, id } = action.payload;
-      const exisitingItem = state.userInfo.find((el) => el.id === id);
-      if (exisitingItem) {
-        exisitingItem.id = id;
-        exisitingItem.firstName = firstName;
-        exisitingItem.lastName = lastName;
-        exisitingItem.email = email;
-        exisitingItem.userName = userName;
-      }
-    },
+
     editCompanyInfo: (state, action) => {
       const { companyName, email, about, id, number, address } = action.payload;
       const exisitingItem = state.companyInfo.find((el) => el.id === id);

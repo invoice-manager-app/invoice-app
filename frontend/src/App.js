@@ -1,33 +1,26 @@
-import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
 import Form from "./components/Form";
 import Header from "./components/layout/Header";
 import Wrapper from "./components/UI/Wrapper";
 import Layout from "./components/layout/Layout";
 import AllPages from "./pages/AllPages";
-import { ThemeProvider } from "styled-components";
-import { darkTheme, lightTheme } from "./themes";
-import AuthPage from "./pages/AuthPage";
-import ConfirmationModel from "./components/UI/ConfirmationModel";
+import AuthContext from "./context/auth-context";
+
 function App() {
-  const location = useLocation();
-  const [theme, setTheme] = useState("dark");
   const [matches, setMatches] = useState(
     window.matchMedia("(min-width: 768px)").matches
   );
+  const authCtx = useContext(AuthContext);
+
+  const { isLoggedIn } = authCtx;
 
   useEffect(() => {
     const handler = (e) => setMatches(e.matches);
     window.matchMedia("(min-width: 900px)").addEventListener("change", handler);
   }, []);
 
-  const themeChangeHandeler = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-  };
-
   return (
-    <div data-theme={theme}>
+    <div>
       {!matches && (
         <div className="center">
           <h1 className="warning">
@@ -40,7 +33,7 @@ function App() {
         <Wrapper>
           <Layout>
             {<Form />}
-            <Header />
+            {isLoggedIn && <Header />}
             <AllPages />
           </Layout>
         </Wrapper>

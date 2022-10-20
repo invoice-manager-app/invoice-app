@@ -4,8 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { AiOutlineLeft } from "react-icons/ai";
 
 import classes from "./InvoiceInform.module.css";
-import { invoiceAction } from "./store/actions";
-import { uiActions } from "./store/Ui-slice";
+import { invoiceAction } from "../store/actions";
+import { uiActions } from "../store/Ui-slice";
 import EditInvoice from "./EditInvoice";
 
 const InoviceInform = () => {
@@ -16,7 +16,7 @@ const InoviceInform = () => {
   const params = useParams();
 
   const invoiceItem = inputFields.find((el) => el.id === params.invoiceId);
-
+  console.log(invoiceItem);
   const { isPending, id } = invoiceItem;
 
   if (!invoiceItem) {

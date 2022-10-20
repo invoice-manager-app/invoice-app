@@ -14,6 +14,8 @@
   --paid-logo: #33d69f40;
   --danger: #ec5757;
   --category-color: #474761;
+  --success: #1872245c;
+  --error: #c8000059;
 }
 
 [data-theme="light"] {
@@ -104,9 +106,7 @@ button:disabled {
   opacity: 0.3;
   cursor: not-allowed;
 }
-button:disabled:hover {
-  background-color: unset !important;
-}
+
 .exist-info {
   font-size: 13px;
   color: red;

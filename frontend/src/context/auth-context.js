@@ -29,7 +29,7 @@ export const AuthContextProvider = (props) => {
     localStorage.setItem("user", JSON.stringify(data));
   };
 
-  const updateToken = () => {
+  const updateToken = useCallback(() => {
     fetch("http://127.0.0.1:8000/account/token/refresh/", {
       method: "POST",
       body: JSON.stringify({ refresh: userInfom.refresh }),
@@ -39,9 +39,7 @@ export const AuthContextProvider = (props) => {
     }).then((res) => {
       if (res.status === 200) {
         return res.json().then((data) => {
-          console.log(data);
           setToken(data.access);
-
           localStorage.setItem("token", data.access);
         });
       }
@@ -49,7 +47,7 @@ export const AuthContextProvider = (props) => {
         console.log(res.detail || "something went wrong");
       }
     });
-  };
+  }, [userInfom]);
   useEffect(() => {
     let interval = setInterval(() => {
       if (userIsLoggedIn) {
@@ -57,7 +55,7 @@ export const AuthContextProvider = (props) => {
       }
     }, 240000);
     return () => clearInterval(interval);
-  }, [userIsLoggedIn]);
+  }, [updateToken, userIsLoggedIn]);
   const contextValue = {
     token: token,
     isLoggedIn: userIsLoggedIn,

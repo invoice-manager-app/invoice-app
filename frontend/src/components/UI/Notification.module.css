@@ -1,0 +1,38 @@
+.notification {
+  display: flex;
+  min-width: 200px;
+  background-color: #050c4929;
+  color: #fff;
+  padding: 10px 30px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+  justify-content: center;
+  align-items: center;
+  border-end-end-radius: 36px;
+  border-end-start-radius: 36px;
+  z-index: 11;
+}
+
+.response-icon {
+  color: green;
+  width: 30px;
+}
+
+.success {
+  background-color: var(--success);
+}
+
+.error {
+  background-color: var(--error);
+}
+.error .response-icon {
+  color: red;
+}
+.close {
+  order: 1;
+  width: 20px;
+  margin-left: 10px;
+  cursor: pointer;
+}

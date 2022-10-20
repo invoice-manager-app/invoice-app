@@ -1,0 +1,27 @@
+.company h1 {
+  margin-bottom: 25px;
+}
+
+.detail {
+  margin-bottom: 15px;
+}
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+.company button {
+  width: 150px;
+  padding: 10px 0px;
+  background-color: var(--main-color);
+  color: #fff;
+  font-size: 15px;
+  bottom: 50px;
+}
+
+.edit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 50px;
+}

@@ -1,7 +1,7 @@
-import AddNewUser from "../components/user/AddNewUser";
+// import AddNewUser from "../components/user/AddNewUser";
 
-const CreateNewUserPage = () => {
-  return <AddNewUser />;
-};
+// const CreateNewUserPage = () => {
+//   return <AddNewUser />;
+// };
 
-export default CreateNewUserPage;
+// export default CreateNewUserPage;

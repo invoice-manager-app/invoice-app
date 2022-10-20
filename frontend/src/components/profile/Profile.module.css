@@ -1,0 +1,59 @@
+.profile {
+  color: #fff;
+  background-color: var(--secondary-color);
+  border-radius: 25px;
+  border-end-start-radius: 0;
+  border-start-start-radius: 0;
+  min-height: 850px;
+  position: relative;
+  padding: 30px 20px;
+  min-height: calc(100vh - 80px);
+}
+.content {
+  display: flex;
+  gap: 30px;
+}
+
+.aside {
+  width: 250px;
+  padding: 20px;
+}
+
+.aside li {
+  display: inline-block;
+  padding: 5px;
+  width: 100%;
+  margin-bottom: 5px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.aside li:hover {
+  background-color: #303151;
+}
+.active {
+  background-color: #303151;
+}
+.edit,
+.change_password {
+  position: absolute;
+  width: 150px;
+
+  padding: 10px 0px;
+  background-color: var(--main-color);
+  color: #fff;
+  font-size: 15px;
+  bottom: 50px;
+}
+.edit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 50px;
+}
+.change_password {
+  left: 260px;
+}
+button svg {
+  width: 30px;
+}

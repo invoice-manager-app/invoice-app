@@ -1,0 +1,39 @@
+.company-info {
+  width: 100%;
+  max-height: 650px;
+  overflow-y: auto;
+}
+.card-container {
+  text-align: center;
+  border: 1px solid var(--main-color);
+  position: relative;
+}
+.card {
+  padding: 10px;
+  text-align: center;
+  width: 100%;
+}
+.card_btn {
+  cursor: pointer;
+  color: #fff;
+  font-size: 12px;
+  text-decoration: underline;
+}
+.info > div {
+  margin-bottom: 30px;
+}
+.back {
+  background-color: transparent;
+  border: none;
+  color: var(--main-color);
+  cursor: pointer;
+  font-size: 25px;
+}
+.deleteBtn {
+  display: inline-block;
+  width: 20px;
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}

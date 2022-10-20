@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
 import classes from "./InvoiceItem.module.css";
 import { AiOutlineRight } from "react-icons/ai";
 import ShowMoreIcon from "./icons/ShowMoreIcon";

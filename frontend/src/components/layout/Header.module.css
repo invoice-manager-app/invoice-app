@@ -44,6 +44,9 @@ header {
   display: inline-block;
   border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
 }
+.tooltip svg {
+  width: 30px;
+}
 .tooltiptext {
   visibility: hidden;
   width: 120px;

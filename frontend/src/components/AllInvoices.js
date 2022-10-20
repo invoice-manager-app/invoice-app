@@ -1,32 +1,19 @@
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classes from "./AllInvoices.module.css";
 import { IoIosAdd } from "react-icons/io";
 import InvoiceBar from "./InvoiceBar";
-import { uiActions } from "./store/Ui-slice";
+import { uiActions } from "../store/Ui-slice";
 const AllInvoices = () => {
   const [selectInput, setSelectInput] = useState("all");
   const [filter, setFilter] = useState([]);
 
   const invoiceNumber = useSelector((state) => state.action.length);
-  const isPending = useSelector((state) =>
-    state.action.value.map((el) => el.isPending)
-  );
 
   const invoiceArray = useSelector((state) => state.action.value);
   const dispatch = useDispatch();
-  useEffect(() => {
-    filterHandeler();
-  }, [selectInput, invoiceArray]);
 
-  const formToggleHandeler = () => {
-    dispatch(uiActions.toggleForm());
-  };
-  const selectHandeler = (e) => {
-    setSelectInput(e.target.value);
-  };
-
-  function filterHandeler() {
+  const filterHandeler = useCallback(() => {
     switch (selectInput) {
       case "pending":
         return setFilter(
@@ -39,7 +26,18 @@ const AllInvoices = () => {
       default:
         return setFilter(invoiceArray);
     }
-  }
+  }, [invoiceArray, selectInput]);
+
+  useEffect(() => {
+    filterHandeler();
+  }, [selectInput, invoiceArray, filterHandeler]);
+
+  const formToggleHandeler = () => {
+    dispatch(uiActions.toggleForm());
+  };
+  const selectHandeler = (e) => {
+    setSelectInput(e.target.value);
+  };
 
   return (
     <Fragment>

@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import classes from "./Input.module.css";
+import classes from "./Inputs.module.css";
 const Input = forwardRef((props, ref) => {
   return (
     <div className={classes.wrapper}>

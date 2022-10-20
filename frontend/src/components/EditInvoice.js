@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { invoiceAction } from "./store/actions";
-import { uiActions } from "./store/Ui-slice";
+import { invoiceAction } from "../store/actions";
+import { uiActions } from "../store/Ui-slice";
 import Input from "./UI/Inputs";
 import classes from "./Form.module.css";
 import { BsPlusLg } from "react-icons/bs";

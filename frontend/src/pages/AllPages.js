@@ -18,7 +18,7 @@ const AllPages = () => {
   //const InvoiceDetail = React.lazy(() => import("./InvoiceDetail"));
   const CreateCompanyPage = React.lazy(() => import("./CreateCompany"));
   const UserProfilePage = React.lazy(() => import("./UserProfilePage"));
-  const CreateNewUserPage = React.lazy(() => import("./CreateNewUserPage"));
+  // const CreateNewUserPage = React.lazy(() => import("./CreateNewUserPage"));
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <Routes>
@@ -38,15 +38,9 @@ const AllPages = () => {
           element={isLoggedIn && <InvoiceDetail />}
         />
         <Route
-          path="/profile"
+          path="/profile/*"
           element={
             isLoggedIn ? <UserProfilePage /> : <Navigate to="/auth" replace />
-          }
-        />
-        <Route
-          path="/create-user"
-          element={
-            isLoggedIn ? <CreateNewUserPage /> : <Navigate to="/auth" replace />
           }
         />
 
@@ -56,6 +50,7 @@ const AllPages = () => {
             isLoggedIn ? <CreateCompanyPage /> : <Navigate to="/auth" replace />
           }
         />
+
         <Route path="/" element={!isLoggedIn ? <AuthPage /> : <Invoices />} />
         <Route path="*" element={<Navigate to="/invoice" replace />} />
       </Routes>

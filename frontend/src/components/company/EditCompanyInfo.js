@@ -1,48 +1,44 @@
 import { useFormik } from "formik";
 import { userSchema } from "../../schemas/index";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Input from "../UI/Inputs";
 
 import classes from "./AddNewCompany.module.css";
-import { invoiceAction } from "../store/actions";
-import { useNavigate } from "react-router-dom";
-import { uiActions } from "../store/Ui-slice";
+import { useNavigate, useParams } from "react-router-dom";
+import { uiActions } from "../../store/Ui-slice";
 
-const EditComapnyInfo = ({ id }) => {
+const EditComapnyInfo = ({ companies, submitEditedCompany, editCompany }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  console.log(editCompany);
 
-  const companyInfo = useSelector((state) => state.action.companyInfo);
-  const exisitngCompany = companyInfo.find((el) => el.id === id);
+  console.log(companies);
+
+  // const name = companies.map((el) => el.name).toString();
+  // const email = companies.map((el) => el.email).toString();
+  // const about = companies.map((el) => el.about).toString();
+  // const number = companies.map((el) => el.number).toString();
+  // const address = companies.map((el) => el.address).toString();
+  // const slug = companies.map((el) => el.slug).toString();
 
   let formIsValid = false;
   const { values, errors, handleBlur, touched, handleChange } = useFormik({
     initialValues: {
-      email: exisitngCompany.email,
-      companyName: exisitngCompany.companyName,
-
-      about: exisitngCompany.about,
-      number: exisitngCompany.number,
-      address: exisitngCompany.address,
+      email: companies.email,
+      companyName: companies.name,
+      about: companies.about,
+      number: companies.number,
+      address: companies.address,
     },
     validationSchema: userSchema,
   });
+  //console.log(companies.slug);
 
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(
-      invoiceAction.editCompanyInfo({
-        id: exisitngCompany.id,
-        email: values.email,
-        companyName: values.companyName,
-
-        about: values.about,
-        number: values.number,
-        address: values.address,
-      })
-    );
+    submitEditedCompany(values, companies.slug);
     dispatch(uiActions.submitEditCompanyInfo());
-    //dispatch(uiActions.toggleUser());
+    dispatch(uiActions.toggleUser());
     if (
       values.address !== "" &&
       values.email !== "" &&
@@ -84,18 +80,6 @@ const EditComapnyInfo = ({ id }) => {
       {errors.companyName && touched.companyName && (
         <p className="error-msg"> {errors.companyName} </p>
       )}
-      {/* <Input
-        type="text"
-        label="Owner"
-        value={values.owner}
-        onChange={handleChange}
-        id="owner"
-        onBlur={handleBlur}
-        className={errors.owner && touched.owner ? "error-input" : ""}
-      />{" "}
-      {errors.owner && touched.owner && (
-        <p className="error-msg"> {errors.owner} </p>
-      )}*/}
       <Input
         type="email"
         label="E-mail"

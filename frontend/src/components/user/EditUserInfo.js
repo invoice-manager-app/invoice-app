@@ -1,55 +1,41 @@
+import { Fragment } from "react";
 import { useFormik } from "formik";
-
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { editUserRequest } from "../../store/action-creator";
+import Notification from "../UI/Notification";
 import Input from "../UI/Inputs";
-
-import classes from "./AddNewUser.module.css";
-import { invoiceAction } from "../store/actions";
-import { useNavigate } from "react-router-dom";
 import { userSchema } from "../../schemas";
-import { uiActions } from "../store/Ui-slice";
 
-const EditUserInfo = ({ id }) => {
-  //const editUser = useSelector((state) => state.ui.editUser);
+import classes from "./EditUserInfo.module.css";
 
-  const navigate = useNavigate();
+//start comonent
+const EditUserInfo = ({ userData }) => {
+  const token = localStorage.getItem("token");
+
   const dispatch = useDispatch();
+  //notification state
+  const notification = useSelector((state) => state.ui.notification);
 
-  const UserInfoList = useSelector((state) => state.action.userInfo);
-  const editingUser = UserInfoList.find((el) => el.id === id);
+  //form validation
   let formIsValid = false;
   const { values, errors, handleBlur, touched, handleChange } = useFormik({
     initialValues: {
-      userName: editingUser.userName,
-      firstName: editingUser.firstName,
-      lastName: editingUser.lastName,
-      email: editingUser.email,
+      username: userData.username,
+      first_name: userData.first_name,
+      last_name: userData.last_name,
+      email: userData.email,
     },
     validationSchema: userSchema,
   });
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    dispatch(
-      invoiceAction.editUserInfo({
-        id: editingUser.id,
-        email: values.email,
-        userName: values.userName,
-        firstName: values.firstName,
-        lastName: values.lastName,
-      })
-    );
-
-    if (values.email !== "" && values.userName !== "") {
-      navigate("/profile");
-    }
-
-    //dispatch(uiActions.toggleCompany());
-    dispatch(uiActions.toggleUser());
+    // edit userInfo asyn function
+    dispatch(editUserRequest(token, values));
   };
   if (
-    values.userName !== "" &&
-    !errors.userName &&
+    values.username !== "" &&
+    !errors.username &&
     values.email !== "" &&
     !errors.email
   ) {
@@ -57,53 +43,52 @@ const EditUserInfo = ({ id }) => {
   }
 
   return (
-    <form onSubmit={onSubmit} autoComplete="off" className={classes.form}>
-      <Input
-        type="text"
-        label="E-mail"
-        value={values.email}
-        onChange={handleChange}
-        id="email"
-        onBlur={handleBlur}
-        className={errors.email && touched.email ? "error-input" : ""}
-      />
-      {errors.email && touched.email && (
-        <p className="error-msg"> {errors.email} </p>
-      )}
-
-      <Input
-        type="text"
-        label="UserName"
-        value={values.userName}
-        onChange={handleChange}
-        id="userName"
-        onBlur={handleBlur}
-        className={errors.userName && touched.userName ? "error-input" : ""}
-      />
-      {errors.userName && touched.userName && (
-        <p className="error-msg"> {errors.userName} </p>
-      )}
-
-      <Input
-        type="text"
-        label="First Name"
-        value={values.firstName}
-        onChange={handleChange}
-        id="firstName"
-      />
-
-      <Input
-        type="text"
-        label="Last Name"
-        value={values.lastName}
-        onChange={handleChange}
-        id="lastName"
-      />
-
-      <button disabled={!formIsValid} type="submit">
-        Submit Edit
-      </button>
-    </form>
+    <Fragment>
+      {notification && notification.message !== undefined && <Notification />}
+      <form onSubmit={onSubmit} autoComplete="off" className={classes.form}>
+        <Input
+          type="text"
+          label="E-mail"
+          value={values.email}
+          onChange={handleChange}
+          id="email"
+          onBlur={handleBlur}
+          className={errors.email && touched.email ? "error-input" : ""}
+        />
+        {errors.email && touched.email && (
+          <p className="error-msg"> {errors.email} </p>
+        )}
+        <Input
+          type="text"
+          label="username"
+          value={values.username}
+          onChange={handleChange}
+          id="username"
+          onBlur={handleBlur}
+          className={errors.username && touched.username ? "error-input" : ""}
+        />
+        {errors.username && touched.username && (
+          <p className="error-msg"> {errors.username} </p>
+        )}
+        <Input
+          type="text"
+          label="First Name"
+          value={values.first_name}
+          onChange={handleChange}
+          id="first_name"
+        />
+        <Input
+          type="text"
+          label="Last Name"
+          value={values.last_name}
+          onChange={handleChange}
+          id="last_name"
+        />
+        <button disabled={!formIsValid} type="submit">
+          Submit Edit
+        </button>
+      </form>
+    </Fragment>
   );
 };
 

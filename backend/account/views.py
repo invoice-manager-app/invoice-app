@@ -124,7 +124,7 @@ def updateprofileUser(request):
             context["email"] = account.email
             context["username"] = account.username
             context["hide_email"] = account.hide_email
-            context["fist_name"] = account.first_name
+            context["first_name"] = account.first_name
             context["last_name"] = account.last_name
             # image_url = str(request.build_absolute_uri(user.profile_image.url))
             # if "?" in image_url:

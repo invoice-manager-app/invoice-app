@@ -6,6 +6,7 @@ const uiSlice = createSlice({
     formIsVisible: false,
     editUser: false,
     editCompany: false,
+    notification: null,
   },
   reducers: {
     toggleForm(state) {
@@ -15,7 +16,7 @@ const uiSlice = createSlice({
       state.editUser = !state.editUser;
     },
     toggleCompany(state) {
-      state.editCompany = !state.editUser;
+      state.editCompany = !state.editCompany;
     },
     editUser(state) {
       state.editUser = true;
@@ -28,6 +29,15 @@ const uiSlice = createSlice({
     },
     submitEditCompanyInfo(state) {
       state.editCompany = false;
+    },
+    notification: (state, action) => {
+      state.notification = {
+        status: action.payload.status,
+        message: action.payload.message,
+      };
+    },
+    hideNotification: (state) => {
+      state.notification = null;
     },
   },
 });
