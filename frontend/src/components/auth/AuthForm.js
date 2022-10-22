@@ -1,6 +1,5 @@
-import { useState, Fragment } from "react";
+import { Fragment } from "react";
 import { useSelector } from "react-redux";
-import Input from "../UI/Inputs";
 import useHttp from "../../hooks/use-http";
 import Notification from "../UI/Notification";
 //styles
@@ -21,15 +20,10 @@ const AuthForm = () => {
     isLogin,
     toggleHandeler,
     responseArr,
+    loginMsg,
+    values,
+    setValues,
   } = useHttp();
-
-  const [values, setValues] = useState({
-    email: "",
-    password: "",
-    username: "",
-    confirmPassword: "",
-    forgetPassword: "",
-  });
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -63,11 +57,13 @@ const AuthForm = () => {
 
   return (
     <Fragment>
-      {notification && notification.message !== undefined && <Notification />}
+      {notification && notification.message !== null && <Notification />}
       <section className={classes.form}>
         <h2> {isLogin ? "Login" : "Sign Up"} </h2>
         <form onSubmit={submitHandler}>
-          {isLogin && <Login values={values} setValues={setValues} />}
+          {isLogin && (
+            <Login values={values} setValues={setValues} loginMsg={loginMsg} />
+          )}
           {!isLogin && (
             <CreateNewAccount
               values={values}

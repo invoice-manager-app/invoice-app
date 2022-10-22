@@ -1,9 +1,8 @@
 import { Fragment } from "react";
 import Input from "../UI/Inputs";
-const Login = ({ values, setValues }) => {
+const Login = ({ values, setValues, loginMsg }) => {
   return (
     <Fragment>
-      {" "}
       <Input
         type="email"
         label="Your Email"
@@ -28,6 +27,7 @@ const Login = ({ values, setValues }) => {
           })
         }
       />
+      {loginMsg && <p className="exist-info"> {loginMsg} </p>}
     </Fragment>
   );
 };

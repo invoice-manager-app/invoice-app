@@ -8,8 +8,17 @@ const useHttp = () => {
   const dispatchRedux = useDispatch();
 
   //states
+  const [values, setValues] = useState({
+    email: "",
+    password: "",
+    username: "",
+    confirmPassword: "",
+    forgetPassword: "",
+  });
+
   const [isLogin, setIsLogin] = useState(true);
   const [responseMsg, setResponseMsg] = useState([]);
+  const [loginMsg, setLoginMsg] = useState([]);
   const [forgetPassword, setForgetPassword] = useState(false);
 
   const responses = (data) => {
@@ -67,6 +76,8 @@ const useHttp = () => {
 
   const httpRequest = async (values) => {
     let url, imformation;
+    responseMessage("pending", null);
+
     if (isLogin) {
       url = "http://127.0.0.1:8000/account/login_token/";
       imformation = {
@@ -82,7 +93,6 @@ const useHttp = () => {
         confirm_password: values.confirmPassword,
       };
     }
-    responseMessage("pending", "wait....");
 
     try {
       const response = await fetch(url, {
@@ -93,19 +103,29 @@ const useHttp = () => {
         },
       });
 
-      if (!response.ok) {
-        throw new Error(`something went wrong ${response.status}`);
-      }
-
       const data = await response.json();
       responseMessage("succeed", data.message);
+
+      if (!response.ok) {
+        throw new Error(
+          data.detail || `something went wrong ${response.status}`
+        );
+      }
+      if (!isLogin && response.status === 200 && data.message) {
+        setIsLogin(true);
+      }
+
       let token = data.access;
       if (isLogin) {
         authCtx.login(token, data);
       }
       responses(data);
     } catch (error) {
-      responseMessage("error", "Something went wrong");
+      if (!isLogin) {
+        setIsLogin(false);
+      }
+      setLoginMsg(error.message);
+      responseMessage("error", null);
     }
   };
 
@@ -150,6 +170,13 @@ const useHttp = () => {
 
   const toggleHandeler = () => {
     setIsLogin((prevState) => !prevState);
+    setValues({
+      email: "",
+      password: "",
+      username: "",
+      confirmPassword: "",
+      forgetPassword: "",
+    });
   };
   return {
     responses,
@@ -162,6 +189,9 @@ const useHttp = () => {
     isLogin,
     responseMessage,
     toggleHandeler,
+    loginMsg,
+    values,
+    setValues,
   };
 };
 export default useHttp;

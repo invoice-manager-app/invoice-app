@@ -1,13 +1,17 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Route, Routes, useNavigate, useParams } from "react-router-dom";
-import { uiActions } from "../../store/Ui-slice";
 import EditIcon from "../icons/EditIcon";
+import DeleteIcon from "../icons/DeleteIcon";
 import classes from "./CompanyDetail.module.css";
 import EditComapnyInfo from "./EditCompanyInfo";
-const CompanyDetail = ({ companies, backHandler, submitEditedCompany }) => {
+const CompanyDetail = ({
+  companies,
+  backHandler,
+  submitEditedCompany,
+  deleteCompany,
+}) => {
   const params = useParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const editCompany = useSelector((state) => state.ui.editCompany);
 
@@ -55,6 +59,18 @@ const CompanyDetail = ({ companies, backHandler, submitEditedCompany }) => {
         <button onClick={backHandler}> back </button>
         <button onClick={editCompanyPath} className={classes.edit}>
           <EditIcon /> Edit Company
+        </button>
+        <button
+          onClick={() =>
+            deleteCompany(
+              selectedCompany.slug,
+              selectedCompany.name,
+              selectedCompany.email
+            )
+          }
+          className={classes.deleteBtn}
+        >
+          <DeleteIcon /> Delete
         </button>
       </div>
 

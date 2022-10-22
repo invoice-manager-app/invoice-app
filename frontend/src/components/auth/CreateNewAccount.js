@@ -24,6 +24,7 @@ const CreateNewAccount = ({ values, setValues, responseMsg }) => {
         label="Your Email"
         id="email"
         value={values.email}
+        autoComplete="true"
         onChange={(e) =>
           setValues({
             ...values,

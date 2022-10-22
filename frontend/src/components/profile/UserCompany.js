@@ -2,7 +2,6 @@ import { useState, memo, Fragment } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CompanyDetail from "../company/CompanyDetail";
-import DeleteIcon from "../icons/DeleteIcon";
 import classes from "./UserCompany.module.css";
 import Notification from "../UI/Notification";
 const UserCompany = ({
@@ -17,6 +16,7 @@ const UserCompany = ({
 
   //notification state
   const notification = useSelector((state) => state.ui.notification);
+
   const showCompanyInfoHandeler = () => {
     setShowCard(false);
   };
@@ -60,14 +60,6 @@ const UserCompany = ({
                   >
                     Show Full Information
                   </Link>
-                  <span
-                    className={classes.deleteBtn}
-                    onClick={() =>
-                      deleteCompany(company.slug, company.name, company.email)
-                    }
-                  >
-                    <DeleteIcon />
-                  </span>
                 </div>
               )}
             </div>
@@ -83,6 +75,7 @@ const UserCompany = ({
                   submitEditedCompany={submitEditedCompany}
                   editCompany={editCompany}
                   editUser={editUser}
+                  deleteCompany={deleteCompany}
                   editCompanyHandeler={editCompanyHandeler}
                 />
               }

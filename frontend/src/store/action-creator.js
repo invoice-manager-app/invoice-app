@@ -52,6 +52,7 @@ export const editUserRequest = (token, values) => {
             message: result.response,
           })
         );
+        dispatch(uiActions.toggleUser());
       })
       .catch((error) => {
         dispatch(
@@ -66,57 +67,57 @@ export const editUserRequest = (token, values) => {
 
 //add new company
 
-export const AddNewCompany = (token, values) => {
-  return async (dispatch) => {
-    dispatch(
-      uiActions.notification({
-        status: "pending",
-        message: "wait....",
-      })
-    );
+// export const AddNewCompany = (token, values) => {
+//   return async (dispatch) => {
+//     dispatch(
+//       uiActions.notification({
+//         status: "pending",
+//         message: "wait....",
+//       })
+//     );
 
-    //HEADER
-    const myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-    //body
-    const formdata = new FormData();
-    formdata.append("name", values.companyName);
-    formdata.append("email", values.email);
-    formdata.append("owner", values.name);
-    formdata.append("about", values.about);
-    formdata.append("number", values.number);
-    formdata.append("address", values.address);
+//     //HEADER
+//     const myHeaders = new Headers();
+//     myHeaders.append("Authorization", `Bearer ${token}`);
+//     //body
+//     const formdata = new FormData();
+//     formdata.append("name", values.companyName);
+//     formdata.append("email", values.email);
+//     formdata.append("owner", values.name);
+//     formdata.append("about", values.about);
+//     formdata.append("number", values.number);
+//     formdata.append("address", values.address);
 
-    fetch("http://127.0.0.1:8000/company/", {
-      method: "POST",
-      headers: myHeaders,
-      body: formdata,
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Something went wrong");
-        }
+//     fetch("http://127.0.0.1:8000/company/", {
+//       method: "POST",
+//       headers: myHeaders,
+//       body: formdata,
+//     })
+//       .then((res) => {
+//         if (!res.ok) {
+//           throw new Error("Something went wrong");
+//         }
 
-        return res.json();
-      })
-      .then((data) => {
-        dispatch(
-          uiActions.notification({
-            status: "succeed",
-            message: data.response,
-          })
-        );
-      })
-      .catch((err) => {
-        dispatch(
-          uiActions.notification({
-            status: "error",
-            message: err.message,
-          })
-        );
-      });
-  };
-};
+//         return res.json();
+//       })
+//       .then((data) => {
+//         dispatch(
+//           uiActions.notification({
+//             status: "succeed",
+//             message: data.response,
+//           })
+//         );
+//       })
+//       .catch((err) => {
+//         dispatch(
+//           uiActions.notification({
+//             status: "error",
+//             message: err.message,
+//           })
+//         );
+//       });
+//   };
+// };
 
 //delete company
 export const deleteCompany = (token, name, email, slug) => {
@@ -155,6 +156,7 @@ export const deleteCompany = (token, name, email, slug) => {
             message: result.response_message,
           })
         );
+        dispatch(uiActions.switchToUserInfo());
       })
       .catch((error) => {
         dispatch(

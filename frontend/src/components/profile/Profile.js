@@ -20,6 +20,7 @@ import EditIcon from "../icons/EditIcon";
 import AuthContext from "../../context/auth-context";
 import { deleteCompany, editCompanyFn } from "../../store/action-creator";
 import Notification from "../UI/Notification";
+import { useNavigate } from "react-router-dom";
 
 //get companies
 
@@ -27,14 +28,16 @@ const Profile = () => {
   const dispatch = useDispatch();
   const authContext = useContext(AuthContext);
 
+  const navigate = useNavigate();
+
   //UI actions
   const editUser = useSelector((state) => state.ui.editUser);
   const editCompany = useSelector((state) => state.ui.editCompany);
 
   //user info after update
   const editedInfo = useSelector((state) => state.action.userInfo);
-  const [changePassword, setChangePassword] = useState(false);
-  const [switchInfo, setSwitchInfo] = useState(false);
+  //const [changePassword, setChangePassword] = useState(false);
+  // const [switchInfo, setSwitchInfo] = useState(false);
   const [userData, setUserData] = useState([
     { username: "", first_name: "", last_name: "", email: "" },
   ]);
@@ -48,6 +51,11 @@ const Profile = () => {
 
   //notification state
   const notification = useSelector((state) => state.ui.notification);
+  //switchUser
+  const switchInfo = useSelector((state) => state.ui.switchInfo);
+  //change password
+  const changePassword = useSelector((state) => state.ui.changePassword);
+
   useEffect(() => {
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
@@ -92,8 +100,9 @@ const Profile = () => {
   const deleteHandler = useCallback(
     (slug, name, email) => {
       dispatch(deleteCompany(token, name, email, slug));
+      navigate("/profile");
     },
-    [dispatch, token]
+    [dispatch, token, navigate]
   );
 
   //edit company
@@ -123,7 +132,7 @@ const Profile = () => {
       setCompanies(data);
     };
     getAllCompanies();
-  }, [token, deleteHandler, notification, dispatch]);
+  }, [token, notification, dispatch]);
 
   //switch into edit user Info Component
   const editUserHandeler = () => {
@@ -139,23 +148,23 @@ const Profile = () => {
   //switch into change password components
 
   const changePasswordHandler = useCallback(() => {
-    setChangePassword((prevState) => !prevState);
-  }, []);
+    dispatch(uiActions.togglePassword());
+  }, [dispatch]);
 
   //switch into user Info
   const basicInfoHandler = useCallback(() => {
-    setSwitchInfo(false);
-    dispatch(uiActions.submitUser());
-    dispatch(uiActions.submitEditCompanyInfo());
-    setChangePassword(false);
+    dispatch(uiActions.toggleUserInfo());
+    //dispatch(uiActions.submitUser());
+    // dispatch(uiActions.submitEditCompanyInfo());
+    // dispatch(uiActions.togglePassword());
   }, [dispatch]);
 
   //switch into company Info
   const companyInfoHandler = useCallback(() => {
-    setSwitchInfo(true);
+    dispatch(uiActions.toggleUserInfo());
     dispatch(uiActions.submitUser());
     dispatch(uiActions.submitEditCompanyInfo());
-    setChangePassword(false);
+    //dispatch(uiActions.togglePassword());
   }, [dispatch]);
 
   const basicInfoBtnClass = switchInfo ? "" : classes.active;
@@ -163,7 +172,7 @@ const Profile = () => {
 
   return (
     <Fragment>
-      {notification && notification.message !== undefined && <Notification />}
+      {notification && notification.message !== null && <Notification />}
 
       <section className={classes.profile}>
         <main className={classes.content}>

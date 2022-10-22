@@ -65,7 +65,6 @@ const AddNewCompany = () => {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
         dispatch(
           uiActions.notification({
             status: "succeed",
@@ -74,6 +73,7 @@ const AddNewCompany = () => {
         );
 
         navigate("/profile");
+        dispatch(uiActions.switchToCompany());
       })
       .catch((err) => {
         console.log(err);

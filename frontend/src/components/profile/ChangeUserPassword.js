@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { useState, Fragment } from "react";
 
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,7 @@ import classes from "./ChangePassword.module.css";
 //import { ChangePassword } from "../../schemas/changepassword";
 
 const ChangeUserPassword = () => {
+  const [resMsg, setResMsg] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
@@ -31,7 +32,7 @@ const ChangeUserPassword = () => {
     dispatch(
       uiActions.notification({
         status: "pending",
-        message: "wait...",
+        message: null,
       })
     );
     var myHeaders = new Headers();
@@ -62,18 +63,21 @@ const ChangeUserPassword = () => {
             "Something went wrong, please make sure you entered the correct password"
         );
       }
+      setResMsg(data.response_msg);
 
       dispatch(
         uiActions.notification({
-          status: "success",
+          status: "succeed",
           message: data.response_msg,
         })
       );
+      dispatch(uiActions.togglePassword());
     } catch (error) {
+      setResMsg(error.message);
       dispatch(
         uiActions.notification({
           status: "error",
-          message: error.message,
+          message: null,
         })
       );
     }
@@ -96,10 +100,10 @@ const ChangeUserPassword = () => {
   ) {
     formIsValid = true;
   }
-
+  console.log(notification);
   return (
     <Fragment>
-      {notification && notification.message !== undefined && <Notification />}{" "}
+      {notification && notification.message !== null && <Notification />}
       <form onSubmit={onSubmit} autoComplete="off" className={classes.form}>
         <h1>Change Password</h1>
         <Input
@@ -148,9 +152,16 @@ const ChangeUserPassword = () => {
         {errors.passwordConfirmation && touched.passwordConfirmation && (
           <p className="error-msg"> {errors.passwordConfirmation} </p>
         )}
-        <button disabled={!formIsValid} type="submit">
-          Change Password
-        </button>
+        {resMsg !== "" && <p className="exist-info"> {resMsg} </p>}
+        {(!notification ||
+          (notification && notification.status !== "pending")) && (
+          <button disabled={!formIsValid} type="submit">
+            Change Password
+          </button>
+        )}
+        {notification && notification.status === "pending" && (
+          <p> Please Wait.... </p>
+        )}
       </form>
     </Fragment>
   );

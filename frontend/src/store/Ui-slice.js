@@ -3,12 +3,26 @@ import { createSlice } from "@reduxjs/toolkit";
 const uiSlice = createSlice({
   name: "UI",
   initialState: {
+    switchInfo: false,
+    changePassword: false,
     formIsVisible: false,
     editUser: false,
     editCompany: false,
     notification: null,
   },
   reducers: {
+    toggleUserInfo: (state) => {
+      state.switchInfo = !state.switchInfo;
+    },
+    switchToCompany: (state) => {
+      state.switchInfo = true;
+    },
+    switchToUserInfo: (state) => {
+      state.switchInfo = false;
+    },
+    togglePassword: (state) => {
+      state.changePassword = !state.changePassword;
+    },
     toggleForm(state) {
       state.formIsVisible = !state.formIsVisible;
     },

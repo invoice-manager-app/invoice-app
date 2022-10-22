@@ -19,9 +19,13 @@
   bottom: 50px;
 }
 
-.edit {
+.edit,
+.deleteBtn {
   display: flex;
   justify-content: center;
   align-items: center;
-  right: 50px;
+}
+.deleteBtn {
+  width: 20px;
+  background-color: red !important;
 }
