@@ -76,7 +76,6 @@ const AddNewCompany = () => {
         dispatch(uiActions.switchToCompany());
       })
       .catch((err) => {
-        console.log(err);
         dispatch(
           uiActions.notification({
             status: "error",

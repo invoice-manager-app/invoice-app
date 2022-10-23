@@ -9,6 +9,7 @@ const uiSlice = createSlice({
     editUser: false,
     editCompany: false,
     notification: null,
+    deleteConfirm: null,
   },
   reducers: {
     toggleUserInfo: (state) => {
@@ -52,6 +53,14 @@ const uiSlice = createSlice({
     },
     hideNotification: (state) => {
       state.notification = null;
+    },
+    showDeleteConfirm: (state, action) => {
+      state.deleteConfirm = {
+        message: action.payload.message,
+      };
+    },
+    hideDeleteConfirm: (state) => {
+      state.deleteConfirm = null;
     },
   },
 });

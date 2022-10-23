@@ -10,9 +10,6 @@ import { uiActions } from "../../store/Ui-slice";
 const EditComapnyInfo = ({ companies, submitEditedCompany, editCompany }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  console.log(editCompany);
-
-  console.log(companies);
 
   // const name = companies.map((el) => el.name).toString();
   // const email = companies.map((el) => el.email).toString();
@@ -32,13 +29,12 @@ const EditComapnyInfo = ({ companies, submitEditedCompany, editCompany }) => {
     },
     validationSchema: userSchema,
   });
-  //console.log(companies.slug);
 
   const onSubmit = (e) => {
     e.preventDefault();
     submitEditedCompany(values, companies.slug);
-    dispatch(uiActions.submitEditCompanyInfo());
-    dispatch(uiActions.toggleUser());
+    //  dispatch(uiActions.submitEditCompanyInfo());
+    //dispatch(uiActions.toggleUser());
     if (
       values.address !== "" &&
       values.email !== "" &&
@@ -47,6 +43,7 @@ const EditComapnyInfo = ({ companies, submitEditedCompany, editCompany }) => {
       values.number !== ""
     ) {
       navigate("/profile");
+      dispatch(uiActions.switchToUserInfo());
     }
   };
   if (

@@ -44,7 +44,7 @@ const UserCompany = ({
 
   return (
     <Fragment>
-      {notification && notification.message !== undefined && <Notification />}
+      {notification && notification.message !== null && <Notification />}
 
       <div className={classes["company-info"]}>
         {companies.map((company) => {

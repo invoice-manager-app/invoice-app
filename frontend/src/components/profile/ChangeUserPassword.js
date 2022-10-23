@@ -100,7 +100,6 @@ const ChangeUserPassword = () => {
   ) {
     formIsValid = true;
   }
-  console.log(notification);
   return (
     <Fragment>
       {notification && notification.message !== null && <Notification />}

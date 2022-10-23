@@ -51,6 +51,7 @@ const Profile = () => {
 
   //notification state
   const notification = useSelector((state) => state.ui.notification);
+
   //switchUser
   const switchInfo = useSelector((state) => state.ui.switchInfo);
   //change password
@@ -99,6 +100,7 @@ const Profile = () => {
   //delete company
   const deleteHandler = useCallback(
     (slug, name, email) => {
+      dispatch(uiActions.hideDeleteConfirm());
       dispatch(deleteCompany(token, name, email, slug));
       navigate("/profile");
     },
@@ -172,7 +174,9 @@ const Profile = () => {
 
   return (
     <Fragment>
-      {notification && notification.message !== null && <Notification />}
+      {notification &&
+        notification.message !== null &&
+        notification.message !== undefined && <Notification />}
 
       <section className={classes.profile}>
         <main className={classes.content}>
