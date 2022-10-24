@@ -1,8 +1,60 @@
-import { useSelector } from "react-redux/es/exports";
+import { useEffect, useContext } from "react";
+import { invoiceAction } from "../../store/actions";
+import { useSelector, useDispatch } from "react-redux/es/exports";
 import classes from "./UserProfile.module.css";
+import AuthContext from "../../context/auth-context";
 
 //start comonent
-const UserProfile = ({ userData }) => {
+const UserProfile = ({ userData, setUserData }) => {
+  const dispatch = useDispatch();
+  const authContext = useContext(AuthContext);
+
+  const { logout } = authContext;
+  useEffect(() => {
+    let token;
+    if (localStorage.getItem("token")) {
+      token = localStorage.getItem("token");
+    }
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    const requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    const userInfo = async () => {
+      const response = await fetch(
+        "http://127.0.0.1:8000/account/view/",
+        requestOptions
+      );
+
+      const data = await response.json();
+      const { email, first_name, last_name, username } = data;
+
+      if (response.status === 401) {
+        logout();
+      }
+
+      dispatch(
+        invoiceAction.editUser({
+          username: username,
+          last_name: last_name,
+          first_name: first_name,
+          email: email,
+        })
+      );
+      setUserData({
+        username,
+        first_name,
+        last_name,
+        email,
+      });
+    };
+    userInfo();
+    console.log("USER-DATA-FETCHED");
+  }, [dispatch, logout, setUserData]);
+
   const userInfo = useSelector((state) => state.action.userInfo);
   return (
     <div className={classes["profile-content"]}>

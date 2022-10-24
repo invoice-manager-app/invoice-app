@@ -156,7 +156,7 @@ export const deleteCompany = (token, name, email, slug) => {
             message: result.response_message,
           })
         );
-        dispatch(uiActions.switchToUserInfo());
+        dispatch(uiActions.switchToCompany());
       })
       .catch((error) => {
         dispatch(
@@ -203,7 +203,9 @@ export const editCompanyFn = (token, values, slug) => {
         return response.json();
       })
       .then((result) => {
-        console.log(result);
+        // console.log(result);
+        dispatch(uiActions.switchToCompany());
+
         dispatch(
           uiActions.notification({
             status: "succeed",
@@ -212,7 +214,7 @@ export const editCompanyFn = (token, values, slug) => {
         );
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
         dispatch(
           uiActions.notification({
             status: "error",

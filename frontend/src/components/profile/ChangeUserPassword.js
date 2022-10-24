@@ -102,7 +102,9 @@ const ChangeUserPassword = () => {
   }
   return (
     <Fragment>
-      {notification && notification.message !== null && <Notification />}
+      {notification &&
+        notification.message !== null &&
+        notification.message !== undefined && <Notification />}
       <form onSubmit={onSubmit} autoComplete="off" className={classes.form}>
         <h1>Change Password</h1>
         <Input

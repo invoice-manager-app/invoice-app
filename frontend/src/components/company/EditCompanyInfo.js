@@ -4,13 +4,20 @@ import { useDispatch } from "react-redux";
 import Input from "../UI/Inputs";
 
 import classes from "./AddNewCompany.module.css";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { uiActions } from "../../store/Ui-slice";
 
-const EditComapnyInfo = ({ companies, submitEditedCompany, editCompany }) => {
+const EditComapnyInfo = ({
+  companies,
+  submitEditedCompany,
+  getAllCompanies,
+}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  let token;
+  if (localStorage.getItem("token")) {
+    token = localStorage.getItem("token");
+  }
   // const name = companies.map((el) => el.name).toString();
   // const email = companies.map((el) => el.email).toString();
   // const about = companies.map((el) => el.about).toString();
@@ -30,21 +37,27 @@ const EditComapnyInfo = ({ companies, submitEditedCompany, editCompany }) => {
     validationSchema: userSchema,
   });
 
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const submitEdit = async () => {
     submitEditedCompany(values, companies.slug);
-    //  dispatch(uiActions.submitEditCompanyInfo());
-    //dispatch(uiActions.toggleUser());
-    if (
-      values.address !== "" &&
-      values.email !== "" &&
-      values.companyName !== "" &&
-      values.about !== "" &&
-      values.number !== ""
-    ) {
-      navigate("/profile");
-      dispatch(uiActions.switchToUserInfo());
-    }
+    await getAllCompanies(token);
+    navigate("/profile");
+    dispatch(uiActions.switchToCompany());
+    console.log("SUB");
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    await submitEdit();
+
+    // if (
+    //   values.address !== "" &&
+    //   values.email !== "" &&
+    //   values.companyName !== "" &&
+    //   values.about !== "" &&
+    //   values.number !== ""
+    // ) {
+    //   navigate("/profile");
+    // }
   };
   if (
     values.address !== "" &&

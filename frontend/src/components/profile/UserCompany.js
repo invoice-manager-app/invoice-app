@@ -1,11 +1,10 @@
-import { useState, memo, Fragment } from "react";
+import { useState, memo, Fragment, useEffect } from "react";
 import { Link, Route, Routes } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CompanyDetail from "../company/CompanyDetail";
 import classes from "./UserCompany.module.css";
 import Notification from "../UI/Notification";
 const UserCompany = ({
-  companies,
   deleteCompany,
   submitEditedCompany,
   editCompany,
@@ -13,6 +12,38 @@ const UserCompany = ({
   editCompanyHandeler,
 }) => {
   const [showCard, setShowCard] = useState(true);
+  const [companies, setCompanies] = useState([]);
+
+  //dispatch
+  const dispatch = useDispatch();
+
+  //getAllCompanies
+  const getAllCompanies = async (token) => {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    const response = await fetch(
+      "http://127.0.0.1:8000/company/",
+      requestOptions
+    );
+    const data = await response.json();
+    setCompanies(data);
+  };
+  useEffect(() => {
+    let token;
+    if (localStorage.getItem("token")) {
+      token = localStorage.getItem("token");
+    }
+
+    getAllCompanies(token);
+    console.log("GET-COMPANIES");
+  }, [dispatch]);
 
   //notification state
   const notification = useSelector((state) => state.ui.notification);
@@ -44,7 +75,9 @@ const UserCompany = ({
 
   return (
     <Fragment>
-      {notification && notification.message !== null && <Notification />}
+      {notification &&
+        notification.message !== null &&
+        notification.message !== undefined && <Notification />}
 
       <div className={classes["company-info"]}>
         {companies.map((company) => {
@@ -77,6 +110,7 @@ const UserCompany = ({
                   editUser={editUser}
                   deleteCompany={deleteCompany}
                   editCompanyHandeler={editCompanyHandeler}
+                  getAllCompanies={getAllCompanies}
                 />
               }
               path="/:companyId/*"

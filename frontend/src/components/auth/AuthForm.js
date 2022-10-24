@@ -10,7 +10,6 @@ import Login from "./Login";
 
 const AuthForm = () => {
   const notification = useSelector((state) => state.ui.notification);
-  console.log(notification);
   const {
     responseMsg,
     httpRequest,
@@ -41,7 +40,9 @@ const AuthForm = () => {
   if (forgetPassword) {
     return (
       <Fragment>
-        {notification && notification.message !== undefined && <Notification />}
+        {notification &&
+          notification.message !== undefined &&
+          notification.message !== null && <Notification />}
         <ForgetPassword
           values={values}
           changePasswordHandler={changePasswordHandler}
@@ -57,7 +58,9 @@ const AuthForm = () => {
 
   return (
     <Fragment>
-      {notification && notification.message !== undefined && <Notification />}
+      {notification &&
+        notification.message !== undefined &&
+        notification.message !== null && <Notification />}
       <section className={classes.form}>
         <h2> {isLogin ? "Login" : "Sign Up"} </h2>
         <form onSubmit={submitHandler}>

@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Input from "../UI/Inputs";
 
 import classes from "./AddNewCompany.module.css";
-import { invoiceAction } from "../../store/actions";
 import { useNavigate } from "react-router-dom";
 import { uiActions } from "../../store/Ui-slice";
 import Notification from "../UI/Notification";
@@ -112,7 +111,9 @@ const AddNewCompany = () => {
 
   return (
     <Fragment>
-      {notification && notification.message !== undefined && <Notification />}
+      {notification &&
+        notification.message !== undefined &&
+        notification.message !== null && <Notification />}
       <form onSubmit={onSubmit} autoComplete="off" className={classes.form}>
         <Input
           type="text"

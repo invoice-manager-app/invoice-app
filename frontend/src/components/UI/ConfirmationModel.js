@@ -4,7 +4,21 @@ import classes from "./ConfirmationModel.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../../store/Ui-slice";
 
-const Model = ({ message, deleteCompany, selectedCompany, hideModel }) => {
+const Model = ({
+  message,
+  deleteCompany,
+  selectedCompany,
+  hideModel,
+  getAllCompanies,
+}) => {
+  let token;
+  if (localStorage.getItem("token")) {
+    token = localStorage.getItem("token");
+  }
+  const deleteHandler = (slug, name, email) => {
+    deleteCompany(slug, name, email);
+    getAllCompanies(token);
+  };
   return (
     <div className={classes.model}>
       <p>{message}</p>
@@ -12,7 +26,7 @@ const Model = ({ message, deleteCompany, selectedCompany, hideModel }) => {
         <button
           type="button"
           onClick={() =>
-            deleteCompany(
+            deleteHandler(
               selectedCompany.slug,
               selectedCompany.name,
               selectedCompany.email
@@ -33,7 +47,11 @@ const Backdrop = ({ hideModel }) => {
   return <div className={classes.backdrop} onClick={hideModel} />;
 };
 
-const ConfirmationModel = ({ deleteCompany, selectedCompany }) => {
+const ConfirmationModel = ({
+  deleteCompany,
+  selectedCompany,
+  getAllCompanies,
+}) => {
   const deleteConfirmation = useSelector((state) => state.ui.deleteConfirm);
   const dipatch = useDispatch();
   //hide model
@@ -45,9 +63,10 @@ const ConfirmationModel = ({ deleteCompany, selectedCompany }) => {
       {ReactDOM.createPortal(
         <Model
           message={deleteConfirmation.message}
-          deleteCompany={deleteCompany}
           selectedCompany={selectedCompany}
           hideModel={hideModel}
+          getAllCompanies={getAllCompanies}
+          deleteCompany={deleteCompany}
         />,
         document.getElementById("model")
       )}

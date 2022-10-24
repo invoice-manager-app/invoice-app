@@ -1,12 +1,6 @@
 import { Fragment, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 import EditIcon from "../icons/EditIcon";
 import DeleteIcon from "../icons/DeleteIcon";
 import classes from "./CompanyDetail.module.css";
@@ -18,12 +12,12 @@ const CompanyDetail = ({
   backHandler,
   submitEditedCompany,
   deleteCompany,
+  getAllCompanies,
 }) => {
   const [editForm, setEditForm] = useState(false);
   const dispatch = useDispatch();
   const params = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const editCompany = useSelector((state) => state.ui.editCompany);
 
@@ -56,6 +50,7 @@ const CompanyDetail = ({
         <ConfirmationModel
           deleteCompany={deleteCompany}
           selectedCompany={selectedCompany}
+          getAllCompanies={getAllCompanies}
         />
       )}
 
@@ -113,6 +108,7 @@ const CompanyDetail = ({
               companies={selectedCompany}
               submitEditedCompany={submitEditedCompany}
               editCompany={editCompany}
+              getAllCompanies={getAllCompanies}
             />
           }
           path={`/:com`}
