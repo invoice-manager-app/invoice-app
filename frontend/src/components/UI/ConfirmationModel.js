@@ -15,9 +15,9 @@ const Model = ({
   if (localStorage.getItem("token")) {
     token = localStorage.getItem("token");
   }
-  const deleteHandler = (slug, name, email) => {
+  const deleteHandler = async (slug, name, email) => {
     deleteCompany(slug, name, email);
-    getAllCompanies(token);
+    await getAllCompanies(token);
   };
   return (
     <div className={classes.model}>

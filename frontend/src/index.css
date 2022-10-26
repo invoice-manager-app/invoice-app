@@ -107,8 +107,9 @@ button:disabled {
   cursor: not-allowed;
 }
 
-.exist-info {
+.response-text {
   font-size: 13px;
   color: red;
   width: fit-content;
+  margin-top: 10px;
 }

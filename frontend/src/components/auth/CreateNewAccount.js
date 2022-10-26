@@ -14,11 +14,9 @@ const CreateNewAccount = ({ values, setValues, responseMsg }) => {
           })
         }
       />
-      {responseMsg.map((el, i) => (
-        <p className="exist-info" key={i}>
-          {el.username}
-        </p>
-      ))}
+      {responseMsg && responseMsg.username && (
+        <p className="response-text"> {responseMsg.username[0]} </p>
+      )}
       <Input
         type="email"
         label="Your Email"
@@ -32,12 +30,9 @@ const CreateNewAccount = ({ values, setValues, responseMsg }) => {
           })
         }
       />
-      {responseMsg.map((el, i) => (
-        <p className="exist-info" key={i}>
-          {el.email}
-        </p>
-      ))}
-
+      {responseMsg && responseMsg.email && (
+        <p className="response-text"> {responseMsg.email[0]} </p>
+      )}
       <Input
         type="password"
         label="Your Password"
@@ -50,11 +45,9 @@ const CreateNewAccount = ({ values, setValues, responseMsg }) => {
           })
         }
       />
-      {responseMsg.map((el, i) => (
-        <p className="exist-info" key={i}>
-          {el.password}{" "}
-        </p>
-      ))}
+      {responseMsg && responseMsg.password && (
+        <p className="response-text"> {responseMsg.password[0]} </p>
+      )}
       <Input
         type="password"
         label="Confirm Password"
@@ -67,11 +60,9 @@ const CreateNewAccount = ({ values, setValues, responseMsg }) => {
           })
         }
       />
-      {responseMsg.map((el, i) => (
-        <p className="exist-info" key={i}>
-          {el.confirm_password}{" "}
-        </p>
-      ))}
+      {responseMsg && responseMsg.confirm_password && (
+        <p className="response-text"> {responseMsg.confirm_password[0]} </p>
+      )}
     </Fragment>
   );
 };

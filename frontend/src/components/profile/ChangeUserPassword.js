@@ -57,7 +57,7 @@ const ChangeUserPassword = () => {
       );
 
       const data = await response.json();
-      if (!response.ok) {
+      if (response.status === 400) {
         throw new Error(
           data.response_msg ||
             "Something went wrong, please make sure you entered the correct password"

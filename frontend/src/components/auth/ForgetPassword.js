@@ -5,11 +5,11 @@ import classes from "./AuthForm.module.css";
 const ForgetPassword = ({
   values,
   notification,
-  responseArr,
   forgetPasswordHandeler,
   forgetPassword,
-  changePasswordHandler,
+  passwordChange,
   setValues,
+  responseMsg,
 }) => {
   return (
     <Fragment>
@@ -27,16 +27,20 @@ const ForgetPassword = ({
               })
             }
           />
-          {<p> {responseArr} </p>}
+
           {(!notification ||
             (notification && notification.status !== "pending")) && (
             <button
               type="submit"
               className={classes.log}
-              onClick={changePasswordHandler}
+              onClick={passwordChange}
             >
               submit
             </button>
+          )}
+
+          {responseMsg && (
+            <p className="response-text"> {Object.values(responseMsg)} </p>
           )}
         </form>
 
