@@ -43,6 +43,7 @@ const CompanyDetail = ({
     );
   };
 
+  console.log(selectedCompany);
   let owner = `${selectedCompany.owner.first_name}  ${selectedCompany.owner.last_name}`;
   return (
     <Fragment>
@@ -58,6 +59,11 @@ const CompanyDetail = ({
         <section className={classes.company}>
           <h1> {selectedCompany.name} </h1>
 
+          <div className={classes.detail}>
+            <div className={classes.avatar}>
+              <img src={selectedCompany.avatar} alt="avatar" />
+            </div>
+          </div>
           <div className={classes.detail}>
             <strong> owner : </strong>
             <span>{owner}</span>

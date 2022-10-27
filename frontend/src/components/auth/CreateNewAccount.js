@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import Input from "../UI/Inputs";
-const CreateNewAccount = ({ values, setValues, responseMsg }) => {
+const CreateNewAccount = ({ values, setValues, responseMsg, notification }) => {
   return (
     <Fragment>
       <Input
@@ -14,9 +14,12 @@ const CreateNewAccount = ({ values, setValues, responseMsg }) => {
           })
         }
       />
-      {responseMsg && responseMsg.username && (
-        <p className="response-text"> {responseMsg.username[0]} </p>
-      )}
+      {responseMsg &&
+        responseMsg.username &&
+        notification &&
+        notification.message === undefined && (
+          <p className="response-text"> {responseMsg.username[0]} </p>
+        )}
       <Input
         type="email"
         label="Your Email"
@@ -30,9 +33,12 @@ const CreateNewAccount = ({ values, setValues, responseMsg }) => {
           })
         }
       />
-      {responseMsg && responseMsg.email && (
-        <p className="response-text"> {responseMsg.email[0]} </p>
-      )}
+      {responseMsg &&
+        responseMsg.email &&
+        notification &&
+        notification.message === undefined && (
+          <p className="response-text"> {responseMsg.email[0]} </p>
+        )}
       <Input
         type="password"
         label="Your Password"
@@ -45,9 +51,12 @@ const CreateNewAccount = ({ values, setValues, responseMsg }) => {
           })
         }
       />
-      {responseMsg && responseMsg.password && (
-        <p className="response-text"> {responseMsg.password[0]} </p>
-      )}
+      {responseMsg &&
+        responseMsg.password &&
+        notification &&
+        notification.message === undefined && (
+          <p className="response-text"> {responseMsg.password[0]} </p>
+        )}
       <Input
         type="password"
         label="Confirm Password"
@@ -60,9 +69,12 @@ const CreateNewAccount = ({ values, setValues, responseMsg }) => {
           })
         }
       />
-      {responseMsg && responseMsg.confirm_password && (
-        <p className="response-text"> {responseMsg.confirm_password[0]} </p>
-      )}
+      {responseMsg &&
+        responseMsg.confirm_password &&
+        notification &&
+        notification.message === undefined && (
+          <p className="response-text"> {responseMsg.confirm_password[0]} </p>
+        )}
     </Fragment>
   );
 };

@@ -39,7 +39,7 @@ const ForgetPassword = ({
             </button>
           )}
 
-          {responseMsg && (
+          {responseMsg && notification && notification.status !== "succeed" && (
             <p className="response-text"> {Object.values(responseMsg)} </p>
           )}
         </form>

@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { useFormik } from "formik";
 import { userSchema } from "../../schemas/index";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,8 +8,11 @@ import classes from "./AddNewCompany.module.css";
 import { useNavigate } from "react-router-dom";
 import { uiActions } from "../../store/Ui-slice";
 import Notification from "../UI/Notification";
+import Avatar from "./Avatar";
 
 const AddNewCompany = () => {
+  const [image, setImage] = useState("");
+  const [imgSrc, setImgSrc] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   let token;
@@ -36,6 +39,43 @@ const AddNewCompany = () => {
     validationSchema: userSchema,
   });
 
+  //image
+
+  //setbackground function
+  const fileTypes = [
+    "image/apng",
+    "image/bmp",
+    "image/gif",
+    "image/jpeg",
+    "image/pjpeg",
+    "image/png",
+    "image/svg+xml",
+    "image/tiff",
+    "image/webp",
+    "image/x-icon",
+  ];
+  function validFileType(file) {
+    return fileTypes.includes(file.type);
+  }
+  function setBackGround(e) {
+    let curFiles = e.target.files;
+
+    for (const file of curFiles) {
+      if (validFileType(file)) {
+        let backgroundImg = URL.createObjectURL(file);
+        setImgSrc(backgroundImg);
+        console.log(backgroundImg, "src");
+      }
+    }
+  }
+
+  const imageHandleChange = (e) => {
+    setImage(e.target.files[0]);
+    console.log(image);
+    console.log("e.target.files");
+    setBackGround(e);
+  };
+
   const onSubmit = (e) => {
     e.preventDefault();
 
@@ -45,6 +85,7 @@ const AddNewCompany = () => {
     //body
     const formdata = new FormData();
     formdata.append("name", values.companyName);
+    formdata.append("avatar", image);
     formdata.append("email", values.email);
     formdata.append("owner", values.name);
     formdata.append("about", values.about);
@@ -83,28 +124,15 @@ const AddNewCompany = () => {
         );
       });
 
-    if (
-      values.address !== "" &&
-      values.email !== "" &&
-      values.companyName !== "" &&
-      values.about !== "" &&
-      values.owner !== "" &&
-      values.number !== ""
-    ) {
+    if (values.email !== "" && values.companyName !== "") {
       //navigate("/profile");
     }
   };
   if (
-    values.address !== "" &&
-    !errors.address &&
     values.email !== "" &&
     !errors.email &&
     values.companyName !== "" &&
-    !errors.companyName &&
-    values.about !== "" &&
-    !errors.about &&
-    values.number !== "" &&
-    !errors.number
+    !errors.companyName
   ) {
     formIsValid = true;
   }
@@ -115,6 +143,11 @@ const AddNewCompany = () => {
         notification.message !== undefined &&
         notification.message !== null && <Notification />}
       <form onSubmit={onSubmit} autoComplete="off" className={classes.form}>
+        <div className={classes.avatar}>
+          {" "}
+          <img src={imgSrc} alt="avatar" />
+        </div>
+        <Avatar imageHandleChange={imageHandleChange} />
         <Input
           type="text"
           label="Company Name"
@@ -150,9 +183,6 @@ const AddNewCompany = () => {
           onBlur={handleBlur}
           className={errors.about && touched.about ? "error-input" : ""}
         />{" "}
-        {errors.about && touched.about && (
-          <p className="error-msg"> {errors.about} </p>
-        )}
         <Input
           type="text"
           label="Phone Number"
@@ -162,9 +192,6 @@ const AddNewCompany = () => {
           onBlur={handleBlur}
           className={errors.number && touched.number ? "error-input" : ""}
         />{" "}
-        {errors.number && touched.number && (
-          <p className="error-msg"> {errors.number} </p>
-        )}
         <Input
           type="text"
           label="Address"
@@ -174,9 +201,6 @@ const AddNewCompany = () => {
           onBlur={handleBlur}
           className={errors.address && touched.address ? "error-input" : ""}
         />
-        {errors.address && touched.address && (
-          <p className="error-msg"> {errors.address} </p>
-        )}
         <button disabled={!formIsValid} type="submit">
           Submit
         </button>

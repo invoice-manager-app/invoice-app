@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import Input from "../UI/Inputs";
-const Login = ({ values, setValues }) => {
+const Login = ({ values, setValues, responseMsg, notification }) => {
   return (
     <Fragment>
       <Input
@@ -15,6 +15,7 @@ const Login = ({ values, setValues }) => {
           })
         }
       />
+
       <Input
         type="password"
         label="Your Password"
@@ -27,6 +28,12 @@ const Login = ({ values, setValues }) => {
           })
         }
       />
+      {responseMsg &&
+        responseMsg.detail &&
+        notification &&
+        notification.status !== "succeed" && (
+          <p className="response-text"> {responseMsg.detail} </p>
+        )}
     </Fragment>
   );
 };

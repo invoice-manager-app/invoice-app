@@ -46,10 +46,7 @@ const AuthForm = () => {
 
   //Registration
   const register = async () => {
-    setResponseMsg();
-
     let url, imformation;
-    responseMessage("pending", null);
     if (isLogin) {
       url = "http://127.0.0.1:8000/account/login_token/";
       imformation = {
@@ -64,38 +61,40 @@ const AuthForm = () => {
         password: values.password,
         confirm_password: values.confirmPassword,
       };
+    }
+    responseMessage("pending", null);
 
-      try {
-        const response = await fetch(url, {
-          method: "POST",
-          body: JSON.stringify(imformation),
-          headers: {
-            "Content-type": "Application/json",
-          },
-        });
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(imformation),
+        headers: {
+          "Content-type": "Application/json",
+        },
+      });
 
-        const data = await response.json();
-        responseMessage("succeed", data.message);
-        setResponseMsg(data);
-        if (!response.ok) {
-          throw new Error(
-            data.detail || `something went wrong ${response.status}`
-          );
-        }
-        if (!isLogin && response.status === 200 && data.message) {
-          setIsLogin(true);
-        }
-
-        let token = data.access;
-        if (isLogin) {
-          authCtx.login(token, data);
-        }
-      } catch (error) {
-        if (!isLogin) {
-          setIsLogin(false);
-        }
-        responseMessage("error", error.message);
+      const data = await response.json();
+      responseMessage("succeed", data.message);
+      setResponseMsg(data);
+      if (!response.ok) {
+        throw new Error(
+          data.detail || `something went wrong ${response.status}`
+        );
       }
+      if (!isLogin && response.status === 200 && data.message) {
+        setIsLogin(true);
+      }
+
+      let token = data.access;
+      if (isLogin) {
+        authCtx.login(token, data);
+      }
+    } catch (error) {
+      if (!isLogin) {
+        setIsLogin(false);
+      }
+
+      responseMessage("error", null);
     }
   };
 
@@ -183,12 +182,20 @@ const AuthForm = () => {
       <section className={classes.form}>
         <h2> {isLogin ? "Login" : "Sign Up"} </h2>
         <form onSubmit={submitHandler}>
-          {isLogin && <Login values={values} setValues={setValues} />}
+          {isLogin && (
+            <Login
+              values={values}
+              setValues={setValues}
+              responseMsg={responseMsg}
+              notification={notification}
+            />
+          )}
           {!isLogin && (
             <CreateNewAccount
               values={values}
               setValues={setValues}
               responseMsg={responseMsg}
+              notification={notification}
             />
           )}
           {notification && notification.status === "pending" && (

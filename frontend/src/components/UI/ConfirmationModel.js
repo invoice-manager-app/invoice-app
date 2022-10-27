@@ -4,20 +4,11 @@ import classes from "./ConfirmationModel.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../../store/Ui-slice";
 
-const Model = ({
-  message,
-  deleteCompany,
-  selectedCompany,
-  hideModel,
-  getAllCompanies,
-}) => {
-  let token;
-  if (localStorage.getItem("token")) {
-    token = localStorage.getItem("token");
-  }
+const Model = ({ message, deleteCompany, selectedCompany, hideModel }) => {
+  const dispatch = useDispatch();
   const deleteHandler = async (slug, name, email) => {
     deleteCompany(slug, name, email);
-    await getAllCompanies(token);
+    dispatch(uiActions.switchToUserInfo());
   };
   return (
     <div className={classes.model}>
