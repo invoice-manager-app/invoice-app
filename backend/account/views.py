@@ -1,11 +1,7 @@
-import threading
-
 from account.models import Account
-from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render
-from django.template.loader import render_to_string
-from django.utils.encoding import force_bytes, force_str
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.generics import UpdateAPIView
@@ -27,14 +23,13 @@ from .serializers import (
 )
 from .utils import account_activation_token, get_user_email
 
+# class EmailThread(threading.Thread):
+#     def __init__(self, email):
+#         self.email = email
+#         threading.Thread.__init__(self)
 
-class EmailThread(threading.Thread):
-    def __init__(self, email):
-        self.email = email
-        threading.Thread.__init__(self)
-
-    def run(self):
-        self.email.send()
+#     def run(self):
+#         self.email.send()
 
 
 # this is an login view it's return the tokens (you can return any thing else with the tokens from the serializer)
@@ -74,8 +69,8 @@ def registerUser(request):
             user = serializer.save()
             context = {"user": user}
             to = [get_user_email(user)]
-            EmailThread(ActivationEmail(request, context).send(to)).start()
-            # ActivationEmail(request, context).send(to)
+            # EmailThread(ActivationEmail(request, context).send(to)).start()
+            ActivationEmail(request, context).send(to)
             # send_vervication_email(request, user)
             response_data["response"] = "successfully registered new user."
             response_data["message"] = "We sent a verfication link to your email to and activate your email"
@@ -202,7 +197,8 @@ class ChangePasswordView(UpdateAPIView):
             self.object.save()
             context = {"user": self.request.user}
             to = [get_user_email(self.request.user)]
-            EmailThread(PasswordChangedConfirmationEmail(self.request, context).send(to)).start()
+            # EmailThread(PasswordChangedConfirmationEmail(self.request, context).send(to)).start()
+            PasswordChangedConfirmationEmail(self.request, context).send(to)
             response_data["response_msg"] = "successfully changed password"
             response_status = status.HTTP_200_OK
             return Response(response_data, response_status)
@@ -210,34 +206,34 @@ class ChangePasswordView(UpdateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-def send_vervication_email(request, user):
-    current_site = get_current_site(request)
-    subject = "Activate your Account"
-    message = render_to_string(
-        "account/registeration/account_activation_email.html",
-        {
-            "user": user,
-            "domain": current_site.domain,
-            "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-            "token": account_activation_token.make_token(user),
-        },
-    )
-    user.email_user(subject=subject, message=message)
+# def send_vervication_email(request, user):
+#     current_site = get_current_site(request)
+#     subject = "Activate your Account"
+#     message = render_to_string(
+#         "account/registeration/account_activation_email.html",
+#         {
+#             "user": user,
+#             "domain": current_site.domain,
+#             "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+#             "token": account_activation_token.make_token(user),
+#         },
+#     )
+#     user.email_user(subject=subject, message=message)
 
 
-def send_reset_email(request, user):
-    current_site = get_current_site(request)
-    subject = "Reset Your account"
-    message = render_to_string(
-        "account/password_reset/password_reset_email.html",
-        {
-            "user": user,
-            "domain": current_site.domain,
-            "uidb46": urlsafe_base64_encode(force_bytes(user.pk)),
-            "token": account_activation_token.make_token(user),
-        },
-    )
-    user.email_user(subject=subject, message=message)
+# def send_reset_email(request, user):
+#     current_site = get_current_site(request)
+#     subject = "Reset Your account"
+#     message = render_to_string(
+#         "account/password_reset/password_reset_email.html",
+#         {
+#             "user": user,
+#             "domain": current_site.domain,
+#             "uidb46": urlsafe_base64_encode(force_bytes(user.pk)),
+#             "token": account_activation_token.make_token(user),
+#         },
+#     )
+#     user.email_user(subject=subject, message=message)
 
 
 def account_activate(request, uidb64, token):
@@ -281,7 +277,8 @@ def ResetPasswordView(request):
                 # send_reset_email(request, user)
                 context = {"user": user}
                 to = [get_user_email(user)]
-                EmailThread(PasswordResetEmail(request, context).send(to)).start()
+                # EmailThread(PasswordResetEmail(request, context).send(to)).start()
+                PasswordResetEmail(request, context).send(to)
                 response_data["response"] = "password reset link has been sent"
         else:
             response_data = serializer.errors
@@ -307,7 +304,8 @@ class UserActivationView(APIView):
             if send_email:
                 context = {"user": user}
                 to = [get_user_email(user)]
-                EmailThread(ConfirmationEmail(self.request, context).send(to)).start()
+                # EmailThread(ConfirmationEmail(self.request, context).send(to)).start()
+                ConfirmationEmail(self.request, context).send(to)
 
             response_date["response"] = "The Account has been verified successfully, now go and login"
             return render(request, "email/account_activation_message.html", response_date)

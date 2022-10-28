@@ -1,12 +1,11 @@
 import uuid
 
-from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.core.mail import EmailMessage
 from django.db import models
 
 from .managers import MyAccountManager
-from .utils import EmailThread
+
+# from .utils import EmailThread
 
 
 class Account(AbstractBaseUser, PermissionsMixin):
@@ -50,15 +49,15 @@ class Account(AbstractBaseUser, PermissionsMixin):
     #         img.thumbnail(output_size)
     #         img.save(self.profile_image.path)
 
-    def email_user(self, subject, message):
-        email = EmailMessage(
-            subject=subject,
-            body=message,
-            from_email=settings.EMAIL_HOST_USER,
-            to=[self.email],
-        )
+    # def email_user(self, subject, message):
+    #     email = EmailMessage(
+    #         subject=subject,
+    #         body=message,
+    #         from_email=settings.EMAIL_HOST_USER,
+    #         to=[self.email],
+    #     )
 
-        EmailThread(email).start()
+    #     EmailThread(email).start()
 
     # def get_profile_image_filename(self):
     #     return str(self.profile_image)[

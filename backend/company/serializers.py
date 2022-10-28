@@ -4,11 +4,10 @@ from rest_framework import serializers
 
 from .utils import get_default_avatar
 
+
 # from account.serializers import AccountProfileSerilizers
-
-
 class CompanyReadSerializer(serializers.ModelSerializer):
-    # avatar = serializers.SerializerMethodField('validate_avatar_url')
+    avatar = serializers.SerializerMethodField("validate_avatar_url")
     # author = AccountProfileSerilizers(read_only=True)
     owner = AccountProfileSerilizers()
 
@@ -16,9 +15,10 @@ class CompanyReadSerializer(serializers.ModelSerializer):
         model = Company
         fields = ["id", "owner", "name", "about", "email", "number", "address", "slug", "avatar"]
 
-    # def validate_avatar_url(self, company):
-    #     avatar = company.avatar.url[:company.avatar.url.rfind("?")]
-    #     return avatar
+    def validate_avatar_url(self, company):
+        request = self.context["request"]
+        avatar = company.avatar.url
+        return request.build_absolute_uri(avatar)
 
 
 class CompanyWriteSerializer(serializers.ModelSerializer):
@@ -30,6 +30,11 @@ class CompanyWriteSerializer(serializers.ModelSerializer):
     def validate_name(self, value):
         if len(value) <= 1:
             raise serializers.ValidationError("name must be more than 2 letters")
+        return value
+
+    def validate_avatar(self, value):
+        if value is None:
+            return get_default_avatar()
         return value
 
     def create(self, validated_data):

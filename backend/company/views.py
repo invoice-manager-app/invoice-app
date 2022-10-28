@@ -39,13 +39,15 @@ class CompanyVewSet(viewsets.ViewSet):
 
     def list(self, request, *args, **kwargs):
         queryset = Company.objects.filter(owner=request.user)
-        serializer_class = CompanyReadSerializer(queryset, many=True)
+        context = {"request": request}
+        serializer_class = CompanyReadSerializer(queryset, context=context, many=True)
         return Response(serializer_class.data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, *args, **kwargs):
         pk = kwargs.get("pk")
         company = get_object_or_404(self.queryset, slug=pk)
-        serializer_class = CompanyReadSerializer(company)
+        context = {"request": request}
+        serializer_class = CompanyReadSerializer(company, context=context)
         return Response(serializer_class.data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
