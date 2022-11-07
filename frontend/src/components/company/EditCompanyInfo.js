@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useFormik } from "formik";
 import { userSchema } from "../../schemas/index";
 import { useDispatch } from "react-redux";
@@ -6,24 +7,22 @@ import Input from "../UI/Inputs";
 import classes from "./AddNewCompany.module.css";
 import { useNavigate } from "react-router-dom";
 import { uiActions } from "../../store/Ui-slice";
+import Avatar from "./Avatar";
+import { editCompanyFn } from "../../store/action-creator";
 
 const EditComapnyInfo = ({
   companies,
-  submitEditedCompany,
+
   getAllCompanies,
 }) => {
+  const [image, setImage] = useState("");
+  const [imgSrc, setImgSrc] = useState(companies.avatar);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   let token;
   if (localStorage.getItem("token")) {
     token = localStorage.getItem("token");
   }
-  // const name = companies.map((el) => el.name).toString();
-  // const email = companies.map((el) => el.email).toString();
-  // const about = companies.map((el) => el.about).toString();
-  // const number = companies.map((el) => el.number).toString();
-  // const address = companies.map((el) => el.address).toString();
-  // const slug = companies.map((el) => el.slug).toString();
 
   let formIsValid = false;
   const { values, errors, handleBlur, touched, handleChange } = useFormik({
@@ -37,27 +36,55 @@ const EditComapnyInfo = ({
     validationSchema: userSchema,
   });
 
+  //image
+
+  //setbackground function
+  const fileTypes = [
+    "image/apng",
+    "image/bmp",
+    "image/gif",
+    "image/jpeg",
+    "image/pjpeg",
+    "image/png",
+    "image/svg+xml",
+    "image/tiff",
+    "image/webp",
+    "image/x-icon",
+  ];
+  function validFileType(file) {
+    return fileTypes.includes(file.type);
+  }
+  function setBackGround(e) {
+    let curFiles = e.target.files;
+
+    for (const file of curFiles) {
+      if (validFileType(file)) {
+        let backgroundImg = URL.createObjectURL(file);
+        setImgSrc(backgroundImg);
+      }
+    }
+  }
+
+  const imageHandleChange = (e) => {
+    setImage(e.target.files[0]);
+
+    setBackGround(e);
+  };
+  //edit company
+  const submitEditedCompany = () => {
+    dispatch(editCompanyFn(token, values, companies.slug, image));
+  };
+
   const submitEdit = async () => {
-    submitEditedCompany(values, companies.slug);
-    await getAllCompanies(token);
+    submitEditedCompany();
+
     navigate("/profile");
-    dispatch(uiActions.switchToCompany());
-    console.log("SUB");
+    dispatch(uiActions.switchToUserInfo());
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
     await submitEdit();
-
-    // if (
-    //   values.address !== "" &&
-    //   values.email !== "" &&
-    //   values.companyName !== "" &&
-    //   values.about !== "" &&
-    //   values.number !== ""
-    // ) {
-    //   navigate("/profile");
-    // }
   };
   if (
     values.address !== "" &&
@@ -135,6 +162,10 @@ const EditComapnyInfo = ({
         onBlur={handleBlur}
         className={errors.address && touched.address ? "error-input" : ""}
       />
+      <div className={classes.avatar}>
+        <img src={imgSrc} alt="avatar" />
+      </div>
+      <Avatar imageHandleChange={imageHandleChange} />
       {errors.address && touched.address && (
         <p className="error-msg"> {errors.address} </p>
       )}

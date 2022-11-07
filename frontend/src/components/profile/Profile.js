@@ -12,6 +12,7 @@ import EditIcon from "../icons/EditIcon";
 import { deleteCompany, editCompanyFn } from "../../store/action-creator";
 import Notification from "../UI/Notification";
 import { useNavigate } from "react-router-dom";
+import Aside from "./Aside";
 
 //get companies
 
@@ -55,12 +56,12 @@ const Profile = () => {
   );
 
   //edit company
-  const submitEditedCompany = useCallback(
-    (values, slug) => {
-      dispatch(editCompanyFn(token, values, slug));
-    },
-    [dispatch, token]
-  );
+  // const submitEditedCompany = useCallback(
+  //   (values, slug, imgSrc) => {
+  //     dispatch(editCompanyFn(token, values, slug, imgSrc));
+  //   },
+  //   [dispatch, token]
+  // );
 
   //switch into edit user Info Component
   const editUserHandeler = () => {
@@ -81,15 +82,12 @@ const Profile = () => {
 
   //switch into user Info
   const basicInfoHandler = useCallback(() => {
-    dispatch(uiActions.toggleUserInfo());
-    //dispatch(uiActions.submitUser());
-    // dispatch(uiActions.submitEditCompanyInfo());
-    // dispatch(uiActions.togglePassword());
+    dispatch(uiActions.switchToUserInfo());
   }, [dispatch]);
 
   //switch into company Info
   const companyInfoHandler = useCallback(() => {
-    dispatch(uiActions.toggleUserInfo());
+    dispatch(uiActions.switchToCompany());
     dispatch(uiActions.submitUser());
     dispatch(uiActions.submitEditCompanyInfo());
     //dispatch(uiActions.togglePassword());
@@ -107,52 +105,53 @@ const Profile = () => {
       <section className={classes.profile}>
         <main className={classes.content}>
           {!changePassword && (
-            <aside className={classes.aside}>
-              <ul>
-                <li className={basicInfoBtnClass} onClick={basicInfoHandler}>
-                  Basic Info
-                </li>
-                <li
-                  className={companyInfoBtnClass}
-                  onClick={companyInfoHandler}
-                >
-                  Company
-                </li>
-              </ul>
-            </aside>
-          )}
-
-          {!switchInfo && !editUser && !changePassword && (
-            <UserProfile userData={userData} setUserData={setUserData} />
-          )}
-          {editUser && <EditUserInfo userData={editedInfo} />}
-
-          {switchInfo && !editUser && !editCompany && !changePassword && (
-            <UserCompany
-              deleteCompany={deleteHandler}
-              editCompanyHandeler={editCompanyHandeler}
-              submitEditedCompany={submitEditedCompany}
-              editCompany={editCompany}
-              editUser={editUser}
+            <Aside
+              basicInfoHandler={basicInfoHandler}
+              companyInfoBtnClass={companyInfoBtnClass}
+              companyInfoHandler={companyInfoHandler}
+              basicInfoBtnClass={basicInfoBtnClass}
             />
           )}
+
+          <div className={classes.conainer}>
+            {!switchInfo && !editUser && !changePassword && (
+              <UserProfile userData={userData} setUserData={setUserData} />
+            )}
+            {editUser && <EditUserInfo userData={editedInfo} />}
+
+            {switchInfo && !editUser && !editCompany && !changePassword && (
+              <UserCompany
+                deleteCompany={deleteHandler}
+                editCompanyHandeler={editCompanyHandeler}
+                editCompany={editCompany}
+                editUser={editUser}
+              />
+            )}
+            {changePassword && <ChangeUserPassword />}
+            <div className={classes.actions}>
+              {!switchInfo && !changePassword && (
+                <button
+                  onClick={editUserHandeler}
+                  className={editUser ? classes.cancel : classes.edit}
+                >
+                  {!editUser && <EditIcon />}{" "}
+                  {editUser ? "Cancel" : "Edit User"}
+                </button>
+              )}
+
+              {!editCompany && !editUser && !switchInfo && (
+                <button
+                  className={
+                    changePassword ? classes.cancel : classes["change_password"]
+                  }
+                  onClick={changePasswordHandler}
+                >
+                  {changePassword ? "Cancel" : "Change Password"}
+                </button>
+              )}
+            </div>
+          </div>
         </main>
-        {!switchInfo && !changePassword && (
-          <button onClick={editUserHandeler} className={classes.edit}>
-            <EditIcon /> {editUser ? "Back" : "Edit User"}
-          </button>
-        )}
-
-        {changePassword && <ChangeUserPassword />}
-
-        {!editCompany && !editUser && (
-          <button
-            className={classes["change_password"]}
-            onClick={changePasswordHandler}
-          >
-            {changePassword ? "Back" : "Change Passworrd"}
-          </button>
-        )}
       </section>
     </Fragment>
   );

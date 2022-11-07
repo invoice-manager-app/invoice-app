@@ -64,15 +64,13 @@ const AddNewCompany = () => {
       if (validFileType(file)) {
         let backgroundImg = URL.createObjectURL(file);
         setImgSrc(backgroundImg);
-        console.log(backgroundImg, "src");
       }
     }
   }
 
   const imageHandleChange = (e) => {
     setImage(e.target.files[0]);
-    console.log(image);
-    console.log("e.target.files");
+
     setBackGround(e);
   };
 
@@ -143,11 +141,6 @@ const AddNewCompany = () => {
         notification.message !== undefined &&
         notification.message !== null && <Notification />}
       <form onSubmit={onSubmit} autoComplete="off" className={classes.form}>
-        <div className={classes.avatar}>
-          {" "}
-          <img src={imgSrc} alt="avatar" />
-        </div>
-        <Avatar imageHandleChange={imageHandleChange} />
         <Input
           type="text"
           label="Company Name"
@@ -201,6 +194,14 @@ const AddNewCompany = () => {
           onBlur={handleBlur}
           className={errors.address && touched.address ? "error-input" : ""}
         />
+        <div className={classes.avatar}>
+          {imgSrc !== "" ? (
+            <img src={imgSrc} alt="avatar" />
+          ) : (
+            <div className={classes.border} />
+          )}
+        </div>
+        <Avatar imageHandleChange={imageHandleChange} />
         <button disabled={!formIsValid} type="submit">
           Submit
         </button>

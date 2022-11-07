@@ -1,0 +1,19 @@
+.aside {
+  width: 250px;
+  padding: 20px;
+  border-right: 1px solid #999;
+}
+
+.aside li {
+  display: inline-block;
+  padding: 5px;
+  width: 100%;
+  margin-bottom: 5px;
+  border-radius: 7px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.aside li:hover {
+  background-color: #303151;
+}

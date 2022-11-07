@@ -7,52 +7,41 @@
   min-height: 850px;
   position: relative;
   padding: 30px 20px;
-  min-height: calc(100vh - 80px);
+  min-height: calc(100vh - 250px);
 }
 .content {
   display: flex;
   gap: 30px;
 }
-
-.aside {
-  width: 250px;
-  padding: 20px;
+.conainer {
+  flex: 1;
 }
 
-.aside li {
-  display: inline-block;
-  padding: 5px;
-  width: 100%;
-  margin-bottom: 5px;
-  border-radius: 7px;
-  cursor: pointer;
-}
-
-.aside li:hover {
-  background-color: #303151;
-}
 .active {
   background-color: #303151;
 }
+.actions {
+  display: flex;
+  gap: 30px;
+}
 .edit,
-.change_password {
-  position: absolute;
-  width: 150px;
-
-  padding: 10px 0px;
+.change_password,
+.cancel {
+  width: 130px;
+  padding: 8px 0px;
   background-color: var(--main-color);
   color: #fff;
-  font-size: 15px;
-  bottom: 50px;
+  font-size: 14px;
+  border-radius: 25px;
+  margin-top: 30px;
 }
 .edit {
   display: flex;
   justify-content: center;
   align-items: center;
-  right: 50px;
 }
-.change_password {
-  left: 260px;
+.cancel {
+  background-color: var(--danger);
 }
 button svg {
   width: 30px;

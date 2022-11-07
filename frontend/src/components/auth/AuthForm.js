@@ -42,6 +42,7 @@ const AuthForm = () => {
       confirmPassword: "",
       forgetPassword: "",
     });
+    setResponseMsg([]);
   };
 
   //Registration
@@ -149,6 +150,7 @@ const AuthForm = () => {
 
   const forgetPasswordHandeler = () => {
     setForgetPassword((prevState) => !prevState);
+    setResponseMsg([]);
   };
   const changePasswordHandler = async (e) => {
     e.preventDefault();

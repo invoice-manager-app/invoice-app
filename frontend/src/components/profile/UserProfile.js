@@ -52,7 +52,6 @@ const UserProfile = ({ userData, setUserData }) => {
       });
     };
     userInfo();
-    console.log("USER-DATA-FETCHED");
   }, [dispatch, logout, setUserData]);
 
   const userInfo = useSelector((state) => state.action.userInfo);

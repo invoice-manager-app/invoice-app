@@ -44,7 +44,9 @@ const EditUserInfo = ({ userData }) => {
 
   return (
     <Fragment>
-      {notification && notification.message !== undefined && <Notification />}
+      {notification &&
+        notification.message !== null &&
+        notification.message !== undefined && <Notification />}
       <form onSubmit={onSubmit} autoComplete="off" className={classes.form}>
         <Input
           type="text"

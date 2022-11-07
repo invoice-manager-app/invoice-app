@@ -1,12 +1,13 @@
 FROM node:lts-alpine
-RUN apk add git  # For developing through the container
-
-WORKDIR /app
-# COPY ./frontend/package*.json ./frontend
-
-COPY ./frontend .
+ 
+WORKDIR /usr/src/app
+ 
+COPY package*.json ./
+ 
 RUN npm install
-
-
+ 
+COPY . .
+ 
 EXPOSE 3000
-CMD [ "npm", "run", "dev" ]
+ 
+CMD [ "npm", "start" ]

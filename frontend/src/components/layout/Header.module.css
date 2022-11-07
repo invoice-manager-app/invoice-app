@@ -28,9 +28,20 @@ header {
 }
 .nav ul {
   text-align: center;
+  width: 100%;
 }
 .nav ul li {
   margin-top: 40px;
+  width: 100%;
+}
+.nav ul li:hover {
+  background-color: var(--main-color);
+}
+.nav ul li button {
+  background-color: transparent;
+  color: #fff;
+  width: 100%;
+  padding: 10px;
 }
 .nav a {
   color: #fff;
@@ -42,7 +53,6 @@ header {
 .tooltip {
   position: relative;
   display: inline-block;
-  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
 }
 .tooltip svg {
   width: 30px;

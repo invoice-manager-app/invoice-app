@@ -10,7 +10,6 @@ import { uiActions } from "../../store/Ui-slice";
 const CompanyDetail = ({
   companies,
   backHandler,
-  submitEditedCompany,
   deleteCompany,
   getAllCompanies,
 }) => {
@@ -43,7 +42,6 @@ const CompanyDetail = ({
     );
   };
 
-  console.log(selectedCompany);
   let owner = `${selectedCompany.owner.first_name}  ${selectedCompany.owner.last_name}`;
   return (
     <Fragment>
@@ -112,7 +110,6 @@ const CompanyDetail = ({
           element={
             <EditComapnyInfo
               companies={selectedCompany}
-              submitEditedCompany={submitEditedCompany}
               editCompany={editCompany}
               getAllCompanies={getAllCompanies}
             />

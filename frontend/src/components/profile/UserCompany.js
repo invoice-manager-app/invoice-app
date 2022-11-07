@@ -1,12 +1,13 @@
 import { useState, memo, Fragment, useEffect } from "react";
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import CompanyDetail from "../company/CompanyDetail";
 import classes from "./UserCompany.module.css";
 import Notification from "../UI/Notification";
+import PlusIcon from "../icons/PlusIcon";
 const UserCompany = ({
   deleteCompany,
-  submitEditedCompany,
+
   editCompany,
   editUser,
   editCompanyHandeler,
@@ -14,6 +15,7 @@ const UserCompany = ({
   const [showCard, setShowCard] = useState(true);
   const [companies, setCompanies] = useState([]);
 
+  const navigate = useNavigate();
   //dispatch
   const dispatch = useDispatch();
 
@@ -42,7 +44,6 @@ const UserCompany = ({
     }
 
     getAllCompanies(token);
-    console.log("GET-COMPANIES");
   }, [dispatch]);
 
   //notification state
@@ -55,20 +56,20 @@ const UserCompany = ({
     setShowCard(true);
   };
 
+  //navigate to create company page
+
+  const createCompanyHandler = () => {
+    navigate("/create-company");
+  };
+
   if (companies.length === 0) {
     return (
       <section>
         <h1> No Companies are found </h1>
-        <Link
-          style={{
-            display: "inline-block",
-            textDecoration: "underline",
-            marginTop: "30px",
-          }}
-          to="/create-company"
-        >
-          Add New Company ?
-        </Link>
+        <button className={classes.addBtn} onClick={createCompanyHandler}>
+          <PlusIcon />
+          <span> Add New Company ?</span>
+        </button>
       </section>
     );
   }
@@ -85,13 +86,17 @@ const UserCompany = ({
             <div key={company.id}>
               {showCard && (
                 <div className={classes["card-container"]}>
+                  <div className={classes.avatar}>
+                    <img src={company.avatar} alt={company.name} />
+                  </div>
                   <div className={classes.card}>{company.name}</div>
+
                   <Link
                     to={`/profile/${company.id}`}
                     className={classes.card_btn}
                     onClick={showCompanyInfoHandeler}
                   >
-                    Show Full Information
+                    More...
                   </Link>
                 </div>
               )}
@@ -105,7 +110,6 @@ const UserCompany = ({
                 <CompanyDetail
                   companies={companies}
                   backHandler={hideCompanyInfoHandeler}
-                  submitEditedCompany={submitEditedCompany}
                   editCompany={editCompany}
                   editUser={editUser}
                   deleteCompany={deleteCompany}

@@ -170,7 +170,7 @@ export const deleteCompany = (token, name, email, slug) => {
 };
 
 //edit company
-export const editCompanyFn = (token, values, slug) => {
+export const editCompanyFn = (token, values, slug, image) => {
   return (dispatch) => {
     dispatch(
       uiActions.notification({
@@ -183,7 +183,9 @@ export const editCompanyFn = (token, values, slug) => {
 
     var formdata = new FormData();
     formdata.append("name", values.companyName);
+    formdata.append("avatar", image);
     formdata.append("email", values.email);
+    formdata.append("owner", values.name);
     formdata.append("about", values.about);
     formdata.append("number", values.number);
     formdata.append("address", values.address);
@@ -198,12 +200,13 @@ export const editCompanyFn = (token, values, slug) => {
     fetch(`http://127.0.0.1:8000/company/${slug}/`, requestOptions)
       .then((response) => {
         if (!response.ok) {
+          console.log(response);
           throw new Error(response.statusText || "Something went wrong");
         }
         return response.json();
       })
       .then((result) => {
-        // console.log(result);
+        console.log(result);
         dispatch(uiActions.switchToCompany());
 
         dispatch(

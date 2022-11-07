@@ -1,3 +1,6 @@
+.wrapper {
+  text-align: left;
+}
 .wrapper input {
   background-color: var(--secondary-color);
   width: 100%;
@@ -12,4 +15,7 @@
   margin-bottom: 6px;
   display: inline-block;
   color: #fff;
+}
+.wrapper input:focus {
+  border: 1px solid var(--main-color);
 }
