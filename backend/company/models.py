@@ -69,10 +69,10 @@ class Company(models.Model):
         verbose_name=_("company safe URL"),
     )
     avatar = models.ImageField(
+        max_length=255,
         upload_to=get_avatar_filepath,
         null=True,
         blank=True,
-        default=get_default_avatar,
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -95,13 +95,16 @@ class Company(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
+        if not self.avatar:
+            self.avatar = get_default_avatar()
+            self.save()
+        else:
+            img = Image.open(self.avatar.path)
 
-        img = Image.open(self.avatar.path)
-
-        if img.height > 500 or img.width > 500:
-            output_size = (500, 500)
-            img.thumbnail(output_size)
-            img.save(self.avatar.path)
+            if img.height > 500 or img.width > 500:
+                output_size = (500, 500)
+                img.thumbnail(output_size)
+                img.save(self.avatar.path)
 
     def get_avatar_filename(self):
         return str(self.avatar)[str(self.avatar).index(f"avatars/{str(self.owner.pk)}/{str(self.slug)}/") :]

@@ -2,8 +2,6 @@ from account.serializers import AccountProfileSerilizers
 from company.models import Company
 from rest_framework import serializers
 
-from .utils import get_default_avatar
-
 
 # from account.serializers import AccountProfileSerilizers
 class CompanyReadSerializer(serializers.ModelSerializer):
@@ -32,10 +30,10 @@ class CompanyWriteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("name must be more than 2 letters")
         return value
 
-    def validate_avatar(self, value):
-        if value is None:
-            return get_default_avatar()
-        return value
+    # def validate_avatar(self, value):
+    #     if value is None:
+    #         return get_default_avatar()
+    #     return value
 
     def create(self, validated_data):
         try:
@@ -46,7 +44,8 @@ class CompanyWriteSerializer(serializers.ModelSerializer):
                 about=validated_data.get("about", "No about"),
                 number=validated_data.get("number", "No number"),
                 address=validated_data.get("address", "No address"),
-                avatar=validated_data.get("avatar", get_default_avatar()),
+                # avatar=validated_data.get("avatar", "images/default/default.jpg"),
+                avatar=validated_data["avatar"],
             )
         except serializers.ValidationError:
             raise serializers.ValidationError("Invalid data")

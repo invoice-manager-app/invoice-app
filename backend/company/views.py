@@ -8,7 +8,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .serializers import CompanyReadSerializer, CompanyWriteSerializer
-from .utils import add_company_data_to_response
 
 SUCCESS_CREATED = "successfully created"
 SUCCESS_UPDATE = "successfully updated"
@@ -56,10 +55,10 @@ class CompanyVewSet(viewsets.ViewSet):
 
         serializer = CompanyWriteSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
-            company = serializer.save(owner=request.user)
+            serializer.save(owner=request.user)
             context["response"] = "ok"
             context["response_message"] = SUCCESS_CREATED
-            add_company_data_to_response(company, context)
+            # add_company_data_to_response(company, context)
 
             return Response(context, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -75,10 +74,10 @@ class CompanyVewSet(viewsets.ViewSet):
         #     return Response(context)
         serializer = CompanyWriteSerializer(company, data=request.data, partial=True)
         if serializer.is_valid():
-            company = serializer.save()
+            serializer.save()
             context["response"] = "ok"
             context["response_message"] = SUCCESS_UPDATE
-            add_company_data_to_response(company, context)
+            # add_company_data_to_response(company, context)
             return Response(context, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
