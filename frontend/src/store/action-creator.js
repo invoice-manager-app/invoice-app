@@ -173,18 +173,21 @@ export const deleteCompany = (token, name, email, slug) => {
 //edit company
 export const editCompanyFn = (token, values, slug) => {
   return (dispatch) => {
+    if (Object.keys(values).length === 0) {
+      return;
+    }
+
     dispatch(
       uiActions.notification({
         status: "pending",
         message: "wait....",
       })
     );
+
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
 
     var formdata = new FormData();
-
-    checkProperties(values);
 
     if (values.companyName) {
       formdata.append("name", values.companyName);
@@ -210,6 +213,8 @@ export const editCompanyFn = (token, values, slug) => {
     if (values.address) {
       formdata.append("address", values.address);
     }
+
+    console.log(formdata.has("address"));
     var requestOptions = {
       method: "PUT",
       headers: myHeaders,

@@ -159,7 +159,12 @@ const AddNewCompany = () => {
           onBlur={handleBlur}
           className={errors.address && touched.address ? "error-input" : ""}
         />
-        <Avatar imgSrc={imgSrc} setImage={setImage} setImgSrc={setImgSrc} />
+        <Avatar
+          image={image}
+          imgSrc={imgSrc}
+          setImage={setImage}
+          setImgSrc={setImgSrc}
+        />
         <button disabled={!formIsValid} type="submit">
           Submit
         </button>

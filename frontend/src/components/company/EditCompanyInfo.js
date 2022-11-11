@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { userSchema } from "../../schemas/index";
 import { useDispatch } from "react-redux";
@@ -39,10 +39,21 @@ const EditComapnyInfo = ({
 
   let emailVar = companies.email,
     companyVar = companies.name,
-    imageVar = imgSrc,
+    //imageVar = imgSrc,
     aboutVar = companies.about,
     numberVar = companies.number,
     addressVar = companies.address;
+  if (
+    values.address !== addressVar ||
+    values.email !== emailVar ||
+    values.companyName !== companyVar ||
+    image !== "" ||
+    values.about !== aboutVar ||
+    addressVar !== values.address ||
+    values.number !== numberVar
+  ) {
+    formIsValid = true;
+  }
 
   //edit company
   const submitEditedCompany = () => {
@@ -52,16 +63,16 @@ const EditComapnyInfo = ({
       about: values.about,
       number: values.number,
       address: values.address,
-      image: imageVar,
+      image: image,
     };
 
     // console.log(updateCompanyObj.image);
-    // console.log(imgSrc);
+    // console.log(image);
 
     if (updateCompanyObj.email === emailVar) {
       delete updateCompanyObj.email;
     }
-    if (updateCompanyObj.image === imgSrc) {
+    if (updateCompanyObj.image === imgSrc || updateCompanyObj.image === "") {
       delete updateCompanyObj.image;
     }
     if (updateCompanyObj.companyName === companyVar) {
@@ -76,7 +87,8 @@ const EditComapnyInfo = ({
     if (updateCompanyObj.address === addressVar) {
       delete updateCompanyObj.address;
     }
-    console.log(updateCompanyObj);
+    // console.log(updateCompanyObj);
+    // console.log(Object.keys(updateCompanyObj).length);
     // checkProperties(updateCompanyObj);
     checkProperties(updateCompanyObj);
     dispatch(editCompanyFn(token, updateCompanyObj, companies.slug));
@@ -93,19 +105,23 @@ const EditComapnyInfo = ({
     e.preventDefault();
     await submitEdit();
   };
-  if (
-    values.address !== "" &&
-    !errors.address &&
-    values.email !== "" &&
-    !errors.email &&
-    values.companyName !== "" &&
-    !errors.companyName
-  ) {
-    formIsValid = true;
-  }
+
+  const backHanlder = () => {
+    navigate("/profile");
+    dispatch(uiActions.switchToUserInfo());
+  };
 
   return (
     <form onSubmit={onSubmit} autoComplete="off" className={classes.form}>
+      <div className={classes.companyAvatarContainer}>
+        <div className={classes.companyAvatar}>
+          <img src={imgSrc} alt="logo" />
+        </div>
+        <Avatar imgSrc={imgSrc} setImage={setImage} setImgSrc={setImgSrc} />
+        {errors.address && touched.address && (
+          <p className="error-msg"> {errors.address} </p>
+        )}
+      </div>
       <Input
         type="text"
         label="Company Name"
@@ -141,9 +157,6 @@ const EditComapnyInfo = ({
         onBlur={handleBlur}
         className={errors.about && touched.about ? "error-input" : ""}
       />{" "}
-      {errors.about && touched.about && (
-        <p className="error-msg"> {errors.about} </p>
-      )}
       <Input
         type="text"
         label="Phone Number"
@@ -165,13 +178,14 @@ const EditComapnyInfo = ({
         onBlur={handleBlur}
         className={errors.address && touched.address ? "error-input" : ""}
       />
-      <Avatar imgSrc={imgSrc} setImage={setImage} setImgSrc={setImgSrc} />
-      {errors.address && touched.address && (
-        <p className="error-msg"> {errors.address} </p>
-      )}
-      <button disabled={!formIsValid} type="submit">
-        Submit Edit
-      </button>
+      <div className={classes.actions}>
+        <button type="button" onClick={backHanlder}>
+          back
+        </button>
+        <button disabled={!formIsValid} type="submit">
+          Submit Edit
+        </button>
+      </div>
     </form>
   );
 };

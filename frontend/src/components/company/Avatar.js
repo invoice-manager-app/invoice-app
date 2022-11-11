@@ -4,7 +4,7 @@ import CloseIcon from "../icons/CloseIcon";
 import CorrectIcons from "../icons/CorrectIcons";
 import UploadIcon from "../icons/UploadIcon";
 import classes from "./Avatar.module.css";
-const Avatar = ({ imgSrc, setImage, setImgSrc }) => {
+const Avatar = ({ image, imgSrc, setImage, setImgSrc }) => {
   const [showImgUploaded, setImgUploader] = useState(false);
   const [saveImg, setSaveImg] = useState(false);
   const [imgName, setImageName] = useState("");
@@ -15,11 +15,24 @@ const Avatar = ({ imgSrc, setImage, setImgSrc }) => {
 
   const hideUploaderHandler = () => {
     setImgUploader(false);
+    // setSaveImg(false);
+
+    // setImage(image);
+    // setImgSrc(imgSrc);
   };
 
   const saveHandler = () => {
     setSaveImg(true);
     hideUploaderHandler();
+  };
+
+  const cancelImg = () => {
+    hideUploaderHandler();
+    if (image !== "" && saveImg && imgSrc !== "") {
+      return;
+    } else {
+      setImage("");
+    }
   };
 
   //setbackground function
@@ -44,7 +57,10 @@ const Avatar = ({ imgSrc, setImage, setImgSrc }) => {
     for (const file of curFiles) {
       if (validFileType(file)) {
         let backgroundImg = URL.createObjectURL(file);
-        setImgSrc(backgroundImg);
+        if (showImgUploaded) {
+          setImgSrc(backgroundImg);
+          setSaveImg(false);
+        }
       }
     }
 
@@ -58,11 +74,11 @@ const Avatar = ({ imgSrc, setImage, setImgSrc }) => {
   return (
     <>
       {showImgUploaded && (
-        <div className={classes.overlay} onClick={hideUploaderHandler} />
+        <div className={classes.overlay} onClick={cancelImg} />
       )}
       {showImgUploaded && (
         <div className={classes.selectBox}>
-          <span className={classes.close} onClick={hideUploaderHandler}>
+          <span className={classes.close} onClick={cancelImg}>
             {" "}
             <CloseIcon />
           </span>
