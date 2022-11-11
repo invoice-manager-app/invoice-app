@@ -1,5 +1,6 @@
 import { uiActions } from "./Ui-slice";
 import { invoiceAction } from "./actions";
+import checkProperties from "../util/check-objects-keys";
 
 //edit user info
 export const editUserRequest = (token, values) => {
@@ -170,7 +171,7 @@ export const deleteCompany = (token, name, email, slug) => {
 };
 
 //edit company
-export const editCompanyFn = (token, values, slug, image) => {
+export const editCompanyFn = (token, values, slug) => {
   return (dispatch) => {
     dispatch(
       uiActions.notification({
@@ -182,14 +183,33 @@ export const editCompanyFn = (token, values, slug, image) => {
     myHeaders.append("Authorization", `Bearer ${token}`);
 
     var formdata = new FormData();
-    formdata.append("name", values.companyName);
-    formdata.append("avatar", image);
-    formdata.append("email", values.email);
-    formdata.append("owner", values.name);
-    formdata.append("about", values.about);
-    formdata.append("number", values.number);
-    formdata.append("address", values.address);
 
+    checkProperties(values);
+
+    if (values.companyName) {
+      formdata.append("name", values.companyName);
+    }
+
+    if (values.image) {
+      formdata.append("avatar", values.image);
+    }
+
+    if (values.email) {
+      formdata.append("email", values.email);
+    }
+    if (values.name) {
+      formdata.append("owner", values.name);
+    }
+    if (values.about) {
+      formdata.append("about", values.about);
+    }
+    if (values.number) {
+      formdata.append("number", values.number);
+    }
+
+    if (values.address) {
+      formdata.append("address", values.address);
+    }
     var requestOptions = {
       method: "PUT",
       headers: myHeaders,
@@ -200,13 +220,11 @@ export const editCompanyFn = (token, values, slug, image) => {
     fetch(`http://127.0.0.1:8000/company/${slug}/`, requestOptions)
       .then((response) => {
         if (!response.ok) {
-          console.log(response);
           throw new Error(response.statusText || "Something went wrong");
         }
         return response.json();
       })
       .then((result) => {
-        console.log(result);
         dispatch(uiActions.switchToCompany());
 
         dispatch(

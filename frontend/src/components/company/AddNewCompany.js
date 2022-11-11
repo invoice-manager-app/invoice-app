@@ -39,41 +39,6 @@ const AddNewCompany = () => {
     validationSchema: userSchema,
   });
 
-  //image
-
-  //setbackground function
-  const fileTypes = [
-    "image/apng",
-    "image/bmp",
-    "image/gif",
-    "image/jpeg",
-    "image/pjpeg",
-    "image/png",
-    "image/svg+xml",
-    "image/tiff",
-    "image/webp",
-    "image/x-icon",
-  ];
-  function validFileType(file) {
-    return fileTypes.includes(file.type);
-  }
-  function setBackGround(e) {
-    let curFiles = e.target.files;
-
-    for (const file of curFiles) {
-      if (validFileType(file)) {
-        let backgroundImg = URL.createObjectURL(file);
-        setImgSrc(backgroundImg);
-      }
-    }
-  }
-
-  const imageHandleChange = (e) => {
-    setImage(e.target.files[0]);
-
-    setBackGround(e);
-  };
-
   const onSubmit = (e) => {
     e.preventDefault();
 
@@ -194,14 +159,7 @@ const AddNewCompany = () => {
           onBlur={handleBlur}
           className={errors.address && touched.address ? "error-input" : ""}
         />
-        <div className={classes.avatar}>
-          {imgSrc !== "" ? (
-            <img src={imgSrc} alt="avatar" />
-          ) : (
-            <div className={classes.border} />
-          )}
-        </div>
-        <Avatar imageHandleChange={imageHandleChange} />
+        <Avatar imgSrc={imgSrc} setImage={setImage} setImgSrc={setImgSrc} />
         <button disabled={!formIsValid} type="submit">
           Submit
         </button>

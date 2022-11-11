@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { uiActions } from "../../store/Ui-slice";
 import Avatar from "./Avatar";
 import { editCompanyFn } from "../../store/action-creator";
+import checkProperties from "../../util/check-objects-keys";
 
 const EditComapnyInfo = ({
   companies,
@@ -36,43 +37,49 @@ const EditComapnyInfo = ({
     validationSchema: userSchema,
   });
 
-  //image
+  let emailVar = companies.email,
+    companyVar = companies.name,
+    imageVar = imgSrc,
+    aboutVar = companies.about,
+    numberVar = companies.number,
+    addressVar = companies.address;
 
-  //setbackground function
-  const fileTypes = [
-    "image/apng",
-    "image/bmp",
-    "image/gif",
-    "image/jpeg",
-    "image/pjpeg",
-    "image/png",
-    "image/svg+xml",
-    "image/tiff",
-    "image/webp",
-    "image/x-icon",
-  ];
-  function validFileType(file) {
-    return fileTypes.includes(file.type);
-  }
-  function setBackGround(e) {
-    let curFiles = e.target.files;
-
-    for (const file of curFiles) {
-      if (validFileType(file)) {
-        let backgroundImg = URL.createObjectURL(file);
-        setImgSrc(backgroundImg);
-      }
-    }
-  }
-
-  const imageHandleChange = (e) => {
-    setImage(e.target.files[0]);
-
-    setBackGround(e);
-  };
   //edit company
   const submitEditedCompany = () => {
-    dispatch(editCompanyFn(token, values, companies.slug, image));
+    const updateCompanyObj = {
+      companyName: values.companyName,
+      email: values.email,
+      about: values.about,
+      number: values.number,
+      address: values.address,
+      image: imageVar,
+    };
+
+    // console.log(updateCompanyObj.image);
+    // console.log(imgSrc);
+
+    if (updateCompanyObj.email === emailVar) {
+      delete updateCompanyObj.email;
+    }
+    if (updateCompanyObj.image === imgSrc) {
+      delete updateCompanyObj.image;
+    }
+    if (updateCompanyObj.companyName === companyVar) {
+      delete updateCompanyObj.companyName;
+    }
+    if (updateCompanyObj.about === aboutVar) {
+      delete updateCompanyObj.about;
+    }
+    if (updateCompanyObj.number === numberVar) {
+      delete updateCompanyObj.number;
+    }
+    if (updateCompanyObj.address === addressVar) {
+      delete updateCompanyObj.address;
+    }
+    console.log(updateCompanyObj);
+    // checkProperties(updateCompanyObj);
+    checkProperties(updateCompanyObj);
+    dispatch(editCompanyFn(token, updateCompanyObj, companies.slug));
   };
 
   const submitEdit = async () => {
@@ -92,11 +99,7 @@ const EditComapnyInfo = ({
     values.email !== "" &&
     !errors.email &&
     values.companyName !== "" &&
-    !errors.companyName &&
-    values.about !== "" &&
-    !errors.about &&
-    values.number !== "" &&
-    !errors.number
+    !errors.companyName
   ) {
     formIsValid = true;
   }
@@ -162,10 +165,7 @@ const EditComapnyInfo = ({
         onBlur={handleBlur}
         className={errors.address && touched.address ? "error-input" : ""}
       />
-      <div className={classes.avatar}>
-        <img src={imgSrc} alt="avatar" />
-      </div>
-      <Avatar imageHandleChange={imageHandleChange} />
+      <Avatar imgSrc={imgSrc} setImage={setImage} setImgSrc={setImgSrc} />
       {errors.address && touched.address && (
         <p className="error-msg"> {errors.address} </p>
       )}

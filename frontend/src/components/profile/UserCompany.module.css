@@ -4,6 +4,9 @@
   overflow-y: auto;
 }
 .card-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
   text-align: center;
   border: 2px solid var(--form-color);
   background-color: rgb(255 255 255 / 6%);
@@ -16,7 +19,7 @@
 .avatar {
   width: 110px;
   height: 100px;
-  margin: 0 auto;
+  /* margin: 0 auto; */
   border: 2px solid var(--main-color);
   border-radius: 50%;
   overflow: hidden;
@@ -30,7 +33,7 @@
 .card {
   padding: 10px;
   text-align: center;
-  width: 100%;
+  font-size: 24px;
 }
 .card_btn {
   cursor: pointer;
