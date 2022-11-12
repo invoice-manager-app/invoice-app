@@ -1,5 +1,5 @@
-from account.mail import BaseEmailMessage
-from account.utils import encode_uid
+from apps.account.mail import BaseEmailMessage
+from apps.account.utils import encode_uid
 from django.contrib.auth.tokens import default_token_generator
 
 

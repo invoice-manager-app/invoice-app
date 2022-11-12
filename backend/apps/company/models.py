@@ -1,4 +1,4 @@
-from account.models import Account
+from apps.account.models import Account
 from core.utils import unique_slug_generator
 from django.db import models
 from django.db.models.signals import pre_save

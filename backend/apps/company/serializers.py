@@ -1,5 +1,5 @@
-from account.serializers import AccountProfileSerilizers
-from company.models import Company
+from apps.account.serializers import AccountProfileSerilizers
+from apps.company.models import Company
 from rest_framework import serializers
 
 

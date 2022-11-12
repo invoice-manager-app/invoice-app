@@ -1,5 +1,5 @@
-from account.forms import RegistrationForm
-from account.models import Account
+from apps.account.forms import RegistrationForm
+from apps.account.models import Account
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from rest_framework_simplejwt.token_blacklist.admin import OutstandingTokenAdmin

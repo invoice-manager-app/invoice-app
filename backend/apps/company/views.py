@@ -1,4 +1,4 @@
-from company.models import Company
+from apps.company.models import Company
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -29,6 +29,9 @@ class AllCompanies(ListAPIView):
 class CompanyVewSet(viewsets.ViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = Company.objects.all()
+    # TRY THIS AND ENABLE get_queryset func MAYBE IT WILL BE BETTER
+    # def get_queryset(self):
+    #     return self.queryset.filter(owner=self.request.user)
 
     # def get_serializer_class(self):
     #     if self.action in ["create", "update", "partial_update", "destroy"]:
