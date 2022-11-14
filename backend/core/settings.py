@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # My apps
     "apps.account",
     "apps.company",
+    "apps.invoice",
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
@@ -85,7 +86,7 @@ REST_FRAMEWORK = {
 
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=90),
     "ROTATE_REFRESH_TOKENS": False,  # return a new refresh token when make refresh
     "BLACKLIST_AFTER_ROTATION": True,  # put the old refresh token to a black list
