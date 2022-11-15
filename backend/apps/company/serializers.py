@@ -12,11 +12,19 @@ class CompanyReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
         fields = ["id", "owner", "name", "about", "email", "number", "address", "slug", "avatar"]
+        read_only_fields = fields
 
     def validate_avatar_url(self, company):
         request = self.context["request"]
         avatar = company.avatar.url
         return request.build_absolute_uri(avatar)
+
+
+class CompanySelectBarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = ("name", "slug")
+        read_only_fields = fields
 
 
 class CompanyWriteSerializer(serializers.ModelSerializer):

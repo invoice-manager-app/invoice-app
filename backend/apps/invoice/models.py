@@ -10,13 +10,10 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Invoice(models.Model):
-    # INVOICE = 'invoice'
-    # CREDIT_NOTE = 'credit_note'
+    PAID = "paid"
+    PENDING = "pending"
 
-    # CHOICES_TYPE = (
-    #     (INVOICE, 'Invoice'),
-    #     (CREDIT_NOTE, 'Credit note')
-    # )
+    CHOICES_TYPE = ((PAID, "paid"), (PENDING, "pending"))
 
     invoice_code = models.UUIDField(
         primary_key=True,
@@ -68,49 +65,15 @@ class Invoice(models.Model):
         null=True,
         verbose_name=_("Client Country"),
     )
-    # client_contact_person = models.CharField(max_length=255, blank=True, null=True)
-    # client_contact_reference = models.CharField(max_length=255, blank=True, null=True)
-    # sender_reference = models.CharField(max_length=255, blank=True, null=True)
-    # invoice_type = models.CharField(max_length=20, choices=CHOICES_TYPE, default=INVOICE)
     due_after = models.IntegerField(
         verbose_name=_("Due after"),
         help_text=_("shouold be integer"),
     )
-    # due_date = models.DateTimeField(
-    #     verbose_name=_("Due Date to pay"),
-    # )
-    # is_credit_for = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)
-    # is_credited = models.BooleanField(default=False)
     email_is_sent = models.BooleanField(
         default=False,
         verbose_name=_("Email Is sent"),
     )
-    is_paid = models.BooleanField(
-        default=False,
-        verbose_name=_("Invoice Is paid"),
-    )
-    # bankaccount = models.CharField(max_length=266, blank=True, null=True)
-    # gross_amount = models.DecimalField(
-    #     max_digits=6,
-    #     decimal_places=2,
-    #     # default=0,
-    #     blank=True,
-    #     null=True,
-    #     verbose_name=_("Gross amount"),
-    # )
-    # tax_amount = models.DecimalField(
-    #     max_digits=6,
-    #     decimal_places=2,
-    #     verbose_name=_("Tax amount"),
-    # )
-    # net_amount = models.DecimalField(
-    #     max_digits=6,
-    #     decimal_places=2,
-    #     null=True,
-    #     blank=True,
-    #     verbose_name=_("Total Amount after taxes"),
-    #     help_text=_("Automaticlly generated"),
-    # )
+    status = models.CharField(max_length=20, choices=CHOICES_TYPE, default=PENDING, verbose_name=_("Invoice Status"))
     discount_amount = models.DecimalField(
         max_digits=6,
         decimal_places=2,
@@ -119,8 +82,6 @@ class Invoice(models.Model):
         blank=True,
         verbose_name=_("Discount amount"),
     )
-    # team = models.ForeignKey(Team, related_name='invoices', on_delete=models.CASCADE)
-    # client = models.ForeignKey(Client, related_name='invoices', on_delete=models.CASCADE)
     description = models.TextField(null=True, blank=True, default="no description")
     created_by = models.ForeignKey(
         Account,
@@ -160,20 +121,9 @@ class Invoice(models.Model):
     def __str__(self):
         return str(self.invoice_code)
 
-    def save(self, *args, **kwargs):
-        # gross_amount_count = Item.objects.filter(invoice__pk=self.pk).aggregate(Sum('net_amount'))
-        # print(gross_amount_count)
-        # self.gross_amount = gross_amount_count["net_amount__sum"]
-        # if self.discount_amount != 0:
-        #     self.net_amount = self.gross_amount - self.discount_amount
-
-        # else:
-        #     self.net_amount = self.gross_amount
-        super().save(*args, **kwargs)
-
     def get_gross_amount(self):
         gross_amount_count = Item.objects.filter(invoice__pk=self.pk).aggregate(Sum("net_amount"))
-        print(gross_amount_count)
+        # print(gross_amount_count)
         return gross_amount_count["net_amount__sum"]
 
     def get_due_date(self):
@@ -225,32 +175,17 @@ class Item(models.Model):
         verbose_name=_("Total amount after taxes"),
         help_text=_("Automaticlly generated"),
     )
-    # discount = models.IntegerField(
-    #     default=0,
-    #     verbose_name=_("Discount"),
-    # )
 
     def __str__(self):
         return self.title
 
     def save(self, *args, **kwargs):
-        # old_net_amount = self.net_amount
         if self.tax_rate != 0:
             tax_rate_calc = decimal.Decimal(self.tax_rate / 100 * (self.unit_price * self.quantity))
             self.net_amount = (self.unit_price * self.quantity) + tax_rate_calc
         else:
             self.net_amount = self.unit_price * self.quantity
         super().save(*args, **kwargs)
-        # invoice = Invoice.objects.get(invoice_code=self.invoice__invoice_code)
-        # if old_net_amount > self.net_amount:
-        #     invoice.update(gross_amount=F('gross_amount') - (old_net_amount - self.net_amount))
-        # else:
-        #     invoice.update(gross_amount=F('gross_amount') - (self.net_amount - old_net_amount))
-        # invoice.save()
-
-        # gross_amount_count = Item.objects.filter(invoice__pk=self.pk).aggregate(Sum('net_amount'))
-        # print(gross_amount_count)
-        # self.gross_amount = gross_amount_count["net_amount__sum"]
 
     def get_gross_amount(self):
         tax_rate = decimal.Decimal(self.tax_rate / 100)

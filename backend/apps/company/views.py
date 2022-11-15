@@ -1,13 +1,11 @@
 from apps.company.models import Company
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
-from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import ListAPIView
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .serializers import CompanyReadSerializer, CompanyWriteSerializer
+from .serializers import CompanyReadSerializer, CompanySelectBarSerializer, CompanyWriteSerializer
 
 SUCCESS_CREATED = "successfully created"
 SUCCESS_UPDATE = "successfully updated"
@@ -16,28 +14,25 @@ SUCCESS_DELETE = "successfully deleted"
 
 # localhost:8000/api/post/all/?page=3
 # localhost:8000/api/post/all/?search=django
-class AllCompanies(ListAPIView):
+class CompanySelectBarView(ListAPIView):
     queryset = Company.objects.all()
-    serializer_class = CompanyReadSerializer
+    serializer_class = CompanySelectBarSerializer
     permission_classes = (IsAuthenticated,)
-    # authentication_classes = (JWTAuthentication,) # if you make it in settings you don't have to make it here
-    pagination_class = PageNumberPagination
-    filter_backends = (SearchFilter, OrderingFilter)
-    search_fields = ("owner__username", "name")
+    pagination_class = None
+
+    def get_queryset(self):
+        return self.queryset.filter(owner=self.request.user)
 
 
 class CompanyVewSet(viewsets.ViewSet):
     permission_classes = (IsAuthenticated,)
-    queryset = Company.objects.all()
+    queryset = Company.objects.select_related("owner")
     # TRY THIS AND ENABLE get_queryset func MAYBE IT WILL BE BETTER
     # def get_queryset(self):
     #     return self.queryset.filter(owner=self.request.user)
 
-    # def get_serializer_class(self):
-    #     if self.action in ["create", "update", "partial_update", "destroy"]:
-    #         return CreateCompanySerializer
-
-    #     return CompanySerializer
+    def get_queryset(self):
+        return self.queryset.filter(owner=self.request.user)
 
     def list(self, request, *args, **kwargs):
         queryset = Company.objects.filter(owner=request.user)
@@ -71,6 +66,7 @@ class CompanyVewSet(viewsets.ViewSet):
         pk = kwargs.get("pk")
         user = request.user
         company = get_object_or_404(self.queryset, slug=pk, owner=user)
+
         # if company.owner != user:
         #     context["response"] = "error"
         #     context["response_message"] = "you don't have permission."

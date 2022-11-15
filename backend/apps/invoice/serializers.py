@@ -1,4 +1,5 @@
 from apps.company.models import Company
+from apps.company.serializers import CompanyReadSerializer
 from rest_framework import serializers
 
 from .models import Invoice, Item
@@ -18,10 +19,9 @@ class ItemSerializer(serializers.ModelSerializer):
         )
 
 
-class InvoiceCompanySerializer(serializers.ModelSerializer):
+class InvoiceCompanySerializer(CompanyReadSerializer, serializers.ModelSerializer):
     class Meta:
         model = Company
-        read_only_fields = ("invoice",)
         fields = (
             "name",
             "about",
@@ -31,34 +31,23 @@ class InvoiceCompanySerializer(serializers.ModelSerializer):
             "slug",
             "avatar",
         )
-
-    def validate_avatar_url(self, company):
-        request = self.context["request"]
-        avatar = company.avatar.url
-        return request.build_absolute_uri(avatar)
-
-
-# class InvoiceAccountSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Account
-#         fields = ("name", "about", "email", "number", "address", "slug", "avatar",)
+        read_only_fields = fields
 
 
 class InvoiceWriteSerializer(serializers.ModelSerializer):
     items = ItemSerializer(many=True)
+    company = serializers.SlugRelatedField(slug_field="slug", queryset=Company.objects.all())
 
     class Meta:
         model = Invoice
         read_only_fields = (
             "invoice_code",
-            # "company",
             "created_at",
             "created_by",
             "updated_at",
             "modified_by",
         )
         fields = (
-            "invoice_code",
             "company",
             "client_name",
             "client_email",
@@ -69,9 +58,7 @@ class InvoiceWriteSerializer(serializers.ModelSerializer):
             "client_city",
             "due_after",
             "email_is_sent",
-            "is_paid",
-            # "gross_amount",
-            # "net_amount",
+            "status",
             "description",
             "discount_amount",
             "items",
@@ -80,24 +67,9 @@ class InvoiceWriteSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         items_data = validated_data.pop("items")
-        # print(validated_data)
-        # company_id = validated_data["company"]
-        # company = Company.objects.get(id=company_id)
         invoice = Invoice.objects.create(**validated_data)
-
-        # items_net_amount = 0
-        # items_gross_amount = 0
         for item in items_data:
             Item.objects.create(invoice=invoice, **item)
-            # items_net_amount += item_obj.net_amount
-        # invoice.gross_amount = items_net_amount
-        # if invoice.discount_amount != 0:
-        #     invoice.net_amount = items_net_amount - invoice.discount_amount
-        #     invoice.save()
-        # else:
-        #     invoice.net_amount = items_net_amount
-        #     invoice.save()
-
         return invoice
 
     def update(self, instance, validated_data):
@@ -111,21 +83,24 @@ class InvoiceWriteSerializer(serializers.ModelSerializer):
         instance.client_city = validated_data.get("client_city", instance.client_city)
         instance.due_after = validated_data.get("due_after", instance.due_after)
         instance.email_is_sent = validated_data.get("email_is_sent", instance.email_is_sent)
+        instance.status = validated_data.get("status", instance.status)
         instance.description = validated_data.get("description", instance.description)
         instance.discount_amount = validated_data.get("discount_amount", instance.discount_amount)
         instance.save()
         items_data = self.context["items"]
-        print("serializer-->", items_data)
         if items_data:
             for item in items_data:
-                print("Hi --------", item)
-                item_obj = Item.objects.get(id=item["id"])
-                item_obj.title = item.get("title", item_obj.title)
-                item_obj.quantity = item.get("quantity", item_obj.quantity)
-                item_obj.unit_price = item.get("unit_price", item_obj.unit_price)
-                item_obj.tax_rate = item.get("tax_rate", item_obj.tax_rate)
-                item_obj.net_amount = item.get("net_amount", item_obj.net_amount)
-                item_obj.save()
+                item_id = item.get("id", None)
+                if item_id:
+                    item_obj = Item.objects.get(id=item_id)
+                    item_obj.title = item.get("title", item_obj.title)
+                    item_obj.quantity = item.get("quantity", item_obj.quantity)
+                    item_obj.unit_price = item.get("unit_price", item_obj.unit_price)
+                    item_obj.tax_rate = item.get("tax_rate", item_obj.tax_rate)
+                    item_obj.net_amount = item.get("net_amount", item_obj.net_amount)
+                    item_obj.save()
+                else:
+                    Item.objects.create(invoice=instance, **item)
         return instance
 
 
@@ -157,13 +132,14 @@ class InvoiceRedSerializer(serializers.ModelSerializer):
             "discount_amount",
             "net_amount",
             "email_is_sent",
-            "is_paid",
+            "status",
             "description",
             "created_by",
             "modified_by",
             "created_at",
             "updated_at",
         )
+        read_only_fields = fields
 
     def get_created_by_username(self, invoice):
         return invoice.created_by.username
@@ -181,11 +157,7 @@ class InvoiceRedSerializer(serializers.ModelSerializer):
         return invoice.get_gross_amount() - invoice.discount_amount
 
 
-class InvoiceListSerializer(serializers.ModelSerializer):
-    items = ItemSerializer(many=True)
-    net_amount = serializers.SerializerMethodField("get_net_amount")
-    created_at = serializers.SerializerMethodField("get_created_at_date_formatted")
-
+class InvoiceListSerializer(InvoiceRedSerializer, serializers.ModelSerializer):
     class Meta:
         model = Invoice
         fields = (
@@ -194,12 +166,7 @@ class InvoiceListSerializer(serializers.ModelSerializer):
             "created_at",
             "get_due_date_formatted",
             "net_amount",
-            "is_paid",
+            "status",
             "items",
         )
-
-    def get_created_at_date_formatted(self, invoice):
-        return invoice.created_at.strftime("%d.%m.%Y")
-
-    def get_net_amount(self, invoice):
-        return invoice.get_gross_amount() - invoice.discount_amount
+        read_only_fields = fields
