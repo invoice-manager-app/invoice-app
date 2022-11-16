@@ -93,12 +93,16 @@ class InvoiceWriteSerializer(serializers.ModelSerializer):
                 item_id = item.get("id", None)
                 if item_id:
                     item_obj = Item.objects.get(id=item_id)
-                    item_obj.title = item.get("title", item_obj.title)
-                    item_obj.quantity = item.get("quantity", item_obj.quantity)
-                    item_obj.unit_price = item.get("unit_price", item_obj.unit_price)
-                    item_obj.tax_rate = item.get("tax_rate", item_obj.tax_rate)
-                    item_obj.net_amount = item.get("net_amount", item_obj.net_amount)
-                    item_obj.save()
+                    delete_order = item.get("delete", False)
+                    if delete_order:
+                        item_obj.delete()
+                    else:
+                        item_obj.title = item.get("title", item_obj.title)
+                        item_obj.quantity = item.get("quantity", item_obj.quantity)
+                        item_obj.unit_price = item.get("unit_price", item_obj.unit_price)
+                        item_obj.tax_rate = item.get("tax_rate", item_obj.tax_rate)
+                        item_obj.net_amount = item.get("net_amount", item_obj.net_amount)
+                        item_obj.save()
                 else:
                     Item.objects.create(invoice=instance, **item)
         return instance

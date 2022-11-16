@@ -116,6 +116,10 @@ the full data should be like this:
             "quantity": 10,
             "unit_price": 10,
             "tax_rate": 10
+        },
+        {
+            "id": 43,  ## To delete item just put it's ID and make thr delete key true
+            "delete": true
         }
     ]
 }
