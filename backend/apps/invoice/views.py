@@ -1,12 +1,12 @@
-# import pdfkit
-
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
+from rest_framework.decorators import api_view
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from .email import InvoiceDetailEmail
 from .models import Invoice
 from .serializers import InvoiceListSerializer, InvoiceRedSerializer, InvoiceWriteSerializer
 
@@ -98,26 +98,39 @@ class InvoiceViewSet(viewsets.ViewSet):
             return Response(context, status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(["POST"])
+def SendInvoice(request, invoice_code):
+    response_data = {}
+    invoice = get_object_or_404(Invoice, pk=invoice_code, created_by=request.user)
+    to = [invoice.client_email]
+    context = {"invoice": invoice}
+    try:
+        InvoiceDetailEmail(request, context).send(to)
+        response_data["response"] = "Ok"
+        response_data["message"] = "Email sent Successfully"
+        response_status = status.HTTP_200_OK
+    except KeyError:
+        response_data["response"] = "Error"
+        response_data["message"] = "Email Sending Failed!"
+        response_status = status.HTTP_400_BAD_REQUEST
+    return Response(response_data, status=response_status)
+
+
 # @api_view(['GET'])
-# @authentication_classes([authentication.TokenAuthentication])
-# @permission_classes([permissions.IsAuthenticated])
-# def generate_pdf(request, invoice_id):
-#     invoice = get_object_or_404(Invoice, pk=invoice_id, created_by=request.user)
-#     team = Team.objects.filter(created_by=request.user).first()
+# def Generate_pdf(request, invoice_code):
+#     invoice = get_object_or_404(Invoice, pk=invoice_code, created_by=request.user)
 
 #     template_name = 'pdf.html'
 
-#     if invoice.is_credit_for:
-#         template_name = 'pdf_creditnote.html'
-
 #     template = get_template(template_name)
-#     html = template.render({'invoice': invoice, 'team': team})
+#     html = template.render({'invoice': invoice})
 #     pdf = pdfkit.from_string(html, False, options={})
 
 #     response = HttpResponse(pdf, content_type='application/pdf')
 #     response['Content-Disposition'] = 'attachment; filename="invoice.pdf"'
 
 #     return response
+
 
 # @api_view(['GET'])
 # @authentication_classes([authentication.TokenAuthentication])

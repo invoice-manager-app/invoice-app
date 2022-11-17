@@ -111,7 +111,7 @@ class InvoiceWriteSerializer(serializers.ModelSerializer):
 class InvoiceRedSerializer(serializers.ModelSerializer):
     items = ItemSerializer(many=True)
     company = InvoiceCompanySerializer()
-    net_amount = serializers.SerializerMethodField("get_net_amount")
+    # net_amount = serializers.SerializerMethodField("get_net_amount")
     created_by = serializers.SerializerMethodField("get_created_by_username")
     modified_by = serializers.SerializerMethodField("get_modified_by_username")
     created_at = serializers.SerializerMethodField("get_created_at_date_formatted")
@@ -134,7 +134,7 @@ class InvoiceRedSerializer(serializers.ModelSerializer):
             "items",
             "get_gross_amount",
             "discount_amount",
-            "net_amount",
+            "get_net_amount",
             "email_is_sent",
             "status",
             "description",
@@ -157,8 +157,8 @@ class InvoiceRedSerializer(serializers.ModelSerializer):
     def get_updated_at_date_formatted(self, invoice):
         return invoice.updated_at.strftime("%d.%m.%Y")
 
-    def get_net_amount(self, invoice):
-        return invoice.get_gross_amount() - invoice.discount_amount
+    # def get_net_amount(self, invoice):
+    #     return invoice.get_gross_amount() - invoice.discount_amount
 
 
 class InvoiceListSerializer(InvoiceRedSerializer, serializers.ModelSerializer):

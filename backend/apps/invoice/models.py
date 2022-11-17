@@ -126,6 +126,9 @@ class Invoice(models.Model):
         # print(gross_amount_count)
         return gross_amount_count["net_amount__sum"]
 
+    def get_net_amount(self):
+        return self.get_gross_amount() - self.discount_amount
+
     def get_due_date(self):
         return self.created_at + timedelta(days=self.due_after)
 
