@@ -24,7 +24,6 @@ class Invoice(models.Model):
     client_name = models.CharField(
         max_length=250,
         null=False,
-        unique=False,
         blank=False,
         verbose_name=_("Client Name"),
     )
@@ -43,8 +42,8 @@ class Invoice(models.Model):
     )
     client_address = models.CharField(
         max_length=255,
-        blank=True,
-        null=True,
+        null=False,
+        blank=False,
         verbose_name=_("Client Full Adress"),
     )
     client_zipcode = models.CharField(
@@ -55,17 +54,20 @@ class Invoice(models.Model):
     )
     client_city = models.CharField(
         max_length=50,
-        blank=True,
-        null=True,
+        null=False,
+        blank=False,
         verbose_name=_("Client City"),
     )
     client_country = models.CharField(
         max_length=255,
-        blank=True,
-        null=True,
+        null=False,
+        blank=False,
         verbose_name=_("Client Country"),
     )
     due_after = models.IntegerField(
+        default=10,
+        null=False,
+        blank=False,
         verbose_name=_("Due after"),
         help_text=_("shouold be integer"),
     )
@@ -82,7 +84,7 @@ class Invoice(models.Model):
         blank=True,
         verbose_name=_("Discount amount"),
     )
-    description = models.TextField(null=True, blank=True, default="no description")
+    description = models.TextField(null=True, blank=True, default="No description")
     created_by = models.ForeignKey(
         Account,
         related_name="created_invoices",
@@ -145,12 +147,12 @@ class Item(models.Model):
     )
     title = models.CharField(
         max_length=255,
-        null=True,
-        blank=True,
+        null=False,
+        blank=False,
         verbose_name=_("Item's title/name"),
     )
     quantity = models.IntegerField(
-        default=0,
+        default=1,
         null=False,
         blank=False,
         verbose_name=_("Item's quantity"),
@@ -158,23 +160,24 @@ class Item(models.Model):
     unit_price = models.DecimalField(
         max_digits=6,
         decimal_places=2,
-        default=0,
+        null=False,
+        blank=False,
         verbose_name=_("Item's price per one"),
     )
     tax_rate = models.DecimalField(
         max_digits=3,
         decimal_places=1,
         default=0,
-        blank=True,
-        null=True,
+        blank=False,
+        null=False,
         verbose_name=_("Tax rate"),
     )
     net_amount = models.DecimalField(
         max_digits=6,
         decimal_places=2,
         default=0,
-        blank=True,
-        null=True,
+        blank=False,
+        null=False,
         verbose_name=_("Total amount after taxes"),
         help_text=_("Automaticlly generated"),
     )

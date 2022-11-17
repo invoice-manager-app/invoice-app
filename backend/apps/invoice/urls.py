@@ -48,23 +48,23 @@ ____________________________________________________________________________
 http://localhost:8000/invoice/        - POST   --> To Create Invoice
 body should be like:
 {
-    "client_name":"Karamyyy Farhan",
-    "client_email":"karam@gmail.com",
-    "client_number":"+9984737383",
-    "client_address":"Iraq. Baghdad. AL Ola Street 4/3",
-    "client_zipcode":3433,
-    "client_city":"Baghdad",
-    "client_country":"Iraq",
-    "due_after":10,
-    "discount_amount":12,
-    "description":"please pay it in the very soon time",
-    "company":"google", ## her you give the company slug filed
+    "client_name":"Karamyyy Farhan", # Required
+    "client_email":"karam@gmail.com", # Required
+    "client_number":"+9984737383",  # Not Required
+    "client_address":"Iraq. Baghdad. AL Ola Street 4/3",  # Required
+    "client_zipcode":3433,  # Not Required
+    "client_city":"Baghdad", # Required
+    "client_country":"Iraq", # Required
+    "due_after":10,  # Required - default = 10 days
+    "discount_amount":12, # Not Required - default = 0
+    "description":"please pay it in the very soon time", # Not Required
+    "company":"google",#  Required - her you give the company slug filed
     "items": [
         {
-            "title": "AX",
-            "quantity": 2,
-            "unit_price": 160,
-            "tax_rate": 10
+            "title": "AX", #  Required
+            "quantity": 2, #  Not Required - default = 1
+            "unit_price": 160, #  Required
+            "tax_rate": 10 # Not Required - default = 0
         },
         {
             "title": "BX",
