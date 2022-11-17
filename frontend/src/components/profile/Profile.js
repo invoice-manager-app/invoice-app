@@ -9,10 +9,11 @@ import ChangeUserPassword from "./ChangeUserPassword";
 //style
 import classes from "./Profile.module.css";
 import EditIcon from "../icons/EditIcon";
-import { deleteCompany, editCompanyFn } from "../../store/action-creator";
+import { deleteCompany } from "../../store/action-creator";
 import Notification from "../UI/Notification";
 import { useNavigate } from "react-router-dom";
 import Aside from "./Aside";
+import { getCompanies } from "../../store/company-slice";
 
 //get companies
 
@@ -55,14 +56,6 @@ const Profile = () => {
     [dispatch, token, navigate]
   );
 
-  //edit company
-  // const submitEditedCompany = useCallback(
-  //   (values, slug, imgSrc) => {
-  //     dispatch(editCompanyFn(token, values, slug, imgSrc));
-  //   },
-  //   [dispatch, token]
-  // );
-
   //switch into edit user Info Component
   const editUserHandeler = () => {
     dispatch(uiActions.toggleUser());
@@ -87,9 +80,15 @@ const Profile = () => {
 
   //switch into company Info
   const companyInfoHandler = useCallback(() => {
+    let token;
+    if (localStorage.getItem("token")) {
+      token = localStorage.getItem("token");
+    }
     dispatch(uiActions.switchToCompany());
     dispatch(uiActions.submitUser());
     dispatch(uiActions.submitEditCompanyInfo());
+    dispatch(getCompanies(token));
+
     //dispatch(uiActions.togglePassword());
   }, [dispatch]);
 

@@ -66,60 +66,6 @@ export const editUserRequest = (token, values) => {
   };
 };
 
-//add new company
-
-// export const AddNewCompany = (token, values) => {
-//   return async (dispatch) => {
-//     dispatch(
-//       uiActions.notification({
-//         status: "pending",
-//         message: "wait....",
-//       })
-//     );
-
-//     //HEADER
-//     const myHeaders = new Headers();
-//     myHeaders.append("Authorization", `Bearer ${token}`);
-//     //body
-//     const formdata = new FormData();
-//     formdata.append("name", values.companyName);
-//     formdata.append("email", values.email);
-//     formdata.append("owner", values.name);
-//     formdata.append("about", values.about);
-//     formdata.append("number", values.number);
-//     formdata.append("address", values.address);
-
-//     fetch("http://127.0.0.1:8000/company/", {
-//       method: "POST",
-//       headers: myHeaders,
-//       body: formdata,
-//     })
-//       .then((res) => {
-//         if (!res.ok) {
-//           throw new Error("Something went wrong");
-//         }
-
-//         return res.json();
-//       })
-//       .then((data) => {
-//         dispatch(
-//           uiActions.notification({
-//             status: "succeed",
-//             message: data.response,
-//           })
-//         );
-//       })
-//       .catch((err) => {
-//         dispatch(
-//           uiActions.notification({
-//             status: "error",
-//             message: err.message,
-//           })
-//         );
-//       });
-//   };
-// };
-
 //delete company
 export const deleteCompany = (token, name, email, slug) => {
   return (dispatch) => {
@@ -214,7 +160,6 @@ export const editCompanyFn = (token, values, slug) => {
       formdata.append("address", values.address);
     }
 
-    console.log(formdata.has("address"));
     var requestOptions = {
       method: "PUT",
       headers: myHeaders,
@@ -248,5 +193,45 @@ export const editCompanyFn = (token, values, slug) => {
           })
         );
       });
+  };
+};
+
+//create invoice
+
+export const createInvoice = (token, selectedCompany, values, items) => {
+  return async (dispatch) => {
+    const createNewInvoice = async (dispatch) => {
+      const response = await fetch("http://localhost:8000/invoice/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          company: selectedCompany,
+          client_name: values.clientName,
+          client_email: values.clientMail,
+          client_address: values.clientAddress,
+          client_zipcode: values.clientZcode,
+          client_city: values.clientCity,
+          client_country: values.clientCountry,
+          description: values.productionDescription,
+          due_after: values.paymentDue,
+          items: items,
+        }),
+      });
+      const data = await response.json();
+      console.log(data);
+
+      return data;
+    };
+
+    try {
+      const data = await createNewInvoice();
+
+      dispatch(uiActions.respponseMsg(data));
+    } catch (error) {
+      console.log(error);
+    }
   };
 };

@@ -1,5 +1,6 @@
 .wrapper {
   text-align: left;
+  position: relative;
 }
 .wrapper input {
   background-color: var(--secondary-color);
@@ -9,6 +10,7 @@
   padding: 12px 4px;
   border: none;
   margin-bottom: 10px;
+  border: 1px solid transparent;
 }
 .wrapper label {
   font-size: 12px;
@@ -17,5 +19,11 @@
   color: #fff;
 }
 .wrapper input:focus {
-  border: 1px solid var(--main-color);
+  border-color: var(--main-color);
+}
+.wrapper:has(input:required)::before {
+  content: "*";
+  color: red;
+  position: absolute;
+  left: -10px;
 }

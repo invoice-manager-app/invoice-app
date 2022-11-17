@@ -6,12 +6,14 @@ import AuthContext from "../context/auth-context";
 // import AuthPage from "./AuthPage";
 // import Invoices from "./Invoices";
 import InvoiceDetail from "./InvoiceDetail";
+import ProtectedRoutes from "./ProtectedRoutes";
 // import CreateNewUserPage from "./CreateNewUserPage";
 // import CreateCompanyPage from "./CreateCompany";
 
 const AllPages = () => {
   const authCtx = useContext(AuthContext);
   const { isLoggedIn } = authCtx;
+
   const AuthPage = React.lazy(() => import("./AuthPage"));
   const Invoices = React.lazy(() => import("./Invoices"));
   //const InvoiceDetail = React.lazy(() => import("./InvoiceDetail"));
@@ -22,36 +24,23 @@ const AllPages = () => {
     <Suspense fallback={<LoadingSpinner />}>
       <Routes>
         <Route
-          path="/auth"
-          element={
-            !isLoggedIn ? <AuthPage /> : <Navigate to="/invoice" replace />
-          }
-        />
-
-        <Route
-          path="/invoice/*"
-          element={isLoggedIn ? <Invoices /> : <Navigate to="/auth" replace />}
+          path="/loggin"
+          element={isLoggedIn ? <Navigate to="/invoice" /> : <AuthPage />}
         />
         <Route
-          path="/invoice/:invoiceId"
-          element={isLoggedIn && <InvoiceDetail />}
+          path="/"
+          element={isLoggedIn ? <Navigate to="/invoice" /> : <AuthPage />}
         />
-        <Route
-          path="/profile/*"
-          element={
-            isLoggedIn ? <UserProfilePage /> : <Navigate to="/auth" replace />
-          }
-        />
-
-        <Route
-          path="/create-company"
-          element={
-            isLoggedIn ? <CreateCompanyPage /> : <Navigate to="/auth" replace />
-          }
-        />
-
-        <Route path="/" element={!isLoggedIn ? <AuthPage /> : <Invoices />} />
-        <Route path="*" element={<Navigate to="/invoice" replace />} />
+        <Route element={<ProtectedRoutes />}>
+          <Route
+            path="/invoice"
+            element={isLoggedIn ? <Invoices /> : <AuthPage />}
+          />
+          <Route path="/invoice/*" element={<Invoices />} />
+          <Route path="/invoice/:invoiceId" element={<InvoiceDetail />} />
+          <Route path="/profile/*" element={<UserProfilePage />} />
+          <Route path="/create-company" element={<CreateCompanyPage />} />
+        </Route>
       </Routes>
     </Suspense>
   );

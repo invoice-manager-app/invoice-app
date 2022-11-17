@@ -18,10 +18,7 @@ const InvoiceItem = ({ items, status, name, date, id }) => {
         <li> #{id} </li>
         <li> {date} </li>
         <li> {name} </li>
-        <li>
-          $
-          {items.map((el) => +el.qty * +el.price).reduce((curr, i) => curr + i)}{" "}
-        </li>
+        <li>${items.map((el) => el.net_amount)} </li>
         <li>
           <div className={status ? "status" : "status paid"}>
             <span> {status ? "Pending" : "Paid"} </span>
@@ -55,10 +52,10 @@ const InvoiceItem = ({ items, status, name, date, id }) => {
             {items.map((el, i) => {
               return (
                 <ul key={i} className={classes.item}>
-                  <li> {el.itemName} </li>
-                  <li> {el.price}.00 </li>
-                  <li> {el.qty} </li>
-                  <li> ${el.qty * el.price} </li>
+                  <li> {el.title} </li>
+                  <li> {el.unit_price}.00 </li>
+                  <li> {el.quantity} </li>
+                  <li> ${el.net_amount} </li>
                 </ul>
               );
             })}

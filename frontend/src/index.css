@@ -113,3 +113,8 @@ button:disabled {
   width: fit-content;
   margin-top: 10px;
 }
+
+select {
+  max-height: calc(1.2em + 24px);
+  height: calc(1.2em + 24px);
+}

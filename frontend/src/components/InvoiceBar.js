@@ -2,9 +2,8 @@ import { useSelector } from "react-redux";
 import { Fragment, memo } from "react";
 import InvoiceItem from "./InvoiceItem";
 import classes from "./InvoiceBar.module.css";
-const InvoiceBar = ({ filtered }) => {
-  let inputFields = useSelector((state) => state.action.value);
-
+const InvoiceBar = ({ invoiceList }) => {
+  if (invoiceList === null) return;
   return (
     <Fragment>
       <ul className={classes.categories}>
@@ -14,14 +13,14 @@ const InvoiceBar = ({ filtered }) => {
         <li>TOTAL</li>
         <li>STATUS</li>
       </ul>
-      {filtered.map((item) => (
+      {invoiceList.map((item) => (
         <InvoiceItem
-          id={item.id}
-          key={item.id}
-          name={item.clientName}
+          id={item.invoice_code}
+          key={item.invoice_code}
+          name={item.client_name}
           items={item.items}
-          date={item.date}
-          status={item.isPending}
+          date={item.created_at}
+          status={item.status}
         />
       ))}
     </Fragment>

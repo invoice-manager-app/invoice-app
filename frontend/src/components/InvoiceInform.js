@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { AiOutlineLeft } from "react-icons/ai";
@@ -9,16 +9,47 @@ import { uiActions } from "../store/Ui-slice";
 import EditInvoice from "./EditInvoice";
 
 const InoviceInform = () => {
+  const [invoiceDetail, setInvoiceDetail] = useState([]);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const inputFields = useSelector((state) => state.action.value);
+  const inputFields = useSelector(
+    (state) => state.invoiceListReducer.invoice_list
+  );
 
   const params = useParams();
+  const invoiceItem = inputFields.find(
+    (el) => el.invoice_code === params.invoiceId
+  );
 
-  const invoiceItem = inputFields.find((el) => el.id === params.invoiceId);
-  console.log(invoiceItem);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const invoice_code = inputFields.map((el) => el.invoice_code);
+
+    const fetchInvoice = async () => {
+      const response = await fetch(
+        `http://localhost:8000/invoice/${invoice_code[0]}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+      setInvoiceDetail(data);
+    };
+
+    fetchInvoice();
+  }, [inputFields]);
+  console.log(invoiceDetail);
+
+  // console.log(inputFields);
   const { isPending, id } = invoiceItem;
-
+  if (invoiceDetail === undefined) {
+    return;
+  }
   if (!invoiceItem) {
     navigate("/invoice");
   }
@@ -39,7 +70,7 @@ const InoviceInform = () => {
   const paidBtnClass = isPending ? classes.paid : classes.pending;
   return (
     <Fragment>
-      <EditInvoice id={invoiceItem.id} />
+      {/* <EditInvoice id={invoiceItem.id} /> */}
       <Link className={classes.icon} to="/invoice">
         <AiOutlineLeft /> <span>Go Back</span>
       </Link>
@@ -62,7 +93,6 @@ const InoviceInform = () => {
           </button>
         </div>
       </div>
-
       <div className={classes.details}>
         <div className={classes.top}>
           <div className={classes.left}>
@@ -70,33 +100,49 @@ const InoviceInform = () => {
               <span>#</span>
               {invoiceItem.id}
             </p>
-            <p>{invoiceItem.productionDescription}</p>
+            <p>
+              {invoiceItem.description
+                ? invoiceItem.description
+                : "Unknown Description"}
+            </p>
           </div>
-          <div className={classes.right}>
-            <p> {invoiceItem.city} </p>
-            <p> {invoiceItem.streetAddress} </p>
+          {/* <div className={classes.right}>
+            <p> {invoiceItem.client_city} </p>
+            <p> {invoiceItem.client_address} </p>
             <p> {invoiceItem.Zcode} </p>
             <p> {invoiceItem.country} </p>
-          </div>
+          </div> */}
         </div>
         <div className={classes.mid}>
           <div className={classes.date}>
             <h4>Invoice Date</h4>
-            <p>{invoiceItem.date}</p>
+            <p>{invoiceDetail.date}</p>
 
             <h4>Payment Date</h4>
-            <p>{invoiceItem.paymentDue}</p>
+            <p>{invoiceDetail.paymentDue}</p>
           </div>
           <div className={classes.billTo}>
             <h4>Bill To</h4>
-            <p> {invoiceItem.clientName} </p>
-            <p>{invoiceItem.clientAddress} </p>
-            <p>{invoiceItem.clientZcode}</p>
-            <p>{invoiceItem.clientCountry}</p>
+            <p> {invoiceDetail.client_name} </p>
+            <p>
+              {invoiceDetail.client_address
+                ? invoiceDetail.client_address
+                : "Unknown Address"}{" "}
+            </p>
+            <p>
+              {invoiceDetail.client_zipcode
+                ? invoiceDetail.client_zipcode
+                : "Unknown zip-code"}
+            </p>
+            <p>
+              {invoiceDetail.client_country
+                ? invoiceDetail.client_country
+                : "Unknow Country"}
+            </p>
           </div>
           <div className={classes.clientMail}>
             <h4>Sent To</h4>
-            <p>{invoiceItem.clientMail}</p>
+            <p>{invoiceDetail.client_email}</p>
           </div>
         </div>
         <div className={classes.bot}>
@@ -110,25 +156,27 @@ const InoviceInform = () => {
               </ul>
             </div>
             <div>
-              {invoiceItem.items.map((item) => {
-                return (
-                  <ul key={item.id}>
-                    <li> {item.itemName} </li>
-                    <li> {item.qty} </li>
-                    <li> {item.price} </li>
-                    <li> {item.qty * item.price} </li>
-                  </ul>
-                );
-              })}
+              {invoiceDetail.items &&
+                invoiceDetail.items.map((item) => {
+                  return (
+                    <ul key={item.id}>
+                      <li> {item.title} </li>
+                      <li> {item.quantity} </li>
+                      <li> {item.unit_price} </li>
+                      <li> {+item.quantity * +item.unit_price} </li>
+                    </ul>
+                  );
+                })}
             </div>
           </div>
           <div className={classes.amount}>
             <p>Amount Due</p>
             <p>
               $
-              {invoiceItem.items
-                .map((el) => +el.qty * +el.price)
-                .reduce((curr, i) => curr + i)}
+              {invoiceDetail.items &&
+                invoiceDetail.items
+                  .map((el) => +el.quantity * +el.unit_price)
+                  .reduce((curr, i) => curr + i)}
             </p>
           </div>
         </div>

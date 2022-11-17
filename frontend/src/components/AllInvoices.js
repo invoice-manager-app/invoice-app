@@ -4,15 +4,23 @@ import classes from "./AllInvoices.module.css";
 import { IoIosAdd } from "react-icons/io";
 import InvoiceBar from "./InvoiceBar";
 import { uiActions } from "../store/Ui-slice";
+import { getInvoiceCompany } from "../store/get-invoice-detail";
+import { getInvoicList } from "../store/get-invoice-slice";
 const AllInvoices = () => {
   const [selectInput, setSelectInput] = useState("all");
   const [filter, setFilter] = useState([]);
+  const dispatch = useDispatch();
 
   const invoiceNumber = useSelector((state) => state.action.length);
 
   const invoiceArray = useSelector((state) => state.action.value);
-  const dispatch = useDispatch();
 
+  //invoice List
+  const invoiceList = useSelector(
+    (state) => state.invoiceListReducer.invoice_list
+  );
+
+  //filter function
   const filterHandeler = useCallback(() => {
     switch (selectInput) {
       case "pending":
@@ -28,16 +36,28 @@ const AllInvoices = () => {
     }
   }, [invoiceArray, selectInput]);
 
+  //filter invoices
   useEffect(() => {
     filterHandeler();
-  }, [selectInput, invoiceArray, filterHandeler]);
+  }, [selectInput, invoiceArray, filterHandeler, dispatch]);
 
-  const formToggleHandeler = () => {
+  //toggle invoice form
+  const formToggleHandeler = useCallback(() => {
+    let token = localStorage.getItem("token");
+
+    dispatch(getInvoiceCompany(token));
+
     dispatch(uiActions.toggleForm());
-  };
+  }, [dispatch]);
   const selectHandeler = (e) => {
     setSelectInput(e.target.value);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    dispatch(getInvoicList(token));
+  }, [dispatch]);
 
   return (
     <Fragment>
@@ -58,16 +78,15 @@ const AllInvoices = () => {
               </select>
             </div>
             <button onClick={formToggleHandeler} className={classes.button}>
-              {" "}
               <span className={classes.icon}>
                 <IoIosAdd />
-              </span>{" "}
-              New Invoice{" "}
+              </span>
+              New Invoice
             </button>
           </div>
         </div>
 
-        <InvoiceBar filtered={filter} />
+        <InvoiceBar invoiceList={invoiceList} />
       </div>
     </Fragment>
   );

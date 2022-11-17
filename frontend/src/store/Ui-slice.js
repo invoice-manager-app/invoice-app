@@ -10,6 +10,7 @@ const uiSlice = createSlice({
     editCompany: false,
     notification: null,
     deleteConfirm: null,
+    responseMsg: null,
   },
   reducers: {
     toggleUserInfo: (state) => {
@@ -26,6 +27,12 @@ const uiSlice = createSlice({
     },
     toggleForm(state) {
       state.formIsVisible = !state.formIsVisible;
+    },
+    hideForm(state) {
+      state.formIsVisible = false;
+    },
+    showForm(state) {
+      state.formIsVisible = true;
     },
     toggleUser(state) {
       state.editUser = !state.editUser;
@@ -61,6 +68,9 @@ const uiSlice = createSlice({
     },
     hideDeleteConfirm: (state) => {
       state.deleteConfirm = null;
+    },
+    respponseMsg: (state, action) => {
+      state.responseMsg = action.payload;
     },
   },
 });

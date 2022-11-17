@@ -5,6 +5,7 @@ import CompanyDetail from "../company/CompanyDetail";
 import classes from "./UserCompany.module.css";
 import Notification from "../UI/Notification";
 import PlusIcon from "../icons/PlusIcon";
+import { getCompanies } from "../../store/company-slice";
 const UserCompany = ({
   deleteCompany,
 
@@ -16,35 +17,16 @@ const UserCompany = ({
   const [companies, setCompanies] = useState([]);
 
   const navigate = useNavigate();
-  //dispatch
   const dispatch = useDispatch();
+  //dispatch
 
   //getAllCompanies
-  const getAllCompanies = async (token) => {
-    const myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-
-    var requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      redirect: "follow",
-    };
-
-    const response = await fetch(
-      "http://127.0.0.1:8000/company/",
-      requestOptions
-    );
-    const data = await response.json();
-    setCompanies(data);
-  };
+  const data = useSelector((state) => state.companiesReducer.allCompanies);
   useEffect(() => {
-    let token;
-    if (localStorage.getItem("token")) {
-      token = localStorage.getItem("token");
-    }
+    // dispatch(getCompanies(token));
 
-    getAllCompanies(token);
-  }, [dispatch]);
+    setCompanies(data);
+  }, [data]);
 
   //notification state
   const notification = useSelector((state) => state.ui.notification);
@@ -61,6 +43,8 @@ const UserCompany = ({
   const createCompanyHandler = () => {
     navigate("/create-company");
   };
+
+  if (companies === null) return;
 
   if (companies.length === 0) {
     return (
@@ -114,7 +98,6 @@ const UserCompany = ({
                   editUser={editUser}
                   deleteCompany={deleteCompany}
                   editCompanyHandeler={editCompanyHandeler}
-                  getAllCompanies={getAllCompanies}
                 />
               }
               path="/:companyId/*"
