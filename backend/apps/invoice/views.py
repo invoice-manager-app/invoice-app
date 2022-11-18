@@ -7,7 +7,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .email import InvoiceDetailEmail
+from .email import InvoiceDetailEmail, InvoiceReminderEmail
 from .models import Invoice
 from .serializers import InvoiceListSerializer, InvoiceRedSerializer, InvoiceWriteSerializer
 from .utils import render_to_pdf
@@ -131,30 +131,19 @@ def Generate_pdf(request, *args, **kwargs):
     return response
 
 
-# @api_view(['GET'])
-# @authentication_classes([authentication.TokenAuthentication])
-# @permission_classes([permissions.IsAuthenticated])
-# def send_reminder(request, invoice_id):
-#     invoice = get_object_or_404(Invoice, pk=invoice_id, created_by=request.user)
-#     team = Team.objects.filter(created_by=request.user).first()
-
-#     subject = 'Unpaid invoice'
-#     from_email = team.email
-#     to = [invoice.client.email]
-#     text_content = 'You have an unpaid invoice. Invoice number: #' + str(invoice.invoice_number)
-#     html_content = 'You have an unpaid invoice. Invoice number: #' + str(invoice.invoice_number)
-
-#     msg = EmailMultiAlternatives(subject, text_content, from_email, to)
-#     msg.attach_alternative(html_content, "text/html")
-
-#     template = get_template('pdf.html')
-#     html = template.render({'invoice': invoice, 'team': team})
-#     pdf = pdfkit.from_string(html, False, options={})
-
-#     if pdf:
-#         name = 'invoice_%s.pdf' % invoice.invoice_number
-#         msg.attach(name, pdf, 'application/pdf')
-
-#     msg.send()
-
-#     return Response()
+@api_view(["POST"])
+def Send_reminder(request, invoice_code):
+    response_data = {}
+    invoice = get_object_or_404(Invoice, pk=invoice_code, created_by=request.user)
+    to = [invoice.client_email]
+    context = {"invoice": invoice}
+    try:
+        InvoiceReminderEmail(request, context).send(to)
+        response_data["response"] = "Ok"
+        response_data["message"] = "Reminder Email sent Successfully"
+        response_status = status.HTTP_200_OK
+    except KeyError:
+        response_data["response"] = "Error"
+        response_data["message"] = "Reminder Email Sending Failed!"
+        response_status = status.HTTP_400_BAD_REQUEST
+    return Response(response_data, status=response_status)
