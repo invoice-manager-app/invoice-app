@@ -333,7 +333,7 @@
                                             {% for item in invoice.items.all %}
                                           <tr>
                                             <td>{{ item.title }}</td>
-                                            <td class="alignright">$ {{ item.get_gross_amount}}</td>
+                                            <td class="alignright">$ {{ item.net_amount}}</td>
                                           </tr>
                                           {% endfor %}
                                           <tr class="total">
@@ -352,7 +352,7 @@
                           </tr>
                           <tr>
                             <td class="content-block">
-                              <a href="#">View in browser</a>
+                              <a href="#">View/Download in browser</a>
                             </td>
                           </tr>
                           <tr>

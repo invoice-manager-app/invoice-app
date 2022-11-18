@@ -1,272 +1,74 @@
-<html>
-    <head>
-        <title>Invoice</title>
-
-        <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
+<head>
+    <style>
+        @page {
+            size: a4 portrait;
+            @frame header_frame {           /* Static Frame */
+                -pdf-frame-content: header_content;
+                left: 50pt; width: 512pt; top: 50pt; height: 40pt;
             }
-
-            html, body {
-                width: 100%;
-                height: 100%;
-                font-family: Arial;
+            @frame content_frame {          /* Content Frame */
+                left: 50pt; width: 512pt; top: 90pt; height: 632pt;
             }
-
-            body {
-                padding: 30px;
+            @frame footer_frame {           /* Another static Frame */
+                -pdf-frame-content: footer_content;
+                left: 50pt; width: 512pt; top: 772pt; height: 20pt;
             }
-
-            .top {
-                font-size: 0;
-            }
-
-                .top-left {
-                    width: 50%;
-                    font-size: 16px;
-                    display: inline-block;
-                    vertical-align: top;
-                }
-
-                    .top-left .client {
-                        margin-top: 40px;
-                        margin-left: 40px;
-                    }
-
-                .top-right {
-                    width: 50%;
-                    font-size: 16px;
-                    display: inline-block;
-                    vertical-align: top;
-                }
-
-                    .top-right h2 {
-                        margin-bottom: 20px;
-                    }
-
-                    .top-right .split {
-                        font-size: 0;
-                    }
-
-                        .top-right .split .split-left,
-                        .top-right .split .split-right {
-                            width: 40%;
-                            display: inline-block;
-                            vertical-align: top;
-                            font-size: 16px;
-                        }
-
-                        .top-right .split .split-right {
-                            width: 60%;
-                        }
-
-            .items {
-                margin-top: 50px;
-            }
-
-                .items .items-row {
-                    font-size: 0;
-                }
-
-                    .items .items-row .items-row-cell {
-                        padding: 6px 14px;
-                        display: inline-block;
-                        vertical-align: top;
-                        font-size: 14px;
-                        border-bottom: 1px solid #f1f1f1;
-                    }
-
-                    .items .items-row .items-row-cell.header {
-                        padding: 14px 14px;
-                        font-weight: bold;
-                        background: #f1f1f1;
-                    }
-
-                    .items .items-row .title {
-                        width: 20%;
-                    }
-
-                    .items .items-row .quantity {
-                        width: 20%;
-                    }
-
-                    .items .items-row .unit-price {
-                        width: 20%;
-                    }
-
-                    .items .items-row .vat-rate {
-                        width: 20%;
-                    }
-
-                    .items .items-row .sum {
-                        width: 20%;
-                    }
-
-            .summary {
-                margin-top: 50px;
-                padding: 30px;
-                font-size: 0;
-                background: #f1f1f1;
-            }
-
-                .summary .summary-title {
-                    width: 100%;
-                    margin-bottom: 30px;
-                    font-size: 20px;
-                }
-
-                .summary .summary-left {
-                    width: 65%;
-                    display: inline-block;
-                    vertical-align: top;
-                    font-size: 16px;
-                }
-
-                    .summary .summary-left strong {
-                        width: 200px;
-                        display: inline-block;
-                    }
-
-                .summary .summary-right {
-                    width: 35%;
-                    display: inline-block;
-                    vertical-align: top;
-                    font-size: 16px;
-                }
-
-                    .summary .summary-right .split {
-                        font-size: 0;
-                    }
-
-                        .summary .summary-right .split .split-right,
-                        .summary .summary-right .split .split-left {
-                            width: 50%;
-                            display: inline-block;
-                            vertical-align: top;
-                            font-size: 16px;
-                        }
-
-                        .summary .summary-right .split .split-right {
-                            text-align: right;
-                        }
-        </style>
+        }
+    </style>
     </head>
 
     <body>
-        <div class="top">
-            <div class="top-left">
-                <div class="invoicely">
-                    <h3>{{ invoice.company.name }}</h3>
-                    <p>{{ invoice.company.address }}</p>
-                    {% if invoice.company.zipcode or invoice.company.place %}
-                        <p>{{ invoice.company.zipcode }} {{ invoice.company.place }}</p>
-                    {% endif %}
-                </div>
-
-                <div class="client">
-                    <p>{{ invoice.client_name }}</p>
-
-                    {% if invoice.client_address %}
-                        <p>{{ invoice.client_address }}</p>
-                    {% endif %}
-
-                    {% if invoice.client_zipcode or invoice.client_country %}
-                        <p>{{ invoice.client_zipcode }} {{ invoice.client_country }}</p>
-                    {% endif %}
-                </div>
-            </div>
-
-            <div class="top-right">
-                <h2>Invoice {{ invoice.invoice_code }}</h2>
-
-                <div class="split">
-                    <div class="split-left">Email</div>
-                    <div class="split-right">{{ invoice.company.email }}</div>
-                </div>
-
-                <div class="split">
-                    <div class="split-left">Invoice date</div>
-                    <div class="split-right">{{ invoice.created_at|date:'d.m.Y' }}</div>
-                </div>
-
-                <div class="split">
-                    <div class="split-left">Due date</div>
-                    <div class="split-right">{{ invoice.get_due_date|date:'d.m.Y' }}</div>
-                </div>
-
-                {% if invoice.sender_reference %}
-                    <div class="split">
-                        <div class="split-left">Our reference</div>
-                        <div class="split-right">{{ invoice.sender_reference }}</div>
-                    </div>
-                {% endif %}
-
-                {% if invoice.client_contact_reference %}
-                    <div class="split">
-                        <div class="split-left">Their reference</div>
-                        <div class="split-right">{{ invoice.client_contact_reference }}</div>
-                    </div>
-                {% endif %}
-            </div>
+        <!-- Content for Static Frame 'header_frame' -->
+        <div id="header_content">
+            <h3>{{ invoice.company.name}}</h3>
         </div>
 
-        <div class="items">
-            <div class="items-row">
-                <div class="items-row-cell header title">Title</div>
-
-                <div class="items-row-cell header quantity">Quantity</div>
-
-                <div class="items-row-cell header unit-price">Unit price</div>
-
-                <div class="items-row-cell header vat-rate">Vat rate</div>
-
-                <div class="items-row-cell header sum">Sum</div>
-
-                {% for item in invoice.items.all %}
-                    <div class="items-row">
-                        <div class="items-row-cell title">{{ item.title }}</div>
-
-                        <div class="items-row-cell quantity">{{ item.quantity }}</div>
-
-                        <div class="items-row-cell unit-price">{{ item.unit_price }}</div>
-
-                        <div class="items-row-cell vat-rate">{{ item.tax_rate }}%</div>
-
-                        <div class="items-row-cell sum">{{ item.get_gross_amount }}</div>
-                    </div>
-                {% endfor %}
-            </div>
+        <!-- Content for Static Frame 'footer_frame' -->
+        <div id="footer_content">(c) - page <pdf:pagenumber>
+            of <pdf:pagecount>
         </div>
 
-        <div class="summary">
-            <div class="summary-title">
-                <h2>Summary</h2>
-            </div>
+        <!-- HTML Content -->
+        <table>
+                <tr>
+                    <td>{{invoice.client_address}}</td>
+                    <td>{{invoice.client_number}}</td>
+                </tr>
+                <tr>
+                    <td>{{invoice.client_country}} {{invoice.client_city}},</td>
+                    <td>{{invoice.client_email}}</td>
+                </tr>
+                <tr>
+                    <td>{{invoice.client_zipcode}}</td>
+                    <td>{{invoice.client_name}}</td>
+                </tr>
+        </table>
 
-            <div class="summary-left">
-                <p><strong>Invoice number: </strong>{{ invoice.invoice_code }}</p>
-                <p><strong>Due date: </strong>{{ invoice.get_due_date|date:'d.m.Y' }}</p>
-                <p><strong>Bankaccount: </strong>bankaccount</p>
-            </div>
+        <hr>
 
-            <div class="summary-right">
-                <div class="split">
-                    <div class="split-left">Net amount</div>
-                    <div class="split-right">{{ invoice.get_gross_amount }}</div>
-                </div>
+        <table>
+            <tr>
 
-                <div class="split">
-                    <div class="split-left">discount amount</div>
-                    <div class="split-right">{{ invoice.discount_amount }}</div>
-                </div>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Tax</th>
+                <th>Total</th>
+            </tr>
+            {% for item in invoice.items.all %}
+            <tr>
+                <td>{{item.title}}</td>
+                <td>${{item.unit_price}}</td>
+                <td>{{item.quantity}}</td>
+                <td>{{item.tax_rate}}</td>
+                <td>${{item.net_amount}}</td>
+            </tr>
+            {% endfor %}
+        </table>
 
-                <div class="split">
-                    <div class="split-left"><strong>Amount to pay</strong></div>
-                    <div class="split-right"><strong>{{ invoice.get_net_amount }}</strong></div>
-                </div>
-            </div>
-        </div>
+        <hr>
+        <p><strong>Gross: ${{invoice.get_gross_amount}}</strong></p>
+        <p><strong>Discount: ${{invoice.discount_amount}}</strong></p>
+        <p><strong>Net: ${{invoice.get_net_amount}}</strong></p>
     </body>
-</html>
+    </html>
