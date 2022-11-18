@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
 from rest_framework.decorators import api_view
@@ -9,6 +10,7 @@ from rest_framework.response import Response
 from .email import InvoiceDetailEmail
 from .models import Invoice
 from .serializers import InvoiceListSerializer, InvoiceRedSerializer, InvoiceWriteSerializer
+from .utils import render_to_pdf
 
 SUCCESS_CREATED = "successfully created"
 SUCCESS_UPDATE = "successfully updated"
@@ -116,20 +118,17 @@ def SendInvoice(request, invoice_code):
     return Response(response_data, status=response_status)
 
 
-# @api_view(['GET'])
-# def Generate_pdf(request, invoice_code):
-#     invoice = get_object_or_404(Invoice, pk=invoice_code, created_by=request.user)
+@api_view(["POST"])
+def Generate_pdf(request, *args, **kwargs):
+    invoice_code = kwargs.get("invoice_code")
+    invoice = get_object_or_404(Invoice, invoice_code=invoice_code, created_by=request.user)
+    pdf = render_to_pdf("pdf.html", {"invoice": invoice})
 
-#     template_name = 'pdf.html'
-
-#     template = get_template(template_name)
-#     html = template.render({'invoice': invoice})
-#     pdf = pdfkit.from_string(html, False, options={})
-
-#     response = HttpResponse(pdf, content_type='application/pdf')
-#     response['Content-Disposition'] = 'attachment; filename="invoice.pdf"'
-
-#     return response
+    response = HttpResponse(pdf, content_type="application/pdf")
+    filename = "Invoice_%s.pdf" % ("12341231")
+    content = "attachment; filename='%s'" % (filename)
+    response["Content-Disposition"] = content
+    return response
 
 
 # @api_view(['GET'])

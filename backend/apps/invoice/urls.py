@@ -1,11 +1,11 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from .views import InvoiceList, InvoiceViewSet, SendInvoice
+from .views import Generate_pdf, InvoiceList, InvoiceViewSet, SendInvoice
 
 urlpatterns = [
     path("list/", InvoiceList.as_view(), name="invoice_list"),
-    # path('<str:invoice_code>/generate_pdf/', Generate_pdf, name='generate_pdf'),
+    path("<str:invoice_code>/generate_pdf/", Generate_pdf, name="generate_pdf"),
     path("<str:invoice_code>/send_invoice/", SendInvoice, name="send_invoice"),
     # path('invoices/<int:invoice_id>/send_reminder/', send_reminder, name='send_reminder'),
 ]

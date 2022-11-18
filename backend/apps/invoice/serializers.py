@@ -169,7 +169,7 @@ class InvoiceListSerializer(InvoiceRedSerializer, serializers.ModelSerializer):
             "client_name",
             "created_at",
             "get_due_date_formatted",
-            "net_amount",
+            "get_net_amount",
             "status",
             "items",
         )
