@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { invoiceAction } from "../store/actions";
 import { uiActions } from "../store/Ui-slice";
@@ -193,6 +193,7 @@ const Form = () => {
   if (
     isNaN(invoiceInputs.clientName) &&
     isNaN(invoiceInputs.clientMail) &&
+    isNaN(invoiceInputs.clientCity) &&
     isNaN(selectedCompany)
   ) {
     form = true;
@@ -329,6 +330,7 @@ const Form = () => {
               id="client-city"
               label="City"
               value={invoiceInputs.clientCity}
+              required
               onChange={(e) =>
                 setInvoiceInputs({
                   ...invoiceInputs,
@@ -336,6 +338,7 @@ const Form = () => {
                 })
               }
             />
+
             <Input
               type="text"
               id="c-z-code"
@@ -361,6 +364,11 @@ const Form = () => {
               }
             />
           </div>
+          {responseMsg &&
+            responseMsg.client_city &&
+            invoiceInputs.clientCity === "" && (
+              <p className="response-text"> Please Enter The Client City </p>
+            )}
         </div>
 
         <div>
@@ -501,4 +509,4 @@ const Form = () => {
   );
 };
 
-export default Form;
+export default memo(Form);

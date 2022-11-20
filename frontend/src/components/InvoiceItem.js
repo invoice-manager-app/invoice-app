@@ -4,6 +4,8 @@ import classes from "./InvoiceItem.module.css";
 import { AiOutlineRight } from "react-icons/ai";
 import ShowMoreIcon from "./icons/ShowMoreIcon";
 import ShowLessIcon from "./icons/ShowLessIcon";
+import { useSelector } from "react-redux";
+import LoadingSpinner from "./UI/LoadingSpinner";
 
 const InvoiceItem = ({ items, status, name, date, id }) => {
   const [showItems, setShowItems] = useState(false);
@@ -11,34 +13,39 @@ const InvoiceItem = ({ items, status, name, date, id }) => {
   const toggleItemHandeler = () => {
     setShowItems((prevState) => !prevState);
   };
-
+  //loading state
+  const isLoading = useSelector((state) => state.invoiceListReducer.isLoading);
   return (
     <div className={classes.bar}>
-      <ul>
-        <li> #{id} </li>
-        <li> {date} </li>
-        <li> {name} </li>
-        <li>${items.map((el) => el.net_amount)} </li>
-        <li>
-          <div className={status ? "status" : "status paid"}>
-            <span> {status ? "Pending" : "Paid"} </span>
-          </div>
-        </li>
-        <li>
-          <button
-            className={`${classes.button} ${showItems ? classes.active : ""}`}
-            onClick={toggleItemHandeler}
-          >
-            {showItems ? <ShowLessIcon /> : <ShowMoreIcon />}
-          </button>
-        </li>
-        <li>
-          {" "}
-          <Link to={`/invoice/${id}`} className={classes.link}>
-            <AiOutlineRight />
-          </Link>
-        </li>
-      </ul>
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <ul>
+          <li> #{id} </li>
+          <li> {date} </li>
+          <li> {name} </li>
+          <li>${items.map((el) => el.net_amount)} </li>
+          <li>
+            <div className={status ? "status" : "status paid"}>
+              <span> {status ? "Pending" : "Paid"} </span>
+            </div>
+          </li>
+          <li>
+            <button
+              className={`${classes.button} ${showItems ? classes.active : ""}`}
+              onClick={toggleItemHandeler}
+            >
+              {showItems ? <ShowLessIcon /> : <ShowMoreIcon />}
+            </button>
+          </li>
+          <li>
+            {" "}
+            <Link to={`/invoice/${id}`} className={classes.link}>
+              <AiOutlineRight />
+            </Link>
+          </li>
+        </ul>
+      )}
 
       {showItems && (
         <div className={classes.detail}>

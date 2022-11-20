@@ -1,18 +1,19 @@
 import { Fragment, useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { AiOutlineLeft } from "react-icons/ai";
 
 import classes from "./InvoiceInform.module.css";
-import { invoiceAction } from "../store/actions";
-import { uiActions } from "../store/Ui-slice";
+
 import EditInvoice from "./EditInvoice";
+import InformHeader from "./InformHeader";
+import LoadingSpinner from "./UI/LoadingSpinner";
 
 const InoviceInform = () => {
   const [invoiceDetail, setInvoiceDetail] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const inputFields = useSelector(
     (state) => state.invoiceListReducer.invoice_list
   );
@@ -22,30 +23,33 @@ const InoviceInform = () => {
     (el) => el.invoice_code === params.invoiceId
   );
 
+  //fetch invoice detail
   useEffect(() => {
     const token = localStorage.getItem("token");
     const invoice_code = inputFields.map((el) => el.invoice_code);
+    setIsLoading(true);
 
+    const link = `http://localhost:8000/invoice/${invoice_code[0]}/`;
     const fetchInvoice = async () => {
-      const response = await fetch(
-        `http://localhost:8000/invoice/${invoice_code[0]}`,
-        {
+      try {
+        const response = await fetch(link, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
-      );
+        });
+        setIsLoading(false);
 
-      const data = await response.json();
-      setInvoiceDetail(data);
+        const data = await response.json();
+        setInvoiceDetail(data);
+      } catch (error) {
+        setIsLoading(false);
+      }
     };
 
     fetchInvoice();
   }, [inputFields]);
-  console.log(invoiceDetail);
 
-  // console.log(inputFields);
   const { isPending, id } = invoiceItem;
   if (invoiceDetail === undefined) {
     return;
@@ -53,21 +57,8 @@ const InoviceInform = () => {
   if (!invoiceItem) {
     navigate("/invoice");
   }
-  const deleteHandeler = () => {
-    navigate("/invoice");
-    dispatch(invoiceAction.deleteInvoice(invoiceItem.id));
-  };
+  //loading state
 
-  const statusHandeler = () => {
-    dispatch(invoiceAction.changePendingState({ id, isPending }));
-
-    //setPendingState((prevState) => !prevState);
-  };
-  const editHandeler = () => {
-    // navigate(`/edit-invoice/${id}`);
-    dispatch(uiActions.toggleForm());
-  };
-  const paidBtnClass = isPending ? classes.paid : classes.pending;
   return (
     <Fragment>
       {/* <EditInvoice id={invoiceItem.id} /> */}
@@ -75,112 +66,90 @@ const InoviceInform = () => {
         <AiOutlineLeft /> <span>Go Back</span>
       </Link>
 
-      <div className={classes.navActions}>
-        <div className={classes.state}>
-          <div className={isPending ? "status" : "status paid"}>
-            <span> {isPending ? "Pending" : "Paid"} </span>
-          </div>
-        </div>
-        <div className={classes.actions}>
-          <button onClick={editHandeler} className={classes.edit}>
-            Edit
-          </button>
-          <button onClick={deleteHandeler} className={classes.delete}>
-            Delete
-          </button>
-          <button className={paidBtnClass} onClick={statusHandeler}>
-            {isPending ? "Mark as Paid" : "Mark as Pending"}
-          </button>
-        </div>
-      </div>
-      <div className={classes.details}>
-        <div className={classes.top}>
-          <div className={classes.left}>
-            <p>
-              <span>#</span>
-              {invoiceItem.id}
-            </p>
-            <p>
-              {invoiceItem.description
-                ? invoiceItem.description
-                : "Unknown Description"}
-            </p>
-          </div>
-          {/* <div className={classes.right}>
-            <p> {invoiceItem.client_city} </p>
-            <p> {invoiceItem.client_address} </p>
-            <p> {invoiceItem.Zcode} </p>
-            <p> {invoiceItem.country} </p>
-          </div> */}
-        </div>
-        <div className={classes.mid}>
-          <div className={classes.date}>
-            <h4>Invoice Date</h4>
-            <p>{invoiceDetail.date}</p>
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <>
+          {" "}
+          <InformHeader
+            isPending={isPending}
+            invoiceItem={invoiceItem}
+            id={id}
+          />
+          <div className={classes.details}>
+            <div className={classes.top}>
+              <div className={classes.left}>
+                <p>
+                  <span>#</span>
+                  {invoiceItem.id}
+                </p>
+                <p>{invoiceItem.description} </p>
+              </div>
+              {/* <div className={classes.right}>
+    <p> {invoiceItem.client_city} </p>
+    <p> {invoiceItem.client_address} </p>
+    <p> {invoiceItem.Zcode} </p>
+    <p> {invoiceItem.country} </p>
+  </div> */}
+            </div>
+            <div className={classes.mid}>
+              <div className={classes.date}>
+                <h4>Invoice Date</h4>
+                <p>{invoiceDetail.date}</p>
 
-            <h4>Payment Date</h4>
-            <p>{invoiceDetail.paymentDue}</p>
-          </div>
-          <div className={classes.billTo}>
-            <h4>Bill To</h4>
-            <p> {invoiceDetail.client_name} </p>
-            <p>
-              {invoiceDetail.client_address
-                ? invoiceDetail.client_address
-                : "Unknown Address"}{" "}
-            </p>
-            <p>
-              {invoiceDetail.client_zipcode
-                ? invoiceDetail.client_zipcode
-                : "Unknown zip-code"}
-            </p>
-            <p>
-              {invoiceDetail.client_country
-                ? invoiceDetail.client_country
-                : "Unknow Country"}
-            </p>
-          </div>
-          <div className={classes.clientMail}>
-            <h4>Sent To</h4>
-            <p>{invoiceDetail.client_email}</p>
-          </div>
-        </div>
-        <div className={classes.bot}>
-          <div>
-            <div>
-              <ul>
-                <li>Item Name</li>
-                <li>QTY</li>
-                <li>Price</li>
-                <li>Total</li>
-              </ul>
+                <h4>Payment Date</h4>
+                <p>{invoiceDetail.paymentDue}</p>
+              </div>
+              <div className={classes.billTo}>
+                <h4>Bill To</h4>
+                <p> {invoiceDetail.client_name} </p>
+                <p>{invoiceDetail.client_address} </p>
+                <p>{invoiceDetail.client_zipcode}</p>
+                <p>{invoiceDetail.client_country}</p>
+              </div>
+              <div className={classes.clientMail}>
+                <h4>Sent To</h4>
+                <p>{invoiceDetail.client_email}</p>
+              </div>
             </div>
-            <div>
-              {invoiceDetail.items &&
-                invoiceDetail.items.map((item) => {
-                  return (
-                    <ul key={item.id}>
-                      <li> {item.title} </li>
-                      <li> {item.quantity} </li>
-                      <li> {item.unit_price} </li>
-                      <li> {+item.quantity * +item.unit_price} </li>
-                    </ul>
-                  );
-                })}
+            <div className={classes.bot}>
+              <div>
+                <div>
+                  <ul>
+                    <li>Item Name</li>
+                    <li>QTY</li>
+                    <li>Price</li>
+                    <li>Total</li>
+                  </ul>
+                </div>
+                <div>
+                  {invoiceDetail.items &&
+                    invoiceDetail.items.map((item) => {
+                      return (
+                        <ul key={item.id}>
+                          <li> {item.title} </li>
+                          <li> {item.quantity} </li>
+                          <li> {item.unit_price} </li>
+                          <li> {+item.quantity * +item.unit_price} </li>
+                        </ul>
+                      );
+                    })}
+                </div>
+              </div>
+              <div className={classes.amount}>
+                <p>Amount Due</p>
+                <p>
+                  $
+                  {invoiceDetail.items &&
+                    invoiceDetail.items
+                      .map((el) => +el.quantity * +el.unit_price)
+                      .reduce((curr, i) => curr + i)}
+                </p>
+              </div>
             </div>
           </div>
-          <div className={classes.amount}>
-            <p>Amount Due</p>
-            <p>
-              $
-              {invoiceDetail.items &&
-                invoiceDetail.items
-                  .map((el) => +el.quantity * +el.unit_price)
-                  .reduce((curr, i) => curr + i)}
-            </p>
-          </div>
-        </div>
-      </div>
+        </>
+      )}
     </Fragment>
   );
 };

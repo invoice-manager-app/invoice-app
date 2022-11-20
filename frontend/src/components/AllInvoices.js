@@ -6,6 +6,8 @@ import InvoiceBar from "./InvoiceBar";
 import { uiActions } from "../store/Ui-slice";
 import { getInvoiceCompany } from "../store/get-invoice-detail";
 import { getInvoicList } from "../store/get-invoice-slice";
+import Notification from "./UI/Notification";
+import LoadingSpinner from "./UI/LoadingSpinner";
 const AllInvoices = () => {
   const [selectInput, setSelectInput] = useState("all");
   const [filter, setFilter] = useState([]);
@@ -14,6 +16,8 @@ const AllInvoices = () => {
   const invoiceNumber = useSelector((state) => state.action.length);
 
   const invoiceArray = useSelector((state) => state.action.value);
+
+  const notification = useSelector((state) => state.ui.notification);
 
   //invoice List
   const invoiceList = useSelector(
@@ -58,9 +62,11 @@ const AllInvoices = () => {
 
     dispatch(getInvoicList(token));
   }, [dispatch]);
-
   return (
     <Fragment>
+      {notification &&
+        notification.message !== null &&
+        notification.message !== undefined && <Notification />}
       <div className={classes["invoice-section"]}>
         <div className={classes.invoices}>
           <div>
@@ -85,7 +91,6 @@ const AllInvoices = () => {
             </button>
           </div>
         </div>
-
         <InvoiceBar invoiceList={invoiceList} />
       </div>
     </Fragment>

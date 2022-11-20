@@ -34,7 +34,6 @@ const invoiceListSlice = createSlice({
     [getInvoicList.fulfilled]: (state, action) => {
       state.isLoading = false;
       state.invoice_list = action.payload.results;
-      console.log(action.payload.results);
     },
     [getInvoicList.pending]: (state, action) => {
       state.isLoading = false;

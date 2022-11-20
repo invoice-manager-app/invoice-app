@@ -235,3 +235,49 @@ export const createInvoice = (token, selectedCompany, values, items) => {
     }
   };
 };
+
+//delete Invoice
+
+export const deleteInvoice = (id, token) => {
+  return async (dispatch) => {
+    dispatch(
+      uiActions.notification({
+        status: "pending",
+        message: "Deleting.....",
+      })
+    );
+
+    const deleteRequest = async () => {
+      const response = await fetch(`http://localhost:8000/invoice/${id}/`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = response.json();
+
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      return data;
+    };
+
+    try {
+      const data = await deleteRequest();
+      dispatch(
+        uiActions.notification({
+          status: "succeed",
+          message: data.response_message,
+        })
+      );
+    } catch (error) {
+      dispatch(
+        uiActions.notification({
+          status: "error",
+          message: error.message,
+        })
+      );
+    }
+  };
+};

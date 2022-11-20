@@ -9,13 +9,6 @@
   color: #fff;
 }
 
-.navActions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 30px;
-  margin-bottom: 20px;
-}
 .navActions,
 .details,
 .bot > div:first-of-type,
@@ -25,31 +18,6 @@
   border-radius: 25px;
 }
 
-.state {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--text);
-  font-size: 12px;
-}
-.actions button {
-  cursor: pointer;
-  padding: 16px 24px;
-  border-radius: 30px;
-  border: none;
-  font-size: 12px;
-  margin-right: 8px;
-  color: #fff;
-}
-.edit {
-  background-color: var(--dark-purple);
-}
-.delete {
-  background-color: var(--danger);
-}
-.paid {
-  background-color: var(--paid-logo);
-}
 /*details*/
 .details {
   color: #fff;
@@ -111,7 +79,4 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-.pending {
-  background-color: var(--pending-logo);
 }
