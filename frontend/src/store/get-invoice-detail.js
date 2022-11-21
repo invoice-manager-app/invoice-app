@@ -7,6 +7,7 @@ export const getInvoiceCompany = createAsyncThunk(
       const response = await fetch("http://localhost:8000/company/list/", {
         method: "GET",
         headers: {
+          "Content-type": "application/json",
           Authorization: `Bearer ${arg}`,
         },
       });
