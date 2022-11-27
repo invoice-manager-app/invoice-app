@@ -1,10 +1,15 @@
 .pagination {
+  display: flex;
   background-color: transparent;
+}
+.pagination button {
+  color: var(--main-color);
+  font-weight: bold;
 }
 .pagination ul {
   display: flex;
   align-items: center;
-  gap: 10px;
+  /* gap: 10px; */
 }
 .pagination ul li {
   width: 30px;
@@ -14,11 +19,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  color: #777;
+  font-weight: bold;
+  color: var(--main-color);
   cursor: pointer;
 }
 .pagination ul li.active {
   background-color: var(--main-color);
   color: #fff;
 }
+/* .deactivate {
+  opacity: 0.2;
+  cursor: not-allowed;
+} */

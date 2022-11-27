@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const getPagination = createAsyncThunk(
   "pagination/getPagination",
-  async (arg, pageNum) => {
+  async (arg, thunkApi) => {
     try {
       const response = await fetch(
         `http://localhost:8000/invoice/list/?page=${arg.num}`,
@@ -29,18 +29,37 @@ export const getPagination = createAsyncThunk(
 
 const paginationSlice = createSlice({
   name: "pagination",
-  initialState: { isLoading: false, pageData: [] },
+  initialState: {
+    isLoading: false,
+    pageData: null,
+    count: null,
+    next: null,
+    previous: null,
+    currentPage: 1,
+  },
+  reducers: {
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+      console.log(state.currentPage);
+    },
+  },
   extraReducers: {
     [getPagination.pending]: (state, action) => {
       state.isLoading = true;
+      //console.log(action);
     },
     [getPagination.fulfilled]: (state, action) => {
-      state.pageData.push(action.payload.results);
+      state.pageData = action.payload.results;
+      state.count = action.payload.count;
+      state.next = action.payload.next;
+      state.previous = action.payload.previous;
       state.isLoading = false;
     },
     [getPagination.rejected]: (state, action) => {
       state.isLoading = false;
+      //console.log(action);
     },
   },
 });
+export const paginationActions = paginationSlice.actions;
 export default paginationSlice;

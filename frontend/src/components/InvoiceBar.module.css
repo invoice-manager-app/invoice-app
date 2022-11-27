@@ -8,3 +8,21 @@
 .categories li {
   flex-basis: 20%;
 }
+.invoiceList {
+  height: 550px;
+  margin-bottom: 20px;
+  overflow-y: auto;
+}
+.invoiceList::-webkit-scrollbar {
+  width: 7px; /* width of the entire scrollbar */
+}
+
+.invoiceList::-webkit-scrollbar-track {
+  background: #fff; /* color of the tracking area */
+}
+
+.invoiceList::-webkit-scrollbar-thumb {
+  background-color: var(--main-color); /* color of the scroll thumb */
+  border-radius: 20px; /* roundness of the scroll thumb */
+  /* creates padding around scroll thumb */
+}

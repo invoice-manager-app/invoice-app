@@ -50,7 +50,6 @@ const InoviceInform = () => {
     fetchInvoice();
   }, [inputFields]);
 
-  const { isPending, id } = invoiceItem;
   if (invoiceDetail === undefined) {
     return;
   }
@@ -72,9 +71,9 @@ const InoviceInform = () => {
         <>
           {" "}
           <InformHeader
-            isPending={isPending}
+            isPending={invoiceDetail.status}
             invoiceItem={invoiceItem}
-            id={id}
+            id={invoiceDetail.invoice_code}
           />
           <div className={classes.details}>
             <div className={classes.top}>

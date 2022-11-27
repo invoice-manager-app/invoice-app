@@ -1,56 +1,38 @@
-import ReactPaginate from "react-paginate";
 import { Fragment, useState, memo, useEffect } from "react";
 import InvoiceItem from "./InvoiceItem";
 import classes from "./InvoiceBar.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { getPagination } from "../store/pagination-slice";
 import Pagination from "./UI/Pagination";
-import { useCallback } from "react";
-const InvoiceBar = ({ invoiceList }) => {
-  const [currentPage, setCurrentPage] = useState(1);
+import { getInvoicList } from "../store/get-invoice-slice";
+const InvoiceBar = () => {
+  // const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
-  const [nextPage, setNextPage] = useState(null);
+  const dispatch = useDispatch();
 
-  const [data, setData] = useState([]);
+  //invoice data
+  const invoices = useSelector((state) => state.paginationReducer.pageData);
 
-  const paginateHandler = useCallback((number) => {
-    setCurrentPage(number);
-  }, []);
+  //current page
+  const currentPage = useSelector(
+    (state) => state.paginationReducer.currentPage
+  );
 
   useEffect(() => {
     let token = localStorage.getItem("token");
-
-    const pagination = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:8000/invoice/list/?page=${currentPage}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const data = await response.json();
-        if (!response.ok) {
-          throw new Error(response.statusText);
-        }
-        setData(data.results);
-        setNextPage(data.next);
-        console.log(data);
-      } catch (error) {
-        console.log(error.message);
-      }
+    console.log("inv");
+    const obj = {
+      num: currentPage,
+      token,
     };
-    pagination();
-  }, [currentPage, paginateHandler]);
-  console.log(data);
+    dispatch(getPagination(obj));
+  }, [currentPage, dispatch]);
 
   //get current item
-  const indexOfLastInvoice = currentPage * itemsPerPage;
-  const indexOfFirstInvoice = indexOfLastInvoice - itemsPerPage;
-  const currentInvoice = data.slice(indexOfFirstInvoice, indexOfLastInvoice);
+  const indexOfLastInvoice = invoices && invoices.length;
+  const indexOfFirstInvoice = 0;
+  const currentInvoice =
+    invoices && invoices.slice(indexOfFirstInvoice, indexOfLastInvoice);
 
   return (
     <Fragment>
@@ -61,22 +43,23 @@ const InvoiceBar = ({ invoiceList }) => {
         <li>TOTAL</li>
         <li>STATUS</li>
       </ul>
-      {data.map((item) => (
-        <InvoiceItem
-          key={item.invoice_code}
-          id={item.invoice_code}
-          name={item.client_name}
-          items={item.items}
-          date={item.created_at}
-          status={item.status}
-        />
-      ))}
+      <div className={classes.invoiceList}>
+        {invoices &&
+          currentInvoice.map((item) => (
+            <InvoiceItem
+              key={item.invoice_code}
+              id={item.invoice_code}
+              name={item.client_name}
+              items={item.items}
+              date={item.created_at}
+              status={item.status}
+            />
+          ))}
+      </div>
 
-      <Pagination
-        data={data}
-        itemsPerPage={itemsPerPage}
-        paginate={paginateHandler}
-      />
+      {invoices && invoices.length !== 0 && (
+        <Pagination data={invoices} itemsPerPage={itemsPerPage} />
+      )}
     </Fragment>
   );
 };

@@ -10,6 +10,7 @@ import Notification from "./UI/Notification";
 import LoadingSpinner from "./UI/LoadingSpinner";
 const AllInvoices = () => {
   const [selectInput, setSelectInput] = useState("all");
+
   const [filter, setFilter] = useState([]);
   const dispatch = useDispatch();
 
@@ -91,7 +92,7 @@ const AllInvoices = () => {
             </button>
           </div>
         </div>
-        <InvoiceBar invoiceList={invoiceList} />
+        <InvoiceBar />
       </div>
     </Fragment>
   );

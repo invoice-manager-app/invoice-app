@@ -9,12 +9,16 @@ import { MdDelete } from "react-icons/md";
 import { useLocation } from "react-router-dom";
 import { createInvoice } from "../store/action-creator";
 import { getInvoicList } from "../store/get-invoice-slice";
+import { getPagination } from "../store/pagination-slice";
 
 const Form = () => {
   const dispatch = useDispatch();
 
   let allCompanies = useSelector((state) => state.getInvoiceData.selectCompany);
-
+  //current page
+  const currentPage = useSelector(
+    (state) => state.paginationReducer.currentPage
+  );
   const responseMsg = useSelector((state) => state.ui.responseMsg);
 
   const location = useLocation();
@@ -117,8 +121,12 @@ const Form = () => {
   const submitHandeler = (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
+    const obj = {
+      num: currentPage,
+      token,
+    };
     dispatch(createInvoice(token, selectedCompany, invoiceInputs, inputFields));
-    dispatch(getInvoicList(token));
+    dispatch(getPagination(obj));
 
     dispatch(uiActions.hideForm());
 
