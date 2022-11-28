@@ -3,9 +3,13 @@ import { Pagination } from "antd";
 
 import { useNavigate } from "react-router-dom";
 import classes from "./Pagination.module.css";
-const PaginationComponent = ({ itemsPerPage, setCurrentPage, currentPage }) => {
+const PaginationComponent = ({
+  itemsPerPage,
+  setCurrentPage,
+  currentPage,
+  count,
+}) => {
   const dispatch = useDispatch();
-  const count = useSelector((state) => state.invoiceListReducer.count);
   const next = useSelector((state) => state.paginationReducer.next);
   const previous = useSelector((state) => state.paginationReducer.previous);
   let pageNums = [];
@@ -25,7 +29,7 @@ const PaginationComponent = ({ itemsPerPage, setCurrentPage, currentPage }) => {
   return (
     <Pagination
       onChange={(value) => setCurrentPage(value)}
-      pageSize={10}
+      pageSize={itemsPerPage}
       total={count}
       current={currentPage}
     />

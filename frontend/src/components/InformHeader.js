@@ -22,8 +22,7 @@ const InformHeader = ({ isPending, invoiceItem, id }) => {
   };
 
   const statusHandeler = () => {
-    dispatch(invoiceAction.changePendingState({ id, isPending }));
-
+    // dispatch(invoiceAction.changePendingState({ id, isPending }));
     //setPendingState((prevState) => !prevState);
   };
 
@@ -51,6 +50,8 @@ const InformHeader = ({ isPending, invoiceItem, id }) => {
         <button className={paidBtnClass} onClick={statusHandeler}>
           {isPending ? "Mark as Paid" : "Mark as Pending"}
         </button>
+
+        <button className={classes.printBtn}>Print</button>
       </div>
     </div>
   );

@@ -9,7 +9,7 @@
   flex-basis: 20%;
 }
 .invoiceList {
-  height: 550px;
+  height: 450px;
   margin-bottom: 20px;
   overflow-y: auto;
 }

@@ -34,3 +34,6 @@
 .pending {
   background-color: var(--pending-logo);
 }
+.printBtn {
+  background-color: #2f79bd;
+}

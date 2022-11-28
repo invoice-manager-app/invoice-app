@@ -4,14 +4,14 @@ import classes from "./InvoiceBar.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { getPagination } from "../store/pagination-slice";
 import PaginationComponent from "./UI/Pagination";
-import {
-  getInvoiceListActions,
-  getInvoicList,
-} from "../store/get-invoice-slice";
-const InvoiceBar = () => {
+import { getInvoiceListActions } from "../store/get-invoice-slice";
+import { searchData } from "../store/search-slice";
+
+const InvoiceBar = ({ search }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [count, setCount] = useState();
   const [itemsPerPage] = useState(10);
-  // const [data, setData] = useState([]);
+
   const data = useSelector((state) => state.invoiceListReducer.data);
   const dispatch = useDispatch();
 
@@ -19,11 +19,17 @@ const InvoiceBar = () => {
   const invoices = useSelector(
     (state) => state.invoiceListReducer.invoice_list
   );
-  console.log(invoices);
+  //count of first render invoice
+  const InvoiceListcount = useSelector(
+    (state) => state.invoiceListReducer.count
+  ); //count of first render invoice
+  const SearchListcount = useSelector((state) => state.searchReducer.count);
+
+  //search results
+  const searchResults = useSelector((state) => state.searchReducer.searchData);
 
   // pagination list
   const nextPageList = useSelector((state) => state.paginationReducer.pageData);
-  console.log(nextPageList);
   //next button
   const nextBtn = useSelector((state) => state.invoiceListReducer.next);
 
@@ -42,15 +48,36 @@ const InvoiceBar = () => {
   useEffect(() => {
     if (nextBtn !== null) {
       dispatch(getInvoiceListActions.addInvoices(nextPageList));
+      setCount(InvoiceListcount);
     }
-  }, [nextPageList, nextBtn, dispatch]);
+  }, [nextPageList, nextBtn, dispatch, InvoiceListcount]);
 
-  //get current item
-  // const indexOfLastInvoice = invoices && invoices.length;
-  // const indexOfFirstInvoice = 0;
-  // const currentInvoice =
-  //   invoices && invoices.slice(indexOfFirstInvoice, indexOfLastInvoice);
+  //search data
 
+  useEffect(() => {
+    if (searchResults && searchResults.length !== 0) {
+      dispatch(getInvoiceListActions.addInvoices(searchResults));
+      setCount(SearchListcount);
+    }
+    if (search !== "" && searchResults && searchResults.length === 0) {
+      dispatch(getInvoiceListActions.addInvoices(searchResults));
+      setCount(SearchListcount);
+    }
+    if (search.trim("") === "") {
+      dispatch(getInvoiceListActions.addInvoices(invoices));
+      setCount(InvoiceListcount);
+    }
+  }, [
+    dispatch,
+    search,
+    invoices,
+    searchResults,
+    SearchListcount,
+    InvoiceListcount,
+  ]);
+  if (search !== "" && searchResults && searchResults.length === 0) {
+    return <p className="not-found"> Not Found</p>;
+  }
   return (
     <Fragment>
       <ul className={classes.categories}>
@@ -80,6 +107,7 @@ const InvoiceBar = () => {
           itemsPerPage={itemsPerPage}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
+          count={count}
         />
       )}
     </Fragment>

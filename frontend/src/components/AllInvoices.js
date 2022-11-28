@@ -8,43 +8,18 @@ import { getInvoiceCompany } from "../store/get-invoice-detail";
 import { getInvoicList } from "../store/get-invoice-slice";
 import Notification from "./UI/Notification";
 import LoadingSpinner from "./UI/LoadingSpinner";
+import Search from "./UI/Search";
+import FilterInvoices from "./UI/FilterInvoices";
 const AllInvoices = () => {
   const [selectInput, setSelectInput] = useState("all");
 
-  const [filter, setFilter] = useState([]);
+  const [search, setSearch] = useState("");
+
   const dispatch = useDispatch();
 
   const invoiceNumber = useSelector((state) => state.action.length);
 
-  const invoiceArray = useSelector((state) => state.action.value);
-
   const notification = useSelector((state) => state.ui.notification);
-
-  //invoice List
-  const invoiceList = useSelector(
-    (state) => state.invoiceListReducer.invoice_list
-  );
-
-  //filter function
-  const filterHandeler = useCallback(() => {
-    switch (selectInput) {
-      case "pending":
-        return setFilter(
-          invoiceArray.filter((invoice) => invoice.isPending === true)
-        );
-      case "paid":
-        return setFilter(
-          invoiceArray.filter((invoice) => invoice.isPending === false)
-        );
-      default:
-        return setFilter(invoiceArray);
-    }
-  }, [invoiceArray, selectInput]);
-
-  //filter invoices
-  useEffect(() => {
-    filterHandeler();
-  }, [selectInput, invoiceArray, filterHandeler, dispatch]);
 
   //toggle invoice form
   const formToggleHandeler = useCallback(() => {
@@ -54,9 +29,6 @@ const AllInvoices = () => {
 
     dispatch(uiActions.toggleForm());
   }, [dispatch]);
-  const selectHandeler = (e) => {
-    setSelectInput(e.target.value);
-  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -68,6 +40,7 @@ const AllInvoices = () => {
       {notification &&
         notification.message !== null &&
         notification.message !== undefined && <Notification />}
+
       <div className={classes["invoice-section"]}>
         <div className={classes.invoices}>
           <div>
@@ -75,15 +48,10 @@ const AllInvoices = () => {
             <p>There are {invoiceNumber} total invoices</p>
           </div>
           <div className={classes.actions}>
-            <div>
-              <label htmlFor="filter">filter by</label>
-              <select id="filter" onChange={selectHandeler} value={selectInput}>
-                <option value="all">All</option>
-                <option value="pending">Pending</option>
-                <option value="paid">Paid</option>
-                {/*<option value="Paid">Paid</option>*/}
-              </select>
-            </div>
+            <FilterInvoices
+              selectInput={selectInput}
+              setSelectInput={setSelectInput}
+            />
             <button onClick={formToggleHandeler} className={classes.button}>
               <span className={classes.icon}>
                 <IoIosAdd />
@@ -92,7 +60,8 @@ const AllInvoices = () => {
             </button>
           </div>
         </div>
-        <InvoiceBar />
+        <Search setSearch={setSearch} search={search} />
+        <InvoiceBar search={search} />
       </div>
     </Fragment>
   );
