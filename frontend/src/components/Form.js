@@ -1,6 +1,5 @@
-import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { invoiceAction } from "../store/actions";
 import { uiActions } from "../store/Ui-slice";
 import Input from "./UI/Inputs";
 import classes from "./Form.module.css";
@@ -9,16 +8,12 @@ import { MdDelete } from "react-icons/md";
 import { useLocation } from "react-router-dom";
 import { createInvoice } from "../store/action-creator";
 import { getInvoicList } from "../store/get-invoice-slice";
-import { getPagination } from "../store/pagination-slice";
 
 const Form = () => {
   const dispatch = useDispatch();
 
   let allCompanies = useSelector((state) => state.getInvoiceData.selectCompany);
-  //current page
-  const currentPage = useSelector(
-    (state) => state.paginationReducer.currentPage
-  );
+
   const responseMsg = useSelector((state) => state.ui.responseMsg);
 
   const location = useLocation();
@@ -42,7 +37,7 @@ const Form = () => {
     paymentDue: 11,
   });
   const [inputFields, setInputFields] = useState([
-    { title: "", quantity: "", unit_price: "", tax_rate: 10 },
+    { title: "", quantity: "", unit_price: "", tax_rate: 0 },
   ]);
 
   const [dateTime] = useState(new Date());
@@ -107,7 +102,7 @@ const Form = () => {
         title: "",
         quantity: "",
         unit_price: "",
-        tax_rate: 10,
+        tax_rate: "",
       },
     ]);
   };
@@ -121,12 +116,9 @@ const Form = () => {
   const submitHandeler = (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
-    const obj = {
-      num: currentPage,
-      token,
-    };
+
     dispatch(createInvoice(token, selectedCompany, invoiceInputs, inputFields));
-    dispatch(getPagination(obj));
+    dispatch(getInvoicList(token));
 
     dispatch(uiActions.hideForm());
 
@@ -469,16 +461,21 @@ const Form = () => {
                     <Input
                       type="number"
                       id="tax_rate"
+                      min="0"
                       label="Tax"
                       value={inputField.tax_rate}
-                      readOnly
+                      onChange={(event) => handleChangeInput(event, index)}
                     />
                   </li>
                   <li>
                     <Input
                       type="number"
                       label="Total"
-                      value={+inputField.unit_price * +inputField.quantity}
+                      value={
+                        +inputField.unit_price * +inputField.quantity +
+                        (inputField.tax_rate / 100) *
+                          (+inputField.unit_price * +inputField.quantity)
+                      }
                       readOnly
                     />
                   </li>

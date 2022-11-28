@@ -16,7 +16,7 @@ export const getInvoicList = createAsyncThunk(
         throw new Error(response.statusText);
       }
       const data = await response.json();
-
+      console.log(data);
       return data;
     } catch (error) {
       console.log(error);
@@ -26,7 +26,20 @@ export const getInvoicList = createAsyncThunk(
 
 const invoiceListSlice = createSlice({
   name: "invoice",
-  initialState: { invoice_list: null, isLoading: false },
+  initialState: {
+    invoice_list: null,
+    next: null,
+    previous: null,
+    currentPage: 1,
+    count: null,
+    isLoading: false,
+    data: null,
+  },
+  reducers: {
+    addInvoices: (state, action) => {
+      state.data = action.payload;
+    },
+  },
   extraReducers: {
     [getInvoicList.pending]: (state, action) => {
       state.isLoading = true;
@@ -34,10 +47,14 @@ const invoiceListSlice = createSlice({
     [getInvoicList.fulfilled]: (state, action) => {
       state.isLoading = false;
       state.invoice_list = action.payload.results;
+      state.count = action.payload.count;
+      state.next = action.payload.next;
+      state.previous = action.payload.previous;
     },
     [getInvoicList.pending]: (state, action) => {
       state.isLoading = false;
     },
   },
 });
+export const getInvoiceListActions = invoiceListSlice.actions;
 export default invoiceListSlice;

@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import classes from "./InformHeader.module.css";
 import { useNavigate } from "react-router-dom";
 import { deleteInvoice } from "../store/action-creator";
+import { getInvoicList } from "../store/get-invoice-slice";
 
 const InformHeader = ({ isPending, invoiceItem, id }) => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const InformHeader = ({ isPending, invoiceItem, id }) => {
   const deleteHandeler = () => {
     dispatch(deleteInvoice(invoice_code, token));
     navigate("/invoice");
-    //  dispatch(invoiceAction.deleteInvoice(invoiceItem.id));
+    dispatch(getInvoicList(token));
   };
 
   const statusHandeler = () => {

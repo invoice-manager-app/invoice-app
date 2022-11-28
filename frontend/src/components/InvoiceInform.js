@@ -12,21 +12,18 @@ import LoadingSpinner from "./UI/LoadingSpinner";
 const InoviceInform = () => {
   const [invoiceDetail, setInvoiceDetail] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
   const navigate = useNavigate();
-  const inputFields = useSelector(
-    (state) => state.invoiceListReducer.invoice_list
-  );
+  const dataInvoice = useSelector((state) => state.invoiceListReducer.data);
 
   const params = useParams();
-  const invoiceItem = inputFields.find(
-    (el) => el.invoice_code === params.invoiceId
-  );
-
+  const invoiceItem =
+    dataInvoice &&
+    dataInvoice.find((el) => el.invoice_code === params.invoiceId);
   //fetch invoice detail
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const invoice_code = inputFields.map((el) => el.invoice_code);
+    const invoice_code =
+      dataInvoice && dataInvoice.map((el) => el.invoice_code);
     setIsLoading(true);
 
     const link = `http://localhost:8000/invoice/${invoice_code[0]}/`;
@@ -48,14 +45,16 @@ const InoviceInform = () => {
     };
 
     fetchInvoice();
-  }, [inputFields]);
-
+  }, [dataInvoice]);
+  useEffect(() => {
+    if (!invoiceItem) {
+      navigate("/invoice");
+    }
+  }, [invoiceItem, navigate]);
   if (invoiceDetail === undefined) {
     return;
   }
-  if (!invoiceItem) {
-    navigate("/invoice");
-  }
+
   //loading state
 
   return (
@@ -80,7 +79,7 @@ const InoviceInform = () => {
               <div className={classes.left}>
                 <p>
                   <span>#</span>
-                  {invoiceItem.id}
+                  {invoiceItem.invoice_code}
                 </p>
                 <p>{invoiceItem.description} </p>
               </div>

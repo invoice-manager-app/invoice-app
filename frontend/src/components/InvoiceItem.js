@@ -7,7 +7,7 @@ import ShowLessIcon from "./icons/ShowLessIcon";
 import { useSelector } from "react-redux";
 import LoadingSpinner from "./UI/LoadingSpinner";
 
-const InvoiceItem = ({ items, status, name, date, id }) => {
+const InvoiceItem = ({ items, status, name, date, id, net_amount }) => {
   const [showItems, setShowItems] = useState(false);
 
   const toggleItemHandeler = () => {
@@ -24,7 +24,7 @@ const InvoiceItem = ({ items, status, name, date, id }) => {
           <li> #{id} </li>
           <li> {date} </li>
           <li> {name} </li>
-          <li>${items.map((el) => el.net_amount)} </li>
+          <li>${net_amount} </li>
           <li>
             <div className={status ? "status" : "status paid"}>
               <span> {status ? "Pending" : "Paid"} </span>

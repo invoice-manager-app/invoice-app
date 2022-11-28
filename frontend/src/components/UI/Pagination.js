@@ -1,10 +1,11 @@
 import { useSelector, useDispatch } from "react-redux";
+import { Pagination } from "antd";
+
 import { useNavigate } from "react-router-dom";
-import { paginationActions } from "../../store/pagination-slice";
 import classes from "./Pagination.module.css";
-const Pagination = ({ itemsPerPage, setCurrentPage }) => {
+const PaginationComponent = ({ itemsPerPage, setCurrentPage, currentPage }) => {
   const dispatch = useDispatch();
-  const count = useSelector((state) => state.paginationReducer.count);
+  const count = useSelector((state) => state.invoiceListReducer.count);
   const next = useSelector((state) => state.paginationReducer.next);
   const previous = useSelector((state) => state.paginationReducer.previous);
   let pageNums = [];
@@ -15,23 +16,42 @@ const Pagination = ({ itemsPerPage, setCurrentPage }) => {
 
   //paginations
   const paginationHandler = (number) => {
-    dispatch(paginationActions.setCurrentPage(number));
+    // dispatch(paginationActions.setCurrentPage(number));
+    setCurrentPage(number);
   };
 
-  return (
-    <div className={classes.pagination}>
-      <button disabled={!previous}>previous</button>
+  //
 
-      <ul>
-        {pageNums.map((number) => (
-          <li key={number} onClick={() => paginationHandler(number)}>
-            {number}
-          </li>
-        ))}
-      </ul>
-      <button disabled={!next}>Next</button>
-    </div>
+  return (
+    <Pagination
+      onChange={(value) => setCurrentPage(value)}
+      pageSize={10}
+      total={count}
+      current={currentPage}
+    />
   );
+  // <div className={classes.pagination}>
+  //   <button
+  //     disabled={!previous}
+  //     onClick={() => setCurrentPage((prevNum) => prevNum - 1)}
+  //   >
+  //     previous
+  //   </button>
+
+  //   <ul>
+  //     {pageNums.map((number) => (
+  //       <li key={number} onClick={() => paginationHandler(number)}>
+  //         {number}
+  //       </li>
+  //     ))}
+  //   </ul>
+  //   <button
+  //     disabled={!next}
+  //     onClick={() => setCurrentPage((prevNum) => prevNum + 1)}
+  //   >
+  //     Next
+  //   </button>
+  // </div>
 };
 
-export default Pagination;
+export default PaginationComponent;

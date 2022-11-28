@@ -3,36 +3,53 @@ import InvoiceItem from "./InvoiceItem";
 import classes from "./InvoiceBar.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { getPagination } from "../store/pagination-slice";
-import Pagination from "./UI/Pagination";
-import { getInvoicList } from "../store/get-invoice-slice";
+import PaginationComponent from "./UI/Pagination";
+import {
+  getInvoiceListActions,
+  getInvoicList,
+} from "../store/get-invoice-slice";
 const InvoiceBar = () => {
-  // const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  // const [data, setData] = useState([]);
+  const data = useSelector((state) => state.invoiceListReducer.data);
   const dispatch = useDispatch();
 
   //invoice data
-  const invoices = useSelector((state) => state.paginationReducer.pageData);
-
-  //current page
-  const currentPage = useSelector(
-    (state) => state.paginationReducer.currentPage
+  const invoices = useSelector(
+    (state) => state.invoiceListReducer.invoice_list
   );
+  console.log(invoices);
+
+  // pagination list
+  const nextPageList = useSelector((state) => state.paginationReducer.pageData);
+  console.log(nextPageList);
+  //next button
+  const nextBtn = useSelector((state) => state.invoiceListReducer.next);
 
   useEffect(() => {
     let token = localStorage.getItem("token");
-    console.log("inv");
     const obj = {
       num: currentPage,
       token,
     };
     dispatch(getPagination(obj));
-  }, [currentPage, dispatch]);
+    //  setData(invoices);
+    dispatch(getInvoiceListActions.addInvoices(invoices));
+  }, [currentPage, dispatch, invoices]);
+
+  //pagination next page
+  useEffect(() => {
+    if (nextBtn !== null) {
+      dispatch(getInvoiceListActions.addInvoices(nextPageList));
+    }
+  }, [nextPageList, nextBtn, dispatch]);
 
   //get current item
-  const indexOfLastInvoice = invoices && invoices.length;
-  const indexOfFirstInvoice = 0;
-  const currentInvoice =
-    invoices && invoices.slice(indexOfFirstInvoice, indexOfLastInvoice);
+  // const indexOfLastInvoice = invoices && invoices.length;
+  // const indexOfFirstInvoice = 0;
+  // const currentInvoice =
+  //   invoices && invoices.slice(indexOfFirstInvoice, indexOfLastInvoice);
 
   return (
     <Fragment>
@@ -44,8 +61,8 @@ const InvoiceBar = () => {
         <li>STATUS</li>
       </ul>
       <div className={classes.invoiceList}>
-        {invoices &&
-          currentInvoice.map((item) => (
+        {data &&
+          data.map((item) => (
             <InvoiceItem
               key={item.invoice_code}
               id={item.invoice_code}
@@ -53,12 +70,17 @@ const InvoiceBar = () => {
               items={item.items}
               date={item.created_at}
               status={item.status}
+              net_amount={item.get_net_amount}
             />
           ))}
       </div>
 
-      {invoices && invoices.length !== 0 && (
-        <Pagination data={invoices} itemsPerPage={itemsPerPage} />
+      {data && data.length !== 0 && nextBtn !== null && (
+        <PaginationComponent
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
       )}
     </Fragment>
   );

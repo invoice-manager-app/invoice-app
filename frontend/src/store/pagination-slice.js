@@ -35,14 +35,8 @@ const paginationSlice = createSlice({
     count: null,
     next: null,
     previous: null,
-    currentPage: 1,
   },
-  reducers: {
-    setCurrentPage: (state, action) => {
-      state.currentPage = action.payload;
-      console.log(state.currentPage);
-    },
-  },
+
   extraReducers: {
     [getPagination.pending]: (state, action) => {
       state.isLoading = true;

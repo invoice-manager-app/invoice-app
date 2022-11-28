@@ -118,3 +118,9 @@ select {
   max-height: calc(1.2em + 24px);
   height: calc(1.2em + 24px);
 }
+
+.ant-pagination .ant-pagination-item a,
+.ant-pagination-item-link {
+  color: var(--main-color) !important;
+  font-weight: bold;
+}
