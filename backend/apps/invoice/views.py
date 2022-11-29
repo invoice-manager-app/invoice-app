@@ -21,6 +21,7 @@ SUCCESS_DELETE = "successfully deleted"
 # localhost:8000/invoice/?search=django
 # http://localhost:8000/invoice/list/?ordering=-created_at
 class InvoiceList(ListAPIView):
+    print("get list")
     queryset = Invoice.objects.select_related("company")
     serializer_class = InvoiceListSerializer
     permission_classes = (IsAuthenticated,)
@@ -37,6 +38,9 @@ class InvoiceList(ListAPIView):
         "created_by__username",
     )
     ordering_fields = ("created_at", "updated_at")
+
+    def get_queryset(self):
+        return self.queryset.filter(company__owner=self.request.user)
 
 
 class InvoiceViewSet(viewsets.ViewSet):
@@ -60,6 +64,8 @@ class InvoiceViewSet(viewsets.ViewSet):
         serializer = InvoiceWriteSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
             company_id = serializer.validated_data["company"]
+            if company_id.owner != self.request.user:
+                return Response({"company": "there is no company with this slug"}, status=status.HTTP_400_BAD_REQUEST)
             # company = Company.objects.get(id=company_id)
             serializer.save(created_by=self.request.user, modified_by=self.request.user, company=company_id)
             context["response"] = "ok"
