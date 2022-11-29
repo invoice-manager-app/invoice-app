@@ -125,11 +125,12 @@ class Invoice(models.Model):
 
     def get_gross_amount(self):
         gross_amount_count = Item.objects.filter(invoice__pk=self.pk).aggregate(Sum("net_amount"))
-        # print(gross_amount_count)
-        return gross_amount_count["net_amount__sum"]
+        nat = gross_amount_count["net_amount__sum"]
+        return nat if nat else False
 
     def get_net_amount(self):
-        return self.get_gross_amount() - self.discount_amount
+        if self.get_gross_amount():
+            return self.get_gross_amount() - self.discount_amount
 
     def get_due_date(self):
         return self.created_at + timedelta(days=self.due_after)

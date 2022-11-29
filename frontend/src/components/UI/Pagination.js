@@ -14,7 +14,7 @@ const PaginationComponent = ({
   const previous = useSelector((state) => state.paginationReducer.previous);
   let pageNums = [];
 
-  for (let i = 1; i <= Math.ceil(count / itemsPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(count / 2); i++) {
     pageNums.push(i);
   }
 
@@ -29,7 +29,11 @@ const PaginationComponent = ({
   return (
     <Pagination
       onChange={(value) => setCurrentPage(value)}
+<<<<<<< HEAD
       pageSize={itemsPerPage}
+=======
+      pageSize={2}
+>>>>>>> 962b1cf (fix get_gross_amount for the invoices)
       total={count}
       current={currentPage}
     />
