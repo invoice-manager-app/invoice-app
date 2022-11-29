@@ -29,11 +29,7 @@ const PaginationComponent = ({
   return (
     <Pagination
       onChange={(value) => setCurrentPage(value)}
-<<<<<<< HEAD
-      pageSize={itemsPerPage}
-=======
       pageSize={2}
->>>>>>> 962b1cf (fix get_gross_amount for the invoices)
       total={count}
       current={currentPage}
     />
