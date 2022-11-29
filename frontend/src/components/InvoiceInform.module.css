@@ -2,6 +2,7 @@
   color: var(--main-color);
   font-size: 13px;
   cursor: pointer;
+  background-color: transparent;
 }
 .icon span {
   display: inline-block;

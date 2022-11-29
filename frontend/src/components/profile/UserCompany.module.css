@@ -15,6 +15,19 @@
   margin-bottom: 30px;
   padding: 10px 0;
 }
+.company-info::-webkit-scrollbar {
+  width: 7px; /* width of the entire scrollbar */
+}
+
+.company-info::-webkit-scrollbar-track {
+  background: #fff; /* color of the tracking area */
+}
+
+.company-info::-webkit-scrollbar-thumb {
+  background-color: var(--main-color); /* color of the scroll thumb */
+  border-radius: 20px; /* roundness of the scroll thumb */
+  /* creates padding around scroll thumb */
+}
 
 .avatar {
   width: 110px;

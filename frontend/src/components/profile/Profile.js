@@ -80,17 +80,15 @@ const Profile = () => {
 
   //switch into company Info
   const companyInfoHandler = useCallback(() => {
-    let token;
-    if (localStorage.getItem("token")) {
-      token = localStorage.getItem("token");
-    }
+    if (switchInfo === true) return;
+
     dispatch(uiActions.switchToCompany());
     dispatch(uiActions.submitUser());
     dispatch(uiActions.submitEditCompanyInfo());
-    dispatch(getCompanies(token));
+    // dispatch(getCompanies(token));
 
     //dispatch(uiActions.togglePassword());
-  }, [dispatch]);
+  }, [dispatch, switchInfo]);
 
   const basicInfoBtnClass = switchInfo ? "" : classes.active;
   const companyInfoBtnClass = switchInfo ? classes.active : "";

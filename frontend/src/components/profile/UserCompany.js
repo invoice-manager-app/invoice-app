@@ -5,28 +5,33 @@ import CompanyDetail from "../company/CompanyDetail";
 import classes from "./UserCompany.module.css";
 import Notification from "../UI/Notification";
 import PlusIcon from "../icons/PlusIcon";
+import LoadingSpinner from "../UI/LoadingSpinner";
 import { getCompanies } from "../../store/company-slice";
 const UserCompany = ({
   deleteCompany,
-
   editCompany,
   editUser,
   editCompanyHandeler,
 }) => {
   const [showCard, setShowCard] = useState(true);
-  const [companies, setCompanies] = useState([]);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  //dispatch
-
-  //getAllCompanies
+  //all companies
   const data = useSelector((state) => state.companiesReducer.allCompanies);
-  useEffect(() => {
-    // dispatch(getCompanies(token));
 
-    setCompanies(data);
-  }, [data]);
+  //loading state
+  const isLoading = useSelector((state) => state.companiesReducer.isLoading);
+
+  //get all companies
+  useEffect(() => {
+    let token;
+    if (localStorage.getItem("token")) {
+      token = localStorage.getItem("token");
+    }
+    console.log("get companies");
+    dispatch(getCompanies(token));
+  }, [dispatch]);
 
   //notification state
   const notification = useSelector((state) => state.ui.notification);
@@ -44,9 +49,7 @@ const UserCompany = ({
     navigate("/create-company");
   };
 
-  if (companies === null) return;
-
-  if (companies.length === 0) {
+  if (data && data.length === 0) {
     return (
       <section>
         <h1> No Companies are found </h1>
@@ -58,6 +61,10 @@ const UserCompany = ({
     );
   }
 
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
   return (
     <Fragment>
       {notification &&
@@ -65,34 +72,35 @@ const UserCompany = ({
         notification.message !== undefined && <Notification />}
 
       <div className={classes["company-info"]}>
-        {companies.map((company) => {
-          return (
-            <div key={company.id}>
-              {showCard && (
-                <div className={classes["card-container"]}>
-                  <div className={classes.avatar}>
-                    <img src={company.avatar} alt={company.name} />
-                  </div>
-                  <div className={classes.card}>{company.name}</div>
+        {data &&
+          data.map((company) => {
+            return (
+              <div key={company.id}>
+                {showCard && (
+                  <div className={classes["card-container"]}>
+                    <div className={classes.avatar}>
+                      <img src={company.avatar} alt={company.name} />
+                    </div>
+                    <div className={classes.card}>{company.name}</div>
 
-                  <Link
-                    to={`/profile/${company.id}`}
-                    className={classes.card_btn}
-                    onClick={showCompanyInfoHandeler}
-                  >
-                    More...
-                  </Link>
-                </div>
-              )}
-            </div>
-          );
-        })}
+                    <Link
+                      to={`/profile/${company.id}`}
+                      className={classes.card_btn}
+                      onClick={showCompanyInfoHandeler}
+                    >
+                      More...
+                    </Link>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         {!showCard && (
           <Routes>
             <Route
               element={
                 <CompanyDetail
-                  companies={companies}
+                  companies={data}
                   backHandler={hideCompanyInfoHandeler}
                   editCompany={editCompany}
                   editUser={editUser}

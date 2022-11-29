@@ -13,7 +13,7 @@ const Search = ({ search, setSearch }) => {
       token,
     };
 
-    if (e.key !== "" || e.target.value.trim("") !== "") {
+    if (e.key !== "" || e.target.value.trim() !== "") {
       const timer = setTimeout(() => {
         dispatch(searchData(obj));
       }, 1500);

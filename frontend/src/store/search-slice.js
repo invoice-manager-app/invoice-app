@@ -3,7 +3,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 export const searchData = createAsyncThunk(
   "search/getSearch",
   async (arg, thunkApi) => {
-    console.log(arg);
     try {
       const response = await fetch(
         `http://localhost:8000/invoice/list/?search=${arg.name}`,

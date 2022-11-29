@@ -8,7 +8,6 @@ const actionSlice = createSlice({
     filteredInvoices: [],
     length: 0,
     newItem: [],
-    pendingState: true,
   },
 
   reducers: {

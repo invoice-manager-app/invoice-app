@@ -10,6 +10,7 @@ import { uiActions } from "../../store/Ui-slice";
 import Avatar from "./Avatar";
 import { editCompanyFn } from "../../store/action-creator";
 import checkProperties from "../../util/check-objects-keys";
+import { getCompanies } from "../../store/company-slice";
 
 const EditComapnyInfo = ({
   companies,
@@ -87,9 +88,7 @@ const EditComapnyInfo = ({
     if (updateCompanyObj.address === addressVar) {
       delete updateCompanyObj.address;
     }
-    // console.log(updateCompanyObj);
-    // console.log(Object.keys(updateCompanyObj).length);
-    // checkProperties(updateCompanyObj);
+
     checkProperties(updateCompanyObj);
     dispatch(editCompanyFn(token, updateCompanyObj, companies.slug));
   };
@@ -108,7 +107,10 @@ const EditComapnyInfo = ({
 
   const backHanlder = () => {
     navigate("/profile");
+
     dispatch(uiActions.switchToUserInfo());
+
+    dispatch(uiActions.switchToCompany());
   };
 
   return (

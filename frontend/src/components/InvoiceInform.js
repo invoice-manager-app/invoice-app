@@ -55,14 +55,22 @@ const InoviceInform = () => {
     return;
   }
 
+  //previous page
+  const previousHandler = () => {
+    navigate(-1);
+  };
+  console.log(dataInvoice.map((el) => el.client_name)[0]);
   //loading state
-
+  console.log("status", invoiceDetail.status);
   return (
     <Fragment>
-      {/* <EditInvoice id={invoiceItem.id} /> */}
-      <Link className={classes.icon} to="/invoice">
+      <EditInvoice
+        id={invoiceDetail.invoice_code}
+        editingInovoice={invoiceDetail}
+      />
+      <button className={classes.icon} onClick={previousHandler}>
         <AiOutlineLeft /> <span>Go Back</span>
-      </Link>
+      </button>
 
       {isLoading ? (
         <LoadingSpinner />

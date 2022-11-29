@@ -13,31 +13,32 @@ import { MdDelete } from "react-icons/md";
 //   { value: "Net 60 Days", text: "Net 60 Days" },
 // ];
 
-const EditInvoice = ({ id }) => {
-  const invoiceList = useSelector((state) => state.action.value);
-  const editingInovoice = invoiceList.find((invoice) => invoice.id === id);
+const EditInvoice = ({ id, editingInovoice }) => {
+  const dataInvoice = useSelector((state) => state.invoiceListReducer.data);
 
+  // const editingInovoice =
+  //   dataInvoice && dataInvoice.find((invoice) => invoice.id === id);
   const [invoiceInputs, setInvoiceInputs] = useState({
-    streetAddress: editingInovoice.streetAddress,
-    city: editingInovoice.city,
-    Zcode: editingInovoice.Zcode,
-    country: editingInovoice.country,
-    clientName: editingInovoice.clientName,
-    clientMail: editingInovoice.clientMail,
-    clientAddress: editingInovoice.clientAddress,
-    clientCity: editingInovoice.clientCity,
-    clientZcode: editingInovoice.clientZcode,
-    clientCountry: editingInovoice.clientCountry,
-    productionDescription: editingInovoice.productionDescription,
-    paymentDue: editingInovoice.paymentDue,
+    streetAddress: editingInovoice.client_address,
+    city: editingInovoice.client_city,
+    Zcode: editingInovoice.client_zipcode,
+    country: editingInovoice.client_country,
+    clientName: editingInovoice.client_name,
+    clientMail: editingInovoice.client_email,
+    clientAddress: editingInovoice.client_address,
+    productionDescription: editingInovoice.description,
+    paymentDue: editingInovoice.due_after,
   });
-
+  console.log(invoiceInputs.clientName);
+  console.log(editingInovoice.client_name);
   const [inputFields, setInputFields] = useState(
-    editingInovoice.items.map(({ itemName, qty, price }) => ({
-      itemName,
-      qty,
-      price,
-    }))
+    editingInovoice &&
+      editingInovoice.items &&
+      editingInovoice.items.map(({ title, quantity, unit_price }) => ({
+        title,
+        quantity,
+        unit_price,
+      }))
   );
 
   const [dateTime] = useState(new Date());
@@ -80,7 +81,7 @@ const EditInvoice = ({ id }) => {
       }),
     });
   };
-
+  console.log(editingInovoice);
   const handleChangeInput = (e, index) => {
     const { id, value } = e.target;
     const list = [...inputFields];
@@ -92,9 +93,9 @@ const EditInvoice = ({ id }) => {
     setInputFields([
       ...inputFields,
       {
-        itemName: "",
-        qty: "",
-        price: "",
+        title: "",
+        quantity: "",
+        unit_price: "",
       },
     ]);
   };
@@ -114,24 +115,6 @@ const EditInvoice = ({ id }) => {
   //actions
 
   const editInvoiceHandeler = () => {
-    dispatch(
-      invoiceAction.editInvoice({
-        id: editingInovoice.id,
-        streetAddress: invoiceInputs.streetAddress,
-        city: invoiceInputs.city,
-        Zcode: invoiceInputs.Zcode,
-        country: invoiceInputs.country,
-        clientName: invoiceInputs.clientName,
-        clientMail: invoiceInputs.clientMail,
-        clientAddress: invoiceInputs.clientAddress,
-        clientCity: invoiceInputs.clientCity,
-        clientZcode: invoiceInputs.clientZcode,
-        clientCountry: invoiceInputs.clientCountry,
-        productionDescription: invoiceInputs.productionDescription,
-        paymentDue: invoiceInputs.paymentDue,
-        items: inputFields,
-      })
-    );
     dispatch(uiActions.toggleForm());
   };
   const hideFromHandeler = () => {
@@ -144,57 +127,6 @@ const EditInvoice = ({ id }) => {
         <h1>New Invoice</h1>
         <div>
           <h4>Bill From</h4>
-
-          <Input
-            type="text"
-            id="street-address"
-            label="Street Address"
-            value={invoiceInputs.streetAddress}
-            onChange={(e) =>
-              setInvoiceInputs({
-                ...invoiceInputs,
-                streetAddress: e.target.value,
-              })
-            }
-          />
-          <div className={classes.footer}>
-            <Input
-              type="text"
-              id="city"
-              label="City"
-              value={invoiceInputs.city}
-              onChange={(e) =>
-                setInvoiceInputs({
-                  ...invoiceInputs,
-                  city: e.target.value,
-                })
-              }
-            />
-            <Input
-              type="text"
-              id="z-code"
-              label="Zip Code"
-              value={invoiceInputs.Zcode}
-              onChange={(e) =>
-                setInvoiceInputs({
-                  ...invoiceInputs,
-                  Zcode: e.target.value,
-                })
-              }
-            />
-            <Input
-              type="text"
-              id="Country"
-              label="Country"
-              value={invoiceInputs.country}
-              onChange={(e) =>
-                setInvoiceInputs({
-                  ...invoiceInputs,
-                  country: e.target.value,
-                })
-              }
-            />
-          </div>
         </div>
 
         <div>
@@ -328,40 +260,41 @@ const EditInvoice = ({ id }) => {
               <li>Price</li>
               <li>Total</li>
             </ul>
-            {inputFields.map((inputField, index) => (
-              <div key={index}>
-                <ul>
-                  <li>
-                    <Input
-                      type="text"
-                      id="itemName"
-                      value={inputField.itemName}
-                      onChange={(event) => handleChangeInput(event, index)}
-                    />
-                  </li>
-                  <li>
-                    <Input
-                      type="number"
-                      id="qty"
-                      value={inputField.qty}
-                      onChange={(event) => handleChangeInput(event, index)}
-                    />
-                  </li>
-                  <li>
-                    <Input
-                      type="number"
-                      id="price"
-                      value={inputField.price}
-                      onChange={(event) => handleChangeInput(event, index)}
-                    />
-                  </li>
-                  <li>{inputField.price * inputField.qty}</li>
-                  <li>
-                    <MdDelete onClick={() => removeHandeler(index)} />
-                  </li>
-                </ul>
-              </div>
-            ))}
+            {inputFields &&
+              inputFields.map((inputField, index) => (
+                <div key={index}>
+                  <ul>
+                    <li>
+                      <Input
+                        type="text"
+                        id="title"
+                        value={inputField.title}
+                        onChange={(event) => handleChangeInput(event, index)}
+                      />
+                    </li>
+                    <li>
+                      <Input
+                        type="number"
+                        id="quantity"
+                        value={inputField.quantity}
+                        onChange={(event) => handleChangeInput(event, index)}
+                      />
+                    </li>
+                    <li>
+                      <Input
+                        type="number"
+                        id="unit_price"
+                        value={inputField.unit_price}
+                        onChange={(event) => handleChangeInput(event, index)}
+                      />
+                    </li>
+                    <li>{inputField.unit_price * inputField.quantity}</li>
+                    <li>
+                      <MdDelete onClick={() => removeHandeler(index)} />
+                    </li>
+                  </ul>
+                </div>
+              ))}
 
             <button type="button" onClick={handleAddFields}>
               <BsPlusLg /> Add New Item

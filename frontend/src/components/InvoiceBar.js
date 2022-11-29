@@ -19,6 +19,7 @@ const InvoiceBar = ({ search }) => {
   const invoices = useSelector(
     (state) => state.invoiceListReducer.invoice_list
   );
+  console.log(invoices);
   //count of first render invoice
   const InvoiceListcount = useSelector(
     (state) => state.invoiceListReducer.count
@@ -39,10 +40,14 @@ const InvoiceBar = ({ search }) => {
       num: currentPage,
       token,
     };
+
     dispatch(getPagination(obj));
     //  setData(invoices);
-    dispatch(getInvoiceListActions.addInvoices(invoices));
-  }, [currentPage, dispatch, invoices]);
+    if (search.trim() === "" || nextBtn === null) {
+      dispatch(getInvoiceListActions.addInvoices(invoices));
+      setCount(InvoiceListcount);
+    }
+  }, [currentPage, dispatch, invoices, InvoiceListcount, search, nextBtn]);
 
   //pagination next page
   useEffect(() => {
@@ -55,17 +60,12 @@ const InvoiceBar = ({ search }) => {
   //search data
 
   useEffect(() => {
-    if (searchResults && searchResults.length !== 0) {
+    if (
+      (searchResults && searchResults.length !== 0) ||
+      (search !== "" && searchResults && searchResults.length === 0)
+    ) {
       dispatch(getInvoiceListActions.addInvoices(searchResults));
       setCount(SearchListcount);
-    }
-    if (search !== "" && searchResults && searchResults.length === 0) {
-      dispatch(getInvoiceListActions.addInvoices(searchResults));
-      setCount(SearchListcount);
-    }
-    if (search.trim("") === "") {
-      dispatch(getInvoiceListActions.addInvoices(invoices));
-      setCount(InvoiceListcount);
     }
   }, [
     dispatch,

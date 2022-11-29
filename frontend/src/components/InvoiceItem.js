@@ -26,8 +26,8 @@ const InvoiceItem = ({ items, status, name, date, id, net_amount }) => {
           <li> {name} </li>
           <li>${net_amount} </li>
           <li>
-            <div className={status ? "status" : "status paid"}>
-              <span> {status ? "Pending" : "Paid"} </span>
+            <div className={status === "pending" ? "status" : "status paid"}>
+              <span> {status === "pending" ? "Pending" : "Paid"} </span>
             </div>
           </li>
           <li>

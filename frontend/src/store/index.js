@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import actionSlice from "./actions";
 import companySlice from "./company-slice";
+import editSlice from "./edit-invoice-slice";
 import getInvoices from "./get-invoice-detail";
 import invoiceListSlice from "./get-invoice-slice";
 import paginationSlice from "./pagination-slice";
@@ -16,6 +17,7 @@ const store = configureStore({
     invoiceListReducer: invoiceListSlice.reducer,
     paginationReducer: paginationSlice.reducer,
     searchReducer: searchSlice.reducer,
+    editReducer: editSlice.reducer,
   },
 });
 export default store;

@@ -26,16 +26,17 @@ export const getCompanies = createAsyncThunk(
 
 const companySlice = createSlice({
   name: "company",
-  initialState: { allCompanies: null },
+  initialState: { allCompanies: null, isLoading: false },
   extraReducers: {
     [getCompanies.pending]: (state, action) => {
-      //console.log(action);
+      state.isLoading = true;
     },
     [getCompanies.fulfilled]: (state, action) => {
       state.allCompanies = action.payload;
+      state.isLoading = false;
     },
     [getCompanies.rejected]: (state, action) => {
-      console.log(action);
+      state.isLoading = false;
     },
   },
 });
