@@ -1,26 +1,34 @@
 import { useSelector, useDispatch } from "react-redux";
 import { Pagination } from "antd";
+import { getPagination } from "../../store/pagination-slice";
 
-import { useNavigate } from "react-router-dom";
-import classes from "./Pagination.module.css";
 const PaginationComponent = ({
-  itemsPerPage,
   setCurrentPage,
   currentPage,
   count,
+  itemsPerPage,
 }) => {
   const dispatch = useDispatch();
   const next = useSelector((state) => state.paginationReducer.next);
   const previous = useSelector((state) => state.paginationReducer.previous);
   let pageNums = [];
 
-  for (let i = 1; i <= Math.ceil(count / 2); i++) {
+  for (let i = 1; i <= Math.ceil(count / itemsPerPage); i++) {
     pageNums.push(i);
   }
 
   //paginations
   const paginationHandler = (number) => {
-    // dispatch(paginationActions.setCurrentPage(number));
+    let token = localStorage.getItem("token");
+
+    if (number !== 1) {
+      const obj = {
+        num: number,
+        token,
+      };
+
+      dispatch(getPagination(obj));
+    }
     setCurrentPage(number);
   };
 
@@ -28,8 +36,8 @@ const PaginationComponent = ({
 
   return (
     <Pagination
-      onChange={(value) => setCurrentPage(value)}
-      pageSize={2}
+      onChange={(value) => paginationHandler(value)}
+      pageSize={itemsPerPage}
       total={count}
       current={currentPage}
     />

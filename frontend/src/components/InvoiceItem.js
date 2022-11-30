@@ -14,38 +14,33 @@ const InvoiceItem = ({ items, status, name, date, id, net_amount }) => {
     setShowItems((prevState) => !prevState);
   };
   //loading state
-  const isLoading = useSelector((state) => state.invoiceListReducer.isLoading);
   return (
     <div className={classes.bar}>
-      {isLoading ? (
-        <LoadingSpinner />
-      ) : (
-        <ul>
-          <li> #{id} </li>
-          <li> {date} </li>
-          <li> {name} </li>
-          <li>${net_amount} </li>
-          <li>
-            <div className={status === "pending" ? "status" : "status paid"}>
-              <span> {status === "pending" ? "Pending" : "Paid"} </span>
-            </div>
-          </li>
-          <li>
-            <button
-              className={`${classes.button} ${showItems ? classes.active : ""}`}
-              onClick={toggleItemHandeler}
-            >
-              {showItems ? <ShowLessIcon /> : <ShowMoreIcon />}
-            </button>
-          </li>
-          <li>
-            {" "}
-            <Link to={`/invoice/${id}`} className={classes.link}>
-              <AiOutlineRight />
-            </Link>
-          </li>
-        </ul>
-      )}
+      <ul>
+        <li> #{id} </li>
+        <li> {date} </li>
+        <li> {name} </li>
+        <li>${net_amount} </li>
+        <li>
+          <div className={status === "pending" ? "status" : "status paid"}>
+            <span> {status === "pending" ? "Pending" : "Paid"} </span>
+          </div>
+        </li>
+        <li>
+          <button
+            className={`${classes.button} ${showItems ? classes.active : ""}`}
+            onClick={toggleItemHandeler}
+          >
+            {showItems ? <ShowLessIcon /> : <ShowMoreIcon />}
+          </button>
+        </li>
+        <li>
+          {" "}
+          <Link to={`/invoice/${id}`} className={classes.link}>
+            <AiOutlineRight />
+          </Link>
+        </li>
+      </ul>
 
       {showItems && (
         <div className={classes.detail}>

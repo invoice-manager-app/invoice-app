@@ -8,6 +8,7 @@ import { MdDelete } from "react-icons/md";
 import { useLocation } from "react-router-dom";
 import { createInvoice } from "../store/action-creator";
 import { getInvoicList } from "../store/get-invoice-slice";
+import { getInvoiceCompany } from "../store/get-invoice-detail";
 
 const Form = () => {
   const dispatch = useDispatch();
@@ -231,6 +232,13 @@ const Form = () => {
     // );
     // dispatch(uiActions.toggleForm());
   };
+
+  //invoice list
+  useEffect(() => {
+    let token = localStorage.getItem("token");
+    dispatch(getInvoiceCompany(token));
+  }, [dispatch]);
+
   const hideFromHandeler = () => {
     dispatch(uiActions.toggleForm());
   };

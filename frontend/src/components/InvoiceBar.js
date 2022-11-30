@@ -4,77 +4,58 @@ import classes from "./InvoiceBar.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { getPagination } from "../store/pagination-slice";
 import PaginationComponent from "./UI/Pagination";
-import { getInvoiceListActions } from "../store/get-invoice-slice";
+
+import {
+  getInvoiceListActions,
+  getInvoicList,
+} from "../store/get-invoice-slice";
 import { searchData } from "../store/search-slice";
+import { getInvoiceCompany } from "../store/get-invoice-detail";
 
 const InvoiceBar = ({ search }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [count, setCount] = useState();
   const [itemsPerPage] = useState(10);
 
-  const data = useSelector((state) => state.invoiceListReducer.data);
   const dispatch = useDispatch();
+  const data = useSelector((state) => state.invoiceListReducer.data);
 
   //invoice data
   const invoices = useSelector(
     (state) => state.invoiceListReducer.invoice_list
   );
-  console.log(invoices);
-  //count of first render invoice
+
+  // //count of first render invoice
   const InvoiceListcount = useSelector(
     (state) => state.invoiceListReducer.count
   ); //count of first render invoice
-  const SearchListcount = useSelector((state) => state.searchReducer.count);
+  // const SearchListcount = useSelector((state) => state.searchReducer.count);
 
   //search results
   const searchResults = useSelector((state) => state.searchReducer.searchData);
 
   // pagination list
-  const nextPageList = useSelector((state) => state.paginationReducer.pageData);
+
+  const nextPageData = useSelector((state) => state.paginationReducer.pageData);
+
   //next button
   const nextBtn = useSelector((state) => state.invoiceListReducer.next);
 
+  //Invoice List
   useEffect(() => {
-    let token = localStorage.getItem("token");
-    const obj = {
-      num: currentPage,
-      token,
-    };
-
-    dispatch(getPagination(obj));
-    //  setData(invoices);
-    if (search.trim() === "" || nextBtn === null) {
+    if (currentPage === 1) {
+      let token = localStorage.getItem("token");
+      dispatch(getInvoicList(token));
       dispatch(getInvoiceListActions.addInvoices(invoices));
-      setCount(InvoiceListcount);
+    } else if (currentPage > 1 && currentPage !== 1) {
+      dispatch(getInvoiceListActions.addInvoices(nextPageData));
+    } else {
+      return;
     }
-  }, [currentPage, dispatch, invoices, InvoiceListcount, search, nextBtn]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, currentPage, nextBtn, nextPageData]);
 
-  //pagination next page
-  useEffect(() => {
-    if (nextBtn !== null) {
-      dispatch(getInvoiceListActions.addInvoices(nextPageList));
-      setCount(InvoiceListcount);
-    }
-  }, [nextPageList, nextBtn, dispatch, InvoiceListcount]);
-
-  //search data
-
-  useEffect(() => {
-    if (
-      (searchResults && searchResults.length !== 0) ||
-      (search !== "" && searchResults && searchResults.length === 0)
-    ) {
-      dispatch(getInvoiceListActions.addInvoices(searchResults));
-      setCount(SearchListcount);
-    }
-  }, [
-    dispatch,
-    search,
-    invoices,
-    searchResults,
-    SearchListcount,
-    InvoiceListcount,
-  ]);
+  console.log(data);
   if (search !== "" && searchResults && searchResults.length === 0) {
     return <p className="not-found"> Not Found</p>;
   }
@@ -102,12 +83,12 @@ const InvoiceBar = ({ search }) => {
           ))}
       </div>
 
-      {data && data.length !== 0 && nextBtn !== null && (
+      {nextBtn !== null && (
         <PaginationComponent
-          itemsPerPage={itemsPerPage}
-          currentPage={currentPage}
+          count={InvoiceListcount}
           setCurrentPage={setCurrentPage}
-          count={count}
+          currentPage={currentPage}
+          itemsPerPage={itemsPerPage}
         />
       )}
     </Fragment>

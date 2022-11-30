@@ -25,16 +25,16 @@ const AllInvoices = () => {
   const formToggleHandeler = useCallback(() => {
     let token = localStorage.getItem("token");
 
-    dispatch(getInvoiceCompany(token));
+    // dispatch(getInvoiceCompany(token));
 
     dispatch(uiActions.toggleForm());
   }, [dispatch]);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
 
-    dispatch(getInvoicList(token));
-  }, [dispatch]);
+  //   dispatch(getInvoicList(token));
+  // }, [dispatch]);
   return (
     <Fragment>
       {notification &&

@@ -16,7 +16,7 @@ export const getPagination = createAsyncThunk(
       );
       // console.log(arg);
       const data = await response.json();
-      //  console.log(data);
+      console.log(data);
       if (!response.ok) {
         throw new Error(response.statusText);
       }
