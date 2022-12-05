@@ -7,40 +7,46 @@ import Notification from "../UI/Notification";
 import PlusIcon from "../icons/PlusIcon";
 import LoadingSpinner from "../UI/LoadingSpinner";
 import { getCompanies } from "../../store/company-slice";
-const UserCompany = ({
-  deleteCompany,
-  editCompany,
-  editUser,
-  editCompanyHandeler,
-}) => {
+import { token } from "../../helper/token-id";
+import { uiActions } from "../../store/Ui-slice";
+import { deleteCompany } from "../../store/action-creator";
+const UserCompany = () => {
   const [showCard, setShowCard] = useState(true);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   //all companies
   const data = useSelector((state) => state.companiesReducer.allCompanies);
+  //UI actions
+  const editUser = useSelector((state) => state.ui.editUser);
+  const editCompany = useSelector((state) => state.ui.editCompany);
 
   //loading state
   const isLoading = useSelector((state) => state.companiesReducer.isLoading);
 
   //get all companies
   useEffect(() => {
-    let token;
-    if (localStorage.getItem("token")) {
-      token = localStorage.getItem("token");
-    }
-    console.log("get companies");
     dispatch(getCompanies(token));
   }, [dispatch]);
+
+  //delete company
+  const deleteHandler = (slug, name, email) => {
+    dispatch(uiActions.hideDeleteConfirm());
+    dispatch(deleteCompany(token, name, email, slug));
+    navigate("/profile");
+  };
+
+  //switch into edit company info
+
+  const editCompanyHandeler = () => {
+    dispatch(uiActions.editCompanyInfo());
+  };
 
   //notification state
   const notification = useSelector((state) => state.ui.notification);
 
   const showCompanyInfoHandeler = () => {
     setShowCard(false);
-  };
-  const hideCompanyInfoHandeler = () => {
-    setShowCard(true);
   };
 
   //navigate to create company page
@@ -84,7 +90,7 @@ const UserCompany = ({
                     <div className={classes.card}>{company.name}</div>
 
                     <Link
-                      to={`/profile/${company.id}`}
+                      to={`/profile/companies/${company.id}`}
                       className={classes.card_btn}
                       onClick={showCompanyInfoHandeler}
                     >
@@ -101,11 +107,11 @@ const UserCompany = ({
               element={
                 <CompanyDetail
                   companies={data}
-                  backHandler={hideCompanyInfoHandeler}
                   editCompany={editCompany}
                   editUser={editUser}
-                  deleteCompany={deleteCompany}
+                  deleteCompany={deleteHandler}
                   editCompanyHandeler={editCompanyHandeler}
+                  setShowCard={setShowCard}
                 />
               }
               path="/:companyId/*"

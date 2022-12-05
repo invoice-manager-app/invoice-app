@@ -10,16 +10,13 @@ import { uiActions } from "../../store/Ui-slice";
 import Avatar from "./Avatar";
 import { editCompanyFn } from "../../store/action-creator";
 import checkProperties from "../../util/check-objects-keys";
+import { token } from "../../helper/token-id";
 
-const EditComapnyInfo = ({ companies }) => {
+const EditComapnyInfo = ({ companies, setShowCard }) => {
   const [image, setImage] = useState("");
   const [imgSrc, setImgSrc] = useState(companies.avatar);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  let token;
-  if (localStorage.getItem("token")) {
-    token = localStorage.getItem("token");
-  }
 
   let formIsValid = false;
   const { values, errors, handleBlur, touched, handleChange } = useFormik({
@@ -62,9 +59,6 @@ const EditComapnyInfo = ({ companies }) => {
       image: image,
     };
 
-    // console.log(updateCompanyObj.image);
-    // console.log(image);
-
     if (updateCompanyObj.email === emailVar) {
       delete updateCompanyObj.email;
     }
@@ -87,25 +81,19 @@ const EditComapnyInfo = ({ companies }) => {
     checkProperties(updateCompanyObj);
     dispatch(editCompanyFn(token, updateCompanyObj, companies.slug));
   };
-
-  const submitEdit = async () => {
+  const backHanlder = () => {
+    navigate(-1);
+    setShowCard(true);
+  };
+  const submitEdit = () => {
     submitEditedCompany();
-
-    navigate("/profile");
-    dispatch(uiActions.switchToUserInfo());
+    backHanlder();
+    //GET ALL COMPANIES
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    await submitEdit();
-  };
-
-  const backHanlder = () => {
-    navigate("/profile");
-
-    dispatch(uiActions.switchToUserInfo());
-
-    dispatch(uiActions.switchToCompany());
+    submitEdit();
   };
 
   return (

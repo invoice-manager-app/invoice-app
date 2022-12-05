@@ -1,11 +1,14 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { invoiceAction } from "../../store/actions";
 import { useSelector, useDispatch } from "react-redux/es/exports";
 import classes from "./UserProfile.module.css";
 import AuthContext from "../../context/auth-context";
 
 //start comonent
-const UserProfile = ({ userData, setUserData }) => {
+const UserProfile = () => {
+  const [userData, setUserData] = useState([
+    { username: "", first_name: "", last_name: "", email: "" },
+  ]);
   const dispatch = useDispatch();
   const authContext = useContext(AuthContext);
 
@@ -53,7 +56,7 @@ const UserProfile = ({ userData, setUserData }) => {
     };
     userInfo();
   }, [dispatch, logout, setUserData]);
-
+  console.log("fetched");
   const userInfo = useSelector((state) => state.action.userInfo);
   return (
     <div className={classes["profile-content"]}>

@@ -1,6 +1,7 @@
 import { uiActions } from "./Ui-slice";
 import { invoiceAction } from "./actions";
 import checkProperties from "../util/check-objects-keys";
+import { getCompanies } from "./company-slice";
 
 //edit user info
 export const editUserRequest = (token, values) => {
@@ -97,6 +98,8 @@ export const deleteCompany = (token, name, email, slug) => {
         return response.json();
       })
       .then((result) => {
+        console.log(result);
+
         dispatch(
           uiActions.notification({
             status: "succeed",
@@ -176,6 +179,7 @@ export const editCompanyFn = (token, values, slug) => {
       })
       .then((result) => {
         dispatch(uiActions.switchToCompany());
+        dispatch(getCompanies(token));
 
         dispatch(
           uiActions.notification({

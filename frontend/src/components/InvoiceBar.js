@@ -2,15 +2,11 @@ import { Fragment, useState, memo, useEffect } from "react";
 import InvoiceItem from "./InvoiceItem";
 import classes from "./InvoiceBar.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { getPagination } from "../store/pagination-slice";
 import PaginationComponent from "./UI/Pagination";
 
-import {
-  getInvoiceListActions,
-  getInvoicList,
-} from "../store/get-invoice-slice";
-import { searchData } from "../store/search-slice";
-import { getInvoiceCompany } from "../store/get-invoice-detail";
+import { getInvoicList } from "../store/get-invoice-slice";
+import LoadingSpinner from "./UI/LoadingSpinner";
+import { searchAction } from "../store/search-slice";
 
 const InvoiceBar = ({ search }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,18 +14,18 @@ const InvoiceBar = ({ search }) => {
   const [itemsPerPage] = useState(10);
 
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.invoiceListReducer.data);
-  console.log(data);
   //invoice data
   const invoices = useSelector(
     (state) => state.invoiceListReducer.invoice_list
   );
 
+  //is Loading
+  const isLoading = useSelector((state) => state.searchReducer.isLoading);
+
   // //count of first render invoice
   const InvoiceListcount = useSelector(
     (state) => state.invoiceListReducer.count
-  ); //count of first render invoice
-  // const SearchListcount = useSelector((state) => state.searchReducer.count);
+  );
 
   //search results
   const searchResults = useSelector((state) => state.searchReducer.searchData),
@@ -37,7 +33,7 @@ const InvoiceBar = ({ search }) => {
   //console.log("search", searchResults);
 
   // pagination list
-
+  console.log(searchResults);
   const nextPageData = useSelector((state) => state.paginationReducer.pageData);
 
   //next button
@@ -48,32 +44,60 @@ const InvoiceBar = ({ search }) => {
     if (currentPage === 1 && search.trim() === "") {
       let token = localStorage.getItem("token");
       dispatch(getInvoicList(token));
-      dispatch(getInvoiceListActions.addInvoices(invoices));
-      dispatch(getInvoiceListActions.addInvoices(invoices));
       setCount(InvoiceListcount);
     } else if (currentPage > 1 && currentPage !== 1) {
-      dispatch(getInvoiceListActions.addInvoices(nextPageData));
       setCount(InvoiceListcount);
     } else if (search.trim() !== "") {
-      dispatch(getInvoiceListActions.addInvoices(searchResults));
-
       setCount(resultCount);
     } else {
       return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    dispatch,
-    currentPage,
-    nextBtn,
-    nextPageData,
-    search,
-    searchResults,
-    resultCount,
-    InvoiceListcount,
-  ]);
+  }, [dispatch, currentPage, search, resultCount, InvoiceListcount]);
 
-  if (search !== "" && searchResults && searchResults.length === 0) {
+  let invoiceItems;
+
+  if (invoices && search === "") {
+    invoiceItems = invoices.map((item) => (
+      <InvoiceItem
+        key={item.invoice_code}
+        id={item.invoice_code}
+        name={item.client_name}
+        items={item.items}
+        date={item.created_at}
+        status={item.status}
+        net_amount={item.get_net_amount}
+      />
+    ));
+  }
+
+  if (searchResults && search !== "") {
+    invoiceItems = searchResults.map((item) => (
+      <InvoiceItem
+        key={item.invoice_code}
+        id={item.invoice_code}
+        name={item.client_name}
+        items={item.items}
+        date={item.created_at}
+        status={item.status}
+        net_amount={item.get_net_amount}
+      />
+    ));
+  }
+  if (currentPage > 1 && currentPage !== 1 && nextPageData) {
+    invoiceItems = nextPageData.map((item) => (
+      <InvoiceItem
+        key={item.invoice_code}
+        id={item.invoice_code}
+        name={item.client_name}
+        items={item.items}
+        date={item.created_at}
+        status={item.status}
+        net_amount={item.get_net_amount}
+      />
+    ));
+  }
+
+  if (searchResults && searchResults.length === 0 && isLoading === false) {
     return <p className="not-found"> Not Found</p>;
   }
   return (
@@ -85,21 +109,8 @@ const InvoiceBar = ({ search }) => {
         <li>TOTAL</li>
         <li>STATUS</li>
       </ul>
-      <div className={classes.invoiceList}>
-        {data &&
-          data.map((item) => (
-            <InvoiceItem
-              key={item.invoice_code}
-              id={item.invoice_code}
-              name={item.client_name}
-              items={item.items}
-              date={item.created_at}
-              status={item.status}
-              net_amount={item.get_net_amount}
-            />
-          ))}
-      </div>
-
+      <div className={classes.invoiceList}>{invoiceItems}</div>
+      {isLoading && <LoadingSpinner />}
       {nextBtn !== null && (
         <PaginationComponent
           count={count}

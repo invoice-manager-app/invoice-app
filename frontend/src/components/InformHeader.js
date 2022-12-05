@@ -9,6 +9,7 @@ import { deleteInvoice } from "../store/action-creator";
 
 import ConfirmationModel from "./UI/ConfirmationModel";
 import { editStatus } from "../store/edit-invoice-slice";
+import { getInformation } from "../store/invoice-information";
 
 const InformHeader = ({ isPending, invoiceItem, id }) => {
   const [invoiceStatus, setInvoiceStatus] = useState(isPending);
@@ -44,8 +45,6 @@ const InformHeader = ({ isPending, invoiceItem, id }) => {
       token,
       status: isPending === "pending" ? "paid" : "pending",
     };
-
-    console.log(obj.status);
 
     dispatch(editStatus(obj));
   }, [dispatch, id, isPending]);

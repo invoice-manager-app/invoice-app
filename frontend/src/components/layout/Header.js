@@ -22,7 +22,7 @@ const Header = () => {
   };
   //user profile navigate
   const userProfileHandeler = () => {
-    navigate("/profile", { replace: false });
+    navigate("/profile/user", { replace: false });
   };
   // create comapny navigate
   const createComapnyNavigator = () => {

@@ -7,12 +7,11 @@ import classes from "./CompanyDetail.module.css";
 import EditComapnyInfo from "./EditCompanyInfo";
 import ConfirmationModel from "../UI/ConfirmationModel";
 import { uiActions } from "../../store/Ui-slice";
-const CompanyDetail = ({
-  companies,
-  backHandler,
-  deleteCompany,
-  getAllCompanies,
-}) => {
+import { token } from "../../helper/token-id";
+import { deleteCompany } from "../../store/action-creator";
+import { getCompanies } from "../../store/company-slice";
+
+const CompanyDetail = ({ companies, getAllCompanies, setShowCard }) => {
   const [editForm, setEditForm] = useState(false);
   const dispatch = useDispatch();
   const params = useParams();
@@ -28,8 +27,16 @@ const CompanyDetail = ({
   );
 
   const editCompanyPath = () => {
-    navigate(`/profile/${selectedCompany.id}/${selectedCompany.slug}`);
+    navigate(
+      `/profile/companies/${selectedCompany.id}/${selectedCompany.slug}`
+    );
     setEditForm(true);
+  };
+
+  //back
+  const backHandler = () => {
+    navigate(-1);
+    setShowCard(true);
   };
 
   //delete Handler
@@ -42,15 +49,26 @@ const CompanyDetail = ({
     );
   };
 
+  const deleteCompanyHandler = () => {
+    dispatch(
+      deleteCompany(
+        token,
+        selectedCompany.name,
+        selectedCompany.email,
+        selectedCompany.slug
+      )
+    );
+    dispatch(uiActions.hideDeleteConfirm());
+    dispatch(getCompanies(token));
+
+    backHandler();
+  };
+
   let owner = `${selectedCompany.owner.first_name}  ${selectedCompany.owner.last_name}`;
   return (
     <Fragment>
       {deleteConfirmation && (
-        <ConfirmationModel
-          deleteCompany={deleteCompany}
-          selectedCompany={selectedCompany}
-          getAllCompanies={getAllCompanies}
-        />
+        <ConfirmationModel deleteHandler={deleteCompanyHandler} />
       )}
 
       {!editForm && (
@@ -112,6 +130,7 @@ const CompanyDetail = ({
               companies={selectedCompany}
               editCompany={editCompany}
               getAllCompanies={getAllCompanies}
+              setShowCard={setShowCard}
             />
           }
           path={`/:com`}

@@ -33,8 +33,7 @@ const AuthForm = () => {
   const { responseMessage } = useHttp();
 
   //toggle form
-  const toggleHandeler = () => {
-    setIsLogin((prevState) => !prevState);
+  const resetHandler = () => {
     setValues({
       email: "",
       password: "",
@@ -44,7 +43,14 @@ const AuthForm = () => {
     });
     setResponseMsg([]);
   };
-
+  const loginHandler = () => {
+    setIsLogin(true);
+    resetHandler();
+  };
+  const signupHandler = () => {
+    setIsLogin(false);
+    resetHandler();
+  };
   //Registration
   const register = async () => {
     let url, imformation;
@@ -176,12 +182,34 @@ const AuthForm = () => {
     );
   }
 
+  const loginAcitveBtn = isLogin ? classes.activeBtn : "";
+  const signupAcitveBtn = !isLogin ? classes.activeBtn : "";
+
   return (
     <Fragment>
       {notification &&
         notification.message !== undefined &&
         notification.message !== null && <Notification />}
       <section className={classes.form}>
+        {(!notification ||
+          (notification && notification.status !== "pending")) && (
+          <div className={classes.sign}>
+            <button
+              className={loginAcitveBtn}
+              onClick={loginHandler}
+              type="button"
+            >
+              Login
+            </button>
+            <button
+              className={signupAcitveBtn}
+              onClick={signupHandler}
+              type="button"
+            >
+              Sign up
+            </button>
+          </div>
+        )}
         <h2> {isLogin ? "Login" : "Sign Up"} </h2>
         <form onSubmit={submitHandler}>
           {isLogin && (
@@ -212,16 +240,6 @@ const AuthForm = () => {
           )}
         </form>
 
-        {(!notification ||
-          (notification && notification.status !== "pending")) && (
-          <button
-            onClick={toggleHandeler}
-            type="button"
-            className={classes.toggle}
-          >
-            {isLogin ? "Create New Account" : "Login with exisiting account"}
-          </button>
-        )}
         <br />
         {isLogin &&
           (!notification ||

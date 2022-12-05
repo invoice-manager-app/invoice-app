@@ -16,6 +16,8 @@ const AllPages = () => {
 
   const AuthPage = React.lazy(() => import("./AuthPage"));
   const Invoices = React.lazy(() => import("./Invoices"));
+  const CompanyListsPage = React.lazy(() => import("./CompanyListsPage"));
+  const UserInfoPage = React.lazy(() => import("./UserInfoPage"));
   //const InvoiceDetail = React.lazy(() => import("./InvoiceDetail"));
   const CreateCompanyPage = React.lazy(() => import("./CreateCompany"));
   const UserProfilePage = React.lazy(() => import("./UserProfilePage"));
@@ -38,7 +40,11 @@ const AllPages = () => {
           />
           <Route path="/invoice/*" element={<Invoices />} />
           <Route path="/invoice/:invoiceId/*" element={<InvoiceDetail />} />
-          <Route path="/profile/*" element={<UserProfilePage />} />
+          <Route path="/profile/*" element={<UserProfilePage />}>
+            <Route path="companies/*" element={<CompanyListsPage />} />
+            <Route path="user" element={<UserInfoPage />} />
+          </Route>
+
           <Route path="/create-company" element={<CreateCompanyPage />} />
         </Route>
       </Routes>

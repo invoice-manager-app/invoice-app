@@ -1,70 +1,41 @@
-import { useState, useCallback, memo, Fragment } from "react";
+import { useCallback, memo, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux/es/exports";
 import { uiActions } from "../../store/Ui-slice";
-import UserCompany from "./UserCompany";
-import UserProfile from "./UserProfile";
+
 import EditUserInfo from "../user/EditUserInfo";
 import ChangeUserPassword from "./ChangeUserPassword";
 
 //style
 import classes from "./Profile.module.css";
 import EditIcon from "../icons/EditIcon";
-import { deleteCompany } from "../../store/action-creator";
 import Notification from "../UI/Notification";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Aside from "./Aside";
-import { getCompanies } from "../../store/company-slice";
 
 //get companies
 
 const Profile = () => {
   const dispatch = useDispatch();
-
-  let token;
-  if (localStorage.getItem("token")) {
-    token = localStorage.getItem("token");
-  }
   const navigate = useNavigate();
-
-  //UI actions
-  const editUser = useSelector((state) => state.ui.editUser);
-  const editCompany = useSelector((state) => state.ui.editCompany);
+  const location = useLocation();
 
   //user info after update
   const editedInfo = useSelector((state) => state.action.userInfo);
-  //const [changePassword, setChangePassword] = useState(false);
-  // const [switchInfo, setSwitchInfo] = useState(false);
-  const [userData, setUserData] = useState([
-    { username: "", first_name: "", last_name: "", email: "" },
-  ]);
+  //UI actions
+  const editUser = useSelector((state) => state.ui.editUser);
+  const editCompany = useSelector((state) => state.ui.editCompany);
 
   //notification state
   const notification = useSelector((state) => state.ui.notification);
 
   //switchUser
-  const switchInfo = useSelector((state) => state.ui.switchInfo);
+  //const switchInfo = useSelector((state) => state.ui.switchInfo);
   //change password
   const changePassword = useSelector((state) => state.ui.changePassword);
-
-  //delete company
-  const deleteHandler = useCallback(
-    (slug, name, email) => {
-      dispatch(uiActions.hideDeleteConfirm());
-      dispatch(deleteCompany(token, name, email, slug));
-      navigate("/profile");
-    },
-    [dispatch, token, navigate]
-  );
 
   //switch into edit user Info Component
   const editUserHandeler = () => {
     dispatch(uiActions.toggleUser());
-  };
-
-  //switch into edit company info
-
-  const editCompanyHandeler = () => {
-    dispatch(uiActions.editCompanyInfo());
   };
 
   //switch into change password components
@@ -75,23 +46,19 @@ const Profile = () => {
 
   //switch into user Info
   const basicInfoHandler = useCallback(() => {
-    dispatch(uiActions.switchToUserInfo());
-  }, [dispatch]);
+    navigate("/profile/user");
+  }, [navigate]);
 
   //switch into company Info
   const companyInfoHandler = useCallback(() => {
-    if (switchInfo === true) return;
+    navigate("/profile/companies");
+  }, [navigate]);
 
-    dispatch(uiActions.switchToCompany());
-    dispatch(uiActions.submitUser());
-    dispatch(uiActions.submitEditCompanyInfo());
-    // dispatch(getCompanies(token));
-
-    //dispatch(uiActions.togglePassword());
-  }, [dispatch, switchInfo]);
-
-  const basicInfoBtnClass = switchInfo ? "" : classes.active;
-  const companyInfoBtnClass = switchInfo ? classes.active : "";
+  const basicInfoBtnClass =
+    location.pathname === "/profile/user" ? classes.active : "";
+  const companyInfoBtnClass = location.pathname.includes("companies")
+    ? classes.active
+    : "";
 
   return (
     <Fragment>
@@ -101,7 +68,7 @@ const Profile = () => {
 
       <section className={classes.profile}>
         <main className={classes.content}>
-          {!changePassword && (
+          {!editUser && !changePassword && (
             <Aside
               basicInfoHandler={basicInfoHandler}
               companyInfoBtnClass={companyInfoBtnClass}
@@ -111,22 +78,18 @@ const Profile = () => {
           )}
 
           <div className={classes.conainer}>
-            {!switchInfo && !editUser && !changePassword && (
-              <UserProfile userData={userData} setUserData={setUserData} />
+            {editUser && location.pathname.includes("user") && (
+              <EditUserInfo userData={editedInfo} />
             )}
-            {editUser && <EditUserInfo userData={editedInfo} />}
 
-            {switchInfo && !editUser && !editCompany && !changePassword && (
-              <UserCompany
-                deleteCompany={deleteHandler}
-                editCompanyHandeler={editCompanyHandeler}
-                editCompany={editCompany}
-                editUser={editUser}
-              />
-            )}
+            {/* <UserCompany />
+
+            <UserProfile /> */}
+            {!editUser && !changePassword && <Outlet />}
+
             {changePassword && <ChangeUserPassword />}
             <div className={classes.actions}>
-              {!switchInfo && !changePassword && (
+              {!changePassword && location.pathname === "/profile/user" && (
                 <button
                   onClick={editUserHandeler}
                   className={editUser ? classes.cancel : classes.edit}
@@ -136,16 +99,20 @@ const Profile = () => {
                 </button>
               )}
 
-              {!editCompany && !editUser && !switchInfo && (
-                <button
-                  className={
-                    changePassword ? classes.cancel : classes["change_password"]
-                  }
-                  onClick={changePasswordHandler}
-                >
-                  {changePassword ? "Cancel" : "Change Password"}
-                </button>
-              )}
+              {!editCompany &&
+                !editUser &&
+                location.pathname === "/profile/user" && (
+                  <button
+                    className={
+                      changePassword
+                        ? classes.cancel
+                        : classes["change_password"]
+                    }
+                    onClick={changePasswordHandler}
+                  >
+                    {changePassword ? "Cancel" : "Change Password"}
+                  </button>
+                )}
             </div>
           </div>
         </main>

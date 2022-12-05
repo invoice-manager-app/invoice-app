@@ -16,23 +16,24 @@ export const editStatus = createAsyncThunk(
           status: arg.status,
         }),
       });
-
+      thunkApi.dispatch(getInformation(arg));
       if (!response.ok) {
         throw new Error(response.statusText);
       }
       const data = await response.json();
-      console.log(data);
       return data;
     } catch (error) {}
   }
 );
 
+//Delete
+
+//Update
+
 //Edit Invoice
 export const editInvoice = createAsyncThunk(
   "edit/invoice",
   async (arg, { dispatch, getState, rejectWithValue, fulfillWithValue }) => {
-    console.log(arg);
-
     try {
       let invoice_data = {
         client_name: arg.invoiceInputs.client_name,

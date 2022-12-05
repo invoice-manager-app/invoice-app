@@ -27,20 +27,29 @@ export const searchData = createAsyncThunk(
 
 const searchSlice = createSlice({
   name: "search",
-  initialState: { searchData: null, count: null, isLoading: false },
+  initialState: { searchData: null, count: null, isLoading: null },
+  reducers: {
+    emptySearchArray: (state, action) => {
+      state.searchData = null;
+    },
+  },
   extraReducers: {
     [searchData.pending]: (state) => {
       state.isLoading = true;
+      state.searchData = null;
     },
     [searchData.fulfilled]: (state, action) => {
       state.isLoading = false;
       state.searchData = action.payload.results;
       state.count = action.payload.count;
+      console.log(state.searchData);
     },
     [searchData.rejected]: (state) => {
       state.isLoading = false;
     },
   },
 });
+
+export const searchAction = searchSlice.actions;
 
 export default searchSlice;

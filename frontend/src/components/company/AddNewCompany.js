@@ -75,7 +75,7 @@ const AddNewCompany = () => {
           })
         );
 
-        navigate("/profile");
+        navigate("/profile/companies");
         dispatch(uiActions.switchToCompany());
       })
       .catch((err) => {
