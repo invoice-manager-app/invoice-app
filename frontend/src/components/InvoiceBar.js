@@ -19,7 +19,7 @@ const InvoiceBar = ({ search }) => {
 
   const dispatch = useDispatch();
   const data = useSelector((state) => state.invoiceListReducer.data);
-
+  console.log(data);
   //invoice data
   const invoices = useSelector(
     (state) => state.invoiceListReducer.invoice_list
@@ -32,7 +32,9 @@ const InvoiceBar = ({ search }) => {
   // const SearchListcount = useSelector((state) => state.searchReducer.count);
 
   //search results
-  const searchResults = useSelector((state) => state.searchReducer.searchData);
+  const searchResults = useSelector((state) => state.searchReducer.searchData),
+    resultCount = useSelector((state) => state.searchReducer.count);
+  //console.log("search", searchResults);
 
   // pagination list
 
@@ -43,19 +45,34 @@ const InvoiceBar = ({ search }) => {
 
   //Invoice List
   useEffect(() => {
-    if (currentPage === 1) {
+    if (currentPage === 1 && search.trim() === "") {
       let token = localStorage.getItem("token");
       dispatch(getInvoicList(token));
       dispatch(getInvoiceListActions.addInvoices(invoices));
+      dispatch(getInvoiceListActions.addInvoices(invoices));
+      setCount(InvoiceListcount);
     } else if (currentPage > 1 && currentPage !== 1) {
       dispatch(getInvoiceListActions.addInvoices(nextPageData));
+      setCount(InvoiceListcount);
+    } else if (search.trim() !== "") {
+      dispatch(getInvoiceListActions.addInvoices(searchResults));
+
+      setCount(resultCount);
     } else {
       return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, currentPage, nextBtn, nextPageData]);
+  }, [
+    dispatch,
+    currentPage,
+    nextBtn,
+    nextPageData,
+    search,
+    searchResults,
+    resultCount,
+    InvoiceListcount,
+  ]);
 
-  console.log(data);
   if (search !== "" && searchResults && searchResults.length === 0) {
     return <p className="not-found"> Not Found</p>;
   }
@@ -85,10 +102,11 @@ const InvoiceBar = ({ search }) => {
 
       {nextBtn !== null && (
         <PaginationComponent
-          count={InvoiceListcount}
+          count={count}
           setCurrentPage={setCurrentPage}
           currentPage={currentPage}
           itemsPerPage={itemsPerPage}
+          search={search}
         />
       )}
     </Fragment>

@@ -28,20 +28,19 @@
   justify-content: space-between;
   align-items: center;
 }
-.left p:last-of-type,
-.left span {
+
+.code span {
   color: var(--text);
 }
 .right p {
   font-size: 12px;
-  color: var(--text);
 }
 
 /*mid*/
 .mid {
   display: flex;
   gap: 90px;
-  color: var(--text);
+
   margin-top: 40px;
 }
 .mid h4 {
@@ -51,6 +50,24 @@
 .date h4:last-of-type {
   margin-top: 30px;
 }
+
+.title {
+  color: var(--text);
+}
+
+/* company */
+.company {
+  text-align: center;
+}
+.avatar {
+  width: 150px;
+  border-radius: 30px;
+  overflow: hidden;
+}
+.avatar img {
+  width: 100%;
+}
+/* bot */
 .bot {
   margin-top: 50px;
 }
@@ -80,4 +97,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.not_found {
+  color: #fff;
+  font-size: 30px;
+  text-align: center;
 }

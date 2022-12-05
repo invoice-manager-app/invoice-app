@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const getInvoiceCompany = createAsyncThunk(
   "invoice/getInvoiceCompany",
-  async (arg, thunkAPI) => {
+  async (arg, { dispatch, getState, rejectWithValue, fulfillWithValue }) => {
     try {
       const response = await fetch("http://localhost:8000/company/list/", {
         method: "GET",
@@ -20,14 +20,14 @@ export const getInvoiceCompany = createAsyncThunk(
 
       return data;
     } catch (error) {
-      console.log(error);
+      throw rejectWithValue(error.message);
     }
   }
 );
 
 const getInvoices = createSlice({
   name: "invoice-details",
-  initialState: { selectCompany: null, isLoading: false },
+  initialState: { selectCompany: null, isLoading: false, logout: null },
   extraReducers: {
     [getInvoiceCompany.pending]: (state, action) => {
       state.isLoading = true;
@@ -38,6 +38,7 @@ const getInvoices = createSlice({
     },
     [getInvoiceCompany.rejected]: (state, action) => {
       state.isLoading = false;
+      state.logout = action.payload;
     },
   },
 });

@@ -1,20 +1,17 @@
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect, useCallback } from "react";
 
 import { invoiceAction } from "../store/actions";
 import { uiActions } from "../store/Ui-slice";
 import { useDispatch, useSelector } from "react-redux";
 import classes from "./InformHeader.module.css";
-import { useNavigate } from "react-router-dom";
+import { Route, useNavigate } from "react-router-dom";
 import { deleteInvoice } from "../store/action-creator";
-import { getInvoicList } from "../store/get-invoice-slice";
 
 import ConfirmationModel from "./UI/ConfirmationModel";
 import { editStatus } from "../store/edit-invoice-slice";
 
 const InformHeader = ({ isPending, invoiceItem, id }) => {
-  const [invoiceStatus, setInvoiceStatus] = useState(
-    isPending === "pending" ? true : false
-  );
+  const [invoiceStatus, setInvoiceStatus] = useState(isPending);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -38,26 +35,31 @@ const InformHeader = ({ isPending, invoiceItem, id }) => {
     navigate("/");
   };
 
-  const statusHandeler = () => {
+  const statusHandeler = useCallback(() => {
     setInvoiceStatus((prevState) => !prevState);
 
     let token = localStorage.getItem("token"); // token
     let obj = {
       id,
       token,
-      status: invoiceStatus === true ? "paid" : "pending",
+      status: isPending === "pending" ? "paid" : "pending",
     };
+
     console.log(obj.status);
-    console.log(invoiceStatus);
+
     dispatch(editStatus(obj));
-  };
+  }, [dispatch, id, isPending]);
+
+  // useEffect(() => {
+  //   statusHandeler();
+  // }, [statusHandeler]);
 
   const editHandeler = () => {
-    // navigate(`/edit-invoice/${id}`);
     dispatch(uiActions.toggleForm());
   };
+  // console.log("header", isPending);
 
-  const paidBtnClass = invoiceStatus === true ? classes.paid : classes.pending;
+  const paidBtnClass = isPending === "pending" ? classes.paid : classes.pending;
   return (
     <Fragment>
       {deleteConfirmation && (
@@ -65,8 +67,8 @@ const InformHeader = ({ isPending, invoiceItem, id }) => {
       )}
       <div className={classes.navActions}>
         <div className={classes.state}>
-          <div className={invoiceStatus ? "status" : "status paid"}>
-            <span> {invoiceStatus === true ? "Pending" : "Paid"} </span>
+          <div className={isPending === "pending" ? "status" : "status paid"}>
+            <span> {isPending} </span>
           </div>
         </div>
         <div className={classes.actions}>
@@ -77,7 +79,7 @@ const InformHeader = ({ isPending, invoiceItem, id }) => {
             Delete
           </button>
           <button className={paidBtnClass} onClick={statusHandeler}>
-            {invoiceStatus === true ? "Mark as Paid" : "Mark as Pending"}
+            {isPending === "pending" ? "Mark as Paid" : "Mark as Pending"}
           </button>
 
           <button className={classes.printBtn}>Print</button>

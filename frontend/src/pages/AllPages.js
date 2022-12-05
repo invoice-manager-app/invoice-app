@@ -37,7 +37,7 @@ const AllPages = () => {
             element={isLoggedIn ? <Invoices /> : <AuthPage />}
           />
           <Route path="/invoice/*" element={<Invoices />} />
-          <Route path="/invoice/:invoiceId" element={<InvoiceDetail />} />
+          <Route path="/invoice/:invoiceId/*" element={<InvoiceDetail />} />
           <Route path="/profile/*" element={<UserProfilePage />} />
           <Route path="/create-company" element={<CreateCompanyPage />} />
         </Route>

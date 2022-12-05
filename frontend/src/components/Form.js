@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { uiActions } from "../store/Ui-slice";
 import Input from "./UI/Inputs";
@@ -9,9 +9,11 @@ import { useLocation } from "react-router-dom";
 import { createInvoice } from "../store/action-creator";
 import { getInvoicList } from "../store/get-invoice-slice";
 import { getInvoiceCompany } from "../store/get-invoice-detail";
+import AuthContext from "../context/auth-context";
 
 const Form = () => {
   const dispatch = useDispatch();
+  const authCtx = useContext(AuthContext);
 
   let allCompanies = useSelector((state) => state.getInvoiceData.selectCompany);
 
@@ -45,6 +47,15 @@ const Form = () => {
 
   const [payTerms, setPayTerms] = useState("--choose an option--");
 
+  //logout
+  const logoutRes = useSelector((state) => state.getInvoiceData.logout);
+
+  const { logout } = authCtx;
+  useEffect(() => {
+    if (logoutRes) {
+      logout();
+    }
+  }, [logout, logoutRes]);
   //fetch companies
   useEffect(() => {
     setCompanies(allCompanies);
@@ -189,7 +200,7 @@ const Form = () => {
     //   paymentDue: "",
     // });
   };
-
+  console.log(inputFields);
   let form = false;
   if (
     isNaN(invoiceInputs.clientName) &&
@@ -210,28 +221,6 @@ const Form = () => {
   let showForm = useSelector((state) => state.ui.formIsVisible);
   let wrapperClass = `${classes.wrapper} ${showForm ? classes.active : ""} `;
   //actions
-
-  const addInvoiceHandeler = () => {
-    // dispatch(
-    //   invoiceAction.onAddName({
-    //     id: Math.random().toString().substring(6, 12),
-    //     streetAddress: invoiceInputs.streetAddress,
-    //     city: invoiceInputs.city,
-    //     Zcode: invoiceInputs.Zcode,
-    //     country: invoiceInputs.country,
-    //     clientName: invoiceInputs.clientName,
-    //     clientMail: invoiceInputs.clientMail,
-    //     clientAddress: invoiceInputs.clientAddress,
-    //     clientCity: invoiceInputs.clientCity,
-    //     clientZcode: invoiceInputs.clientZcode,
-    //     clientCountry: invoiceInputs.clientCountry,
-    //     paymentDue: invoiceInputs.paymentDue,
-    //     productionDescription: invoiceInputs.productionDescription,
-    //     items: inputFields,
-    //   })
-    // );
-    // dispatch(uiActions.toggleForm());
-  };
 
   //invoice list
   useEffect(() => {
@@ -461,7 +450,7 @@ const Form = () => {
                       label="Price"
                       min="1"
                       required
-                      value={inputField.unit_price}
+                      value={+inputField.unit_price}
                       onChange={(event) => handleChangeInput(event, index)}
                     />
                   </li>
@@ -481,7 +470,7 @@ const Form = () => {
                       label="Total"
                       value={
                         +inputField.unit_price * +inputField.quantity +
-                        (inputField.tax_rate / 100) *
+                        (+inputField.tax_rate / 100) *
                           (+inputField.unit_price * +inputField.quantity)
                       }
                       readOnly
@@ -512,9 +501,7 @@ const Form = () => {
             </button>
           </div>
           <div>
-            <button disabled={!form} onClick={addInvoiceHandeler}>
-              Create Invoice
-            </button>
+            <button disabled={!form}>Create Invoice</button>
           </div>
         </div>
       </form>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useFormik } from "formik";
 import { userSchema } from "../../schemas/index";
 import { useDispatch } from "react-redux";
@@ -10,13 +10,8 @@ import { uiActions } from "../../store/Ui-slice";
 import Avatar from "./Avatar";
 import { editCompanyFn } from "../../store/action-creator";
 import checkProperties from "../../util/check-objects-keys";
-import { getCompanies } from "../../store/company-slice";
 
-const EditComapnyInfo = ({
-  companies,
-
-  getAllCompanies,
-}) => {
+const EditComapnyInfo = ({ companies }) => {
   const [image, setImage] = useState("");
   const [imgSrc, setImgSrc] = useState(companies.avatar);
   const navigate = useNavigate();

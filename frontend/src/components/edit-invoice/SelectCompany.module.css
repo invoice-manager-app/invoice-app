@@ -1,0 +1,14 @@
+.selectCompany {
+  position: relative;
+}
+.selectCompany select {
+  width: 100%;
+  padding: 12px;
+  background: #1e2139;
+  color: #fff;
+  border-radius: 10px;
+  position: relative;
+}
+.selectCompany select:focus {
+  border: 1px solid var(--main-color);
+}
