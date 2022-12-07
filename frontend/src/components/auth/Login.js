@@ -5,8 +5,8 @@ const Login = ({ values, setValues, responseMsg, notification }) => {
     <Fragment>
       <Input
         type="email"
-        label="Your Email"
         id="email"
+        placeholder="Email address"
         value={values.email}
         onChange={(e) =>
           setValues({
@@ -18,8 +18,8 @@ const Login = ({ values, setValues, responseMsg, notification }) => {
 
       <Input
         type="password"
-        label="Your Password"
         id="password"
+        placeholder="Password"
         value={values.password}
         onChange={(e) =>
           setValues({

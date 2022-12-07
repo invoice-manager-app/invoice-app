@@ -1,25 +1,63 @@
 .form {
-  margin-top: 60px;
-  padding: 30px;
+  padding: 0 24px 16px 24px;
   color: #fff;
   text-align: center;
-  background-color: #ffffff17;
+  background-color: var(--secondary-color);
   border-radius: 10px;
+  width: 450px;
+  margin: 120px auto;
+}
+.form h2 {
+  padding: 24px 0 16px 0;
 }
 .form label {
   font-weight: bold;
   font-size: 15px;
 }
+
+.separator {
+  color: #96999e;
+  position: relative;
+  font-size: 12px;
+  margin: 10px 0;
+}
+.separator::after,
+.separator::before {
+  content: "";
+  position: absolute;
+  width: 200px;
+  height: 1px;
+  background-color: #d7dade;
+  top: 50%;
+}
+.separator::before {
+  left: -12px;
+}
+.separator::after {
+  right: -12px;
+}
 .sign {
   margin-bottom: 20px;
 }
+.signinBtn {
+  background-color: transparent;
+  color: #1877f2;
+}
+.signupBtn {
+  background-color: #42b72a;
+  color: #fff;
+  font-size: 17px;
+  transition: 200ms;
+}
+.signupBtn:hover {
+  background-color: #2b9217;
+}
 .sign button {
   border: none;
-
   font-weight: bold;
   font-size: 15px;
   cursor: pointer;
-  padding: 9px 20px;
+  padding: 13px 20px;
   border-radius: 5px;
 }
 .activeBtn {
@@ -31,19 +69,33 @@
   font-size: 15px;
   color: var(--main-color);
 }
-.log {
+.loginBtn {
   cursor: pointer;
   border: 0;
   border-radius: 4px;
   font-weight: 600;
-  margin: 0 10px;
-  width: 200px;
+  font-size: 20px;
+  width: 100%;
   padding: 10px 0;
   box-shadow: 0 0 20px rgba(104, 85, 224, 0.2);
   transition: 0.4s;
-  color: rgb(104, 85, 224);
-  background-color: rgba(255, 255, 255, 1);
-  border: 1px solid rgba(104, 85, 224, 1);
+  color: #fff;
+  background-color: #0d8af0;
+  /* border: 1px solid rgba(104, 85, 224, 1); */
+}
+.signup {
+  background: none;
+  background-color: #00a400;
+  border: none;
+  border-radius: 6px;
+  box-shadow: none;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  height: 36px;
+  overflow: hidden;
+  padding: 0 32px;
+  text-shadow: none;
 }
 .log:hover {
   color: white;

@@ -5,8 +5,8 @@ const CreateNewAccount = ({ values, setValues, responseMsg, notification }) => {
     <Fragment>
       <Input
         type="userName"
-        label="User Name"
         id="userName"
+        placeholder="User-name"
         value={values.username}
         onChange={(e) =>
           setValues({
@@ -22,8 +22,8 @@ const CreateNewAccount = ({ values, setValues, responseMsg, notification }) => {
         )}
       <Input
         type="email"
-        label="Your Email"
         id="email"
+        placeholder="Email address"
         value={values.email}
         autoComplete="true"
         onChange={(e) =>
@@ -41,7 +41,7 @@ const CreateNewAccount = ({ values, setValues, responseMsg, notification }) => {
         )}
       <Input
         type="password"
-        label="Your Password"
+        placeholder="New password"
         id="password"
         value={values.password}
         onChange={(e) =>
@@ -59,7 +59,7 @@ const CreateNewAccount = ({ values, setValues, responseMsg, notification }) => {
         )}
       <Input
         type="password"
-        label="Confirm Password"
+        placeholder="Re-enter password"
         id="confirmPassword"
         value={values.confirmPassword}
         onChange={(e) =>

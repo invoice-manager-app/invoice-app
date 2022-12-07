@@ -43,12 +43,9 @@ const AuthForm = () => {
     });
     setResponseMsg([]);
   };
-  const loginHandler = () => {
-    setIsLogin(true);
-    resetHandler();
-  };
-  const signupHandler = () => {
-    setIsLogin(false);
+
+  const toggleForm = () => {
+    setIsLogin((prevState) => !prevState);
     resetHandler();
   };
   //Registration
@@ -185,32 +182,15 @@ const AuthForm = () => {
   const loginAcitveBtn = isLogin ? classes.activeBtn : "";
   const signupAcitveBtn = !isLogin ? classes.activeBtn : "";
 
+  const logBtn = isLogin ? classes.loginBtn : classes.signup;
+  const toggleBtn = isLogin ? classes.signupBtn : classes.signinBtn;
   return (
     <Fragment>
       {notification &&
         notification.message !== undefined &&
         notification.message !== null && <Notification />}
       <section className={classes.form}>
-        {(!notification ||
-          (notification && notification.status !== "pending")) && (
-          <div className={classes.sign}>
-            <button
-              className={loginAcitveBtn}
-              onClick={loginHandler}
-              type="button"
-            >
-              Login
-            </button>
-            <button
-              className={signupAcitveBtn}
-              onClick={signupHandler}
-              type="button"
-            >
-              Sign up
-            </button>
-          </div>
-        )}
-        <h2> {isLogin ? "Login" : "Sign Up"} </h2>
+        <h2> {isLogin ? "Log in" : "Sign Up"} </h2>
         <form onSubmit={submitHandler}>
           {isLogin && (
             <Login
@@ -234,8 +214,8 @@ const AuthForm = () => {
 
           {(!notification ||
             (notification && notification.status !== "pending")) && (
-            <button type="submit" className={classes.log}>
-              {isLogin ? "Sign In" : "Create New Account"}
+            <button type="submit" className={logBtn}>
+              {isLogin ? "Log in" : "Sign Up"}
             </button>
           )}
         </form>
@@ -249,9 +229,19 @@ const AuthForm = () => {
               type="button"
               className={classes.toggle}
             >
-              Forget Password? reset now....
+              Forget Password?
             </button>
           )}
+
+        {isLogin && <div className={classes.separator}>or</div>}
+        {(!notification ||
+          (notification && notification.status !== "pending")) && (
+          <div className={classes.sign}>
+            <button className={toggleBtn} onClick={toggleForm} type="button">
+              {!isLogin ? "Already have an account ? " : "Create New Account"}
+            </button>
+          </div>
+        )}
       </section>
     </Fragment>
   );

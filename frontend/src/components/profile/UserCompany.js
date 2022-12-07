@@ -7,7 +7,6 @@ import Notification from "../UI/Notification";
 import PlusIcon from "../icons/PlusIcon";
 import LoadingSpinner from "../UI/LoadingSpinner";
 import { getCompanies } from "../../store/company-slice";
-import { token } from "../../helper/token-id";
 import { uiActions } from "../../store/Ui-slice";
 import { deleteCompany } from "../../store/action-creator";
 const UserCompany = () => {
@@ -26,11 +25,14 @@ const UserCompany = () => {
 
   //get all companies
   useEffect(() => {
+    let token = localStorage.getItem("token");
     dispatch(getCompanies(token));
   }, [dispatch]);
 
   //delete company
   const deleteHandler = (slug, name, email) => {
+    let token = localStorage.getItem("token");
+
     dispatch(uiActions.hideDeleteConfirm());
     dispatch(deleteCompany(token, name, email, slug));
     navigate("/profile");

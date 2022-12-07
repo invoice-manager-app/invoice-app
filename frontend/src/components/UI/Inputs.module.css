@@ -10,7 +10,7 @@
   padding: 12px 4px;
   border: none;
   margin-bottom: 10px;
-  border: 1px solid transparent;
+  border: 1px solid #ddd;
 }
 .wrapper label {
   font-size: 12px;
