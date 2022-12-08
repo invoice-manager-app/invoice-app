@@ -23,7 +23,7 @@ header {
   display: flex;
   flex: 1;
   justify-content: center;
-
+  margin-top: 120px;
   height: 100%;
 }
 .nav ul {
@@ -31,10 +31,11 @@ header {
   width: 100%;
 }
 .nav ul li {
-  margin-top: 40px;
+  padding: 10px 0;
   width: 100%;
 }
-.nav ul li:hover {
+.nav ul li:hover,
+.active {
   background-color: var(--main-color);
 }
 .nav ul li button {

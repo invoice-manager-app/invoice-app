@@ -9,7 +9,6 @@ import EditInvoice from "./edit-invoice/EditInvoice";
 import InformHeader from "./InformHeader";
 import LoadingSpinner from "./UI/LoadingSpinner";
 import { getInformation } from "../store/invoice-information";
-import { token } from "../helper/token-id";
 
 const InoviceInform = () => {
   const navigate = useNavigate();
@@ -23,6 +22,7 @@ const InoviceInform = () => {
   const { invoiceId } = params;
   //fetch invoice detail
   useEffect(() => {
+    let token = localStorage.getItem("token");
     const obj = {
       token: token,
       id: invoiceId,
@@ -116,6 +116,10 @@ const InoviceInform = () => {
                 <h3> {invoiceDetail.company.name}</h3>
               </div>
             )}
+          </div>
+          <div>
+            <h3>Description</h3>
+            <p> {invoiceDetail.description} </p>
           </div>
           <div className={classes.bot}>
             <div>

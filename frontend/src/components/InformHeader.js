@@ -1,18 +1,15 @@
-import { useState, Fragment, useEffect, useCallback } from "react";
-
-import { invoiceAction } from "../store/actions";
+import { Fragment, useCallback } from "react";
 import { uiActions } from "../store/Ui-slice";
 import { useDispatch, useSelector } from "react-redux";
 import classes from "./InformHeader.module.css";
-import { Route, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { deleteInvoice } from "../store/action-creator";
 
 import ConfirmationModel from "./UI/ConfirmationModel";
 import { editStatus } from "../store/edit-invoice-slice";
-import { getInformation } from "../store/invoice-information";
 
 const InformHeader = ({ isPending, invoiceItem, id }) => {
-  const [invoiceStatus, setInvoiceStatus] = useState(isPending);
+  /// const [invoiceStatus, setInvoiceStatus] = useState(isPending);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -30,6 +27,28 @@ const InformHeader = ({ isPending, invoiceItem, id }) => {
       })
     );
   };
+
+  //print invoice
+  const printHandler = () => {
+    let token = localStorage.getItem("token"); // token
+
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(`http://localhost:8000/invoice/${id}/generate_pdf/`, requestOptions)
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+  };
+
+  //Delete Inoice
+
   const deleteInvoiceHandler = () => {
     dispatch(deleteInvoice(invoice_code, token));
     dispatch(uiActions.hideDeleteConfirm());
@@ -37,7 +56,7 @@ const InformHeader = ({ isPending, invoiceItem, id }) => {
   };
 
   const statusHandeler = useCallback(() => {
-    setInvoiceStatus((prevState) => !prevState);
+    //setInvoiceStatus((prevState) => !prevState);
 
     let token = localStorage.getItem("token"); // token
     let obj = {
@@ -48,10 +67,6 @@ const InformHeader = ({ isPending, invoiceItem, id }) => {
 
     dispatch(editStatus(obj));
   }, [dispatch, id, isPending]);
-
-  // useEffect(() => {
-  //   statusHandeler();
-  // }, [statusHandeler]);
 
   const editHandeler = () => {
     dispatch(uiActions.toggleForm());
@@ -81,7 +96,9 @@ const InformHeader = ({ isPending, invoiceItem, id }) => {
             {isPending === "pending" ? "Mark as Paid" : "Mark as Pending"}
           </button>
 
-          <button className={classes.printBtn}>Print</button>
+          <button className={classes.printBtn} onClick={printHandler}>
+            Print
+          </button>
         </div>
       </div>
     </Fragment>

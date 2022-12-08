@@ -8,7 +8,10 @@
   margin-bottom: 70px;
 }
 .invoices p {
-  color: var(--category-color);
+  color: #fff;
+}
+.invoices p span {
+  color: var(--main-color);
 }
 .actions {
   display: flex;

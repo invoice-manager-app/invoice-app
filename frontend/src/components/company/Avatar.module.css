@@ -63,10 +63,12 @@
   background-color: var(--main-color);
   gap: 10px;
   width: 180px !important;
-  /* border: 1px solid #fff; */
   color: #fff;
   cursor: pointer;
   border-radius: 30px;
+}
+.save {
+  padding: 10px;
 }
 .label input[type="file"] {
   display: none;
@@ -78,7 +80,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: var(--main-color);
+  color: #fff;
   width: 180px;
+  padding: 5px;
   border-radius: 30px;
   overflow: hidden;
   gap: 10px;

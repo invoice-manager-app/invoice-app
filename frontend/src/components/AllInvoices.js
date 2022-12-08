@@ -21,11 +21,16 @@ const AllInvoices = () => {
 
   const notification = useSelector((state) => state.ui.notification);
 
+  //count of first render invoice
+  const InvoiceListcount = useSelector(
+    (state) => state.invoiceListReducer.count
+  );
+
   //toggle invoice form
   const formToggleHandeler = useCallback(() => {
     let token = localStorage.getItem("token");
 
-    // dispatch(getInvoiceCompany(token));
+    dispatch(getInvoiceCompany(token));
 
     dispatch(uiActions.toggleForm());
   }, [dispatch]);
@@ -45,7 +50,9 @@ const AllInvoices = () => {
         <div className={classes.invoices}>
           <div>
             <h1>Invoices</h1>
-            <p>There are {invoiceNumber} total invoices</p>
+            <p>
+              There are <span> {InvoiceListcount}</span> total invoices
+            </p>
           </div>
           <div className={classes.actions}>
             <FilterInvoices

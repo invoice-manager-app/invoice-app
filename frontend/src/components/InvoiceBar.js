@@ -33,7 +33,6 @@ const InvoiceBar = ({ search }) => {
   //console.log("search", searchResults);
 
   // pagination list
-  console.log(searchResults);
   const nextPageData = useSelector((state) => state.paginationReducer.pageData);
 
   //next button

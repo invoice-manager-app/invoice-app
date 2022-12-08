@@ -66,29 +66,41 @@ const UserProfile = () => {
 
           <div>
             <div>
-              <h4>E-mail</h4>
-              <span>{userInfo === null ? userData.email : userInfo.email}</span>
+              <h4>
+                E-mail :{" "}
+                <span>
+                  {userInfo === null ? userData.email : userInfo.email}
+                </span>{" "}
+              </h4>
             </div>
             <div>
-              <h4>User Name</h4>
-              <span>
-                {userInfo === null ? userData.username : userInfo.username}
-              </span>
+              <h4>
+                User Name :{" "}
+                <span>
+                  {userInfo === null ? userData.username : userInfo.username}
+                </span>
+              </h4>
             </div>
             <div>
-              <h4>First Name</h4>
-              <span>
-                {userInfo === null ? userData.first_name : userInfo.first_name}
-              </span>
+              <h4>
+                First Name :{" "}
+                <span>
+                  {userInfo === null
+                    ? userData.first_name
+                    : userInfo.first_name}
+                </span>
+              </h4>
             </div>
             <div>
-              <h4>Last Name</h4>
-              <span>
-                {" "}
-                {userInfo === null
-                  ? userData.last_name
-                  : userInfo.last_name}{" "}
-              </span>
+              <h4>
+                Last Name :{" "}
+                <span>
+                  {" "}
+                  {userInfo === null
+                    ? userData.last_name
+                    : userInfo.last_name}{" "}
+                </span>
+              </h4>
             </div>
           </div>
         </div>

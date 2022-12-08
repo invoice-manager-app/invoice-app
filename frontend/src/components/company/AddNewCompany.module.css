@@ -1,10 +1,24 @@
-.form button {
+.section {
+  width: 550px;
+  margin: 5% auto;
+  border: 1px solid #fff;
+  padding: 20px;
+  border-radius: 20px;
+}
+.section h1 {
+  text-align: center;
+  padding: 15px 0;
+  color: #fff;
+}
+.form button[type="submit"],
+.actions button {
   padding: 10px;
   color: #fff;
   border: none;
   background-color: var(--main-color);
   cursor: pointer;
   width: 100%;
+  margin: 10px 0;
 }
 
 .form input {

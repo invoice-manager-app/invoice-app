@@ -105,70 +105,73 @@ const AddNewCompany = () => {
       {notification &&
         notification.message !== undefined &&
         notification.message !== null && <Notification />}
-      <form onSubmit={onSubmit} autoComplete="off" className={classes.form}>
-        <Input
-          type="text"
-          label="Company Name"
-          value={values.companyName}
-          onChange={handleChange}
-          id="companyName"
-          onBlur={handleBlur}
-          className={
-            errors.companyName && touched.companyName ? "error-input" : ""
-          }
-        />
-        {errors.companyName && touched.companyName && (
-          <p className="error-msg"> {errors.companyName} </p>
-        )}
-        <Input
-          type="email"
-          label="E-mail"
-          value={values.email}
-          onChange={handleChange}
-          id="email"
-          onBlur={handleBlur}
-          className={errors.email && touched.email ? "error-input" : ""}
-        />{" "}
-        {errors.email && touched.email && (
-          <p className="error-msg"> {errors.email} </p>
-        )}
-        <Input
-          type="text"
-          label="About"
-          value={values.about}
-          onChange={handleChange}
-          id="about"
-          onBlur={handleBlur}
-          className={errors.about && touched.about ? "error-input" : ""}
-        />{" "}
-        <Input
-          type="text"
-          label="Phone Number"
-          value={values.number}
-          onChange={handleChange}
-          id="number"
-          onBlur={handleBlur}
-          className={errors.number && touched.number ? "error-input" : ""}
-        />{" "}
-        <Input
-          type="text"
-          label="Address"
-          value={values.address}
-          onChange={handleChange}
-          id="address"
-          onBlur={handleBlur}
-          className={errors.address && touched.address ? "error-input" : ""}
-        />
-        <Avatar
-          image={image}
-          imgSrc={imgSrc}
-          setImage={setImage}
-          setImgSrc={setImgSrc}
-        />
-        <button disabled={!formIsValid} type="submit">
-          Submit
-        </button>
-      </form>
+      <section className={classes.section}>
+        <h1>Create Company</h1>
+        <form onSubmit={onSubmit} autoComplete="off" className={classes.form}>
+          <Input
+            type="text"
+            label="Company Name"
+            value={values.companyName}
+            onChange={handleChange}
+            id="companyName"
+            onBlur={handleBlur}
+            className={
+              errors.companyName && touched.companyName ? "error-input" : ""
+            }
+          />
+          {errors.companyName && touched.companyName && (
+            <p className="error-msg"> {errors.companyName} </p>
+          )}
+          <Input
+            type="email"
+            label="E-mail"
+            value={values.email}
+            onChange={handleChange}
+            id="email"
+            onBlur={handleBlur}
+            className={errors.email && touched.email ? "error-input" : ""}
+          />{" "}
+          {errors.email && touched.email && (
+            <p className="error-msg"> {errors.email} </p>
+          )}
+          <Input
+            type="text"
+            label="About"
+            value={values.about}
+            onChange={handleChange}
+            id="about"
+            onBlur={handleBlur}
+            className={errors.about && touched.about ? "error-input" : ""}
+          />{" "}
+          <Input
+            type="text"
+            label="Phone Number"
+            value={values.number}
+            onChange={handleChange}
+            id="number"
+            onBlur={handleBlur}
+            className={errors.number && touched.number ? "error-input" : ""}
+          />{" "}
+          <Input
+            type="text"
+            label="Address"
+            value={values.address}
+            onChange={handleChange}
+            id="address"
+            onBlur={handleBlur}
+            className={errors.address && touched.address ? "error-input" : ""}
+          />
+          <Avatar
+            image={image}
+            imgSrc={imgSrc}
+            setImage={setImage}
+            setImgSrc={setImgSrc}
+          />
+          <button disabled={!formIsValid} type="submit">
+            Submit
+          </button>
+        </form>
+      </section>
     </Fragment>
   );
 };

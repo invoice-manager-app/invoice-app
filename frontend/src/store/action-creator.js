@@ -1,6 +1,5 @@
 import { uiActions } from "./Ui-slice";
 import { invoiceAction } from "./actions";
-import checkProperties from "../util/check-objects-keys";
 import { getCompanies } from "./company-slice";
 
 //edit user info
@@ -169,7 +168,6 @@ export const editCompanyFn = (token, values, slug) => {
       body: formdata,
       redirect: "follow",
     };
-
     fetch(`http://127.0.0.1:8000/company/${slug}/`, requestOptions)
       .then((response) => {
         if (!response.ok) {
@@ -224,6 +222,8 @@ export const createInvoice = (token, selectedCompany, values, items) => {
           items: items,
         }),
       });
+      console.log(values.paymentDue);
+
       const data = await response.json();
       console.log(data);
 

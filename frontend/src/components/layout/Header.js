@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import classes from "./Header.module.css";
 import AuthContext from "../../context/auth-context";
@@ -11,6 +11,7 @@ import LogoutIcon from "../icons/LogoutIcon";
 const Header = () => {
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
+  const location = useLocation();
   const { isLoggedIn, logout } = authCtx;
 
   const homeDirectHandeler = () => {
@@ -28,15 +29,23 @@ const Header = () => {
   const createComapnyNavigator = () => {
     navigate("/create-company", { replace: false });
   };
+
+  const homeBtnActive = location.pathname === "/invoice" ? classes.active : "";
+  const profileBtnActive = location.pathname.includes("profile")
+    ? classes.active
+    : "";
+  const createCompantBtnActive =
+    location.pathname === "/create-company" ? classes.active : "";
+
   return (
     <header className={classes.header}>
-      <div className={classes.icon}>
+      {/* <div className={classes.icon}>
         <FaFileInvoiceDollar />
-      </div>
+      </div> */}
       {isLoggedIn && (
         <nav className={classes.nav}>
           <ul>
-            <li>
+            <li className={homeBtnActive}>
               <button onClick={homeDirectHandeler}>
                 <div className={classes.tooltip}>
                   <HomeIcon />
@@ -44,7 +53,7 @@ const Header = () => {
                 </div>
               </button>
             </li>
-            <li>
+            <li className={profileBtnActive}>
               <button onClick={userProfileHandeler}>
                 <div className={classes.tooltip}>
                   <UserIcon />
@@ -52,7 +61,7 @@ const Header = () => {
                 </div>
               </button>
             </li>
-            <li>
+            <li className={createCompantBtnActive}>
               <button onClick={createComapnyNavigator}>
                 <div className={classes.tooltip}>
                   <CaseIcon />
