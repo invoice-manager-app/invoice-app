@@ -3,6 +3,7 @@
 }
 .aside ul {
   display: flex;
+  gap: 30px;
 }
 
 .aside li {

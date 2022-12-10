@@ -42,8 +42,15 @@ const InformHeader = ({ isPending, invoiceItem, id }) => {
     };
 
     fetch(`http://localhost:8000/invoice/${id}/generate_pdf/`, requestOptions)
-      .then((response) => response.text())
-      .then((result) => console.log(result))
+      .then((response) => response.blob())
+      .then((blob) => {
+        console.log(blob);
+        const fileURL = window.URL.createObjectURL(blob);
+        let alink = document.createElement("a");
+        alink.href = fileURL;
+        alink.download = "Invoice.pdf";
+        alink.click();
+      })
       .catch((error) => console.log("error", error));
   };
 

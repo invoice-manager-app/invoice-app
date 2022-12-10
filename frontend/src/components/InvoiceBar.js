@@ -10,6 +10,7 @@ import { searchAction } from "../store/search-slice";
 
 const InvoiceBar = ({ search }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  console.log(currentPage);
   const [count, setCount] = useState();
   const [itemsPerPage] = useState(10);
 
@@ -40,11 +41,12 @@ const InvoiceBar = ({ search }) => {
 
   //Invoice List
   useEffect(() => {
+    localStorage.setItem("current-page", currentPage);
     if (currentPage === 1 && search.trim() === "") {
       let token = localStorage.getItem("token");
       dispatch(getInvoicList(token));
       setCount(InvoiceListcount);
-    } else if (currentPage > 1 && currentPage !== 1) {
+    } else if (currentPage > 1) {
       setCount(InvoiceListcount);
     } else if (search.trim() !== "") {
       setCount(resultCount);
