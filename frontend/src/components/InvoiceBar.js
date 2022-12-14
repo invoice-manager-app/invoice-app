@@ -6,59 +6,104 @@ import PaginationComponent from "./UI/Pagination";
 
 import { getInvoicList } from "../store/get-invoice-slice";
 import LoadingSpinner from "./UI/LoadingSpinner";
-import { searchAction } from "../store/search-slice";
+import { searchPagination } from "../store/search-pagination-slice";
+import { searchData } from "../store/search-slice";
+import { getPagination } from "../store/pagination-slice";
 
-const InvoiceBar = ({ search }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  console.log(currentPage);
-  const [count, setCount] = useState();
+const InvoiceBar = ({ search, filter, currentPage, setCurrentPage }) => {
+  const [count, setCount] = useState(null);
   const [itemsPerPage] = useState(10);
 
   const dispatch = useDispatch();
   //invoice data
-  const invoices = useSelector(
+  const invoice_list = useSelector(
     (state) => state.invoiceListReducer.invoice_list
+  );
+  //filtere invoice
+  const filteredData = useSelector(
+    (state) => state.filteredReducer.dataFiltered
+  );
+  //filter search
+  const filterSearchFirstPage = useSelector((state) => state.searchFilter.data);
+  // filtered data next page
+  //search results [pagination]
+  const searchResults = useSelector(
+      (state) => state.paginationSearch.searchData
+    ),
+    resultCount = useSelector((state) => state.paginationSearch.count),
+    searchNextBtn = useSelector((state) => state.searchReducer.nextBtn);
+
+  //Search first page
+  const searchFirstPage = useSelector(
+    (state) => state.searchReducer.searchData
   );
 
   //is Loading
   const isLoading = useSelector((state) => state.searchReducer.isLoading);
-
-  // //count of first render invoice
-  const InvoiceListcount = useSelector(
-    (state) => state.invoiceListReducer.count
-  );
-
-  //search results
-  const searchResults = useSelector((state) => state.searchReducer.searchData),
-    resultCount = useSelector((state) => state.searchReducer.count);
-  //console.log("search", searchResults);
 
   // pagination list
   const nextPageData = useSelector((state) => state.paginationReducer.pageData);
 
   //next button
   const nextBtn = useSelector((state) => state.invoiceListReducer.next);
-
   //Invoice List
+  const listCount = invoice_list && invoice_list.count;
+  //dispatch all invoices
   useEffect(() => {
-    localStorage.setItem("current-page", currentPage);
-    if (currentPage === 1 && search.trim() === "") {
-      let token = localStorage.getItem("token");
+    let token = localStorage.getItem("token");
+    const obj = {
+      number: currentPage,
+      token,
+    };
+    if (search === "") {
       dispatch(getInvoicList(token));
-      setCount(InvoiceListcount);
-    } else if (currentPage > 1) {
-      setCount(InvoiceListcount);
-    } else if (search.trim() !== "") {
+      if (currentPage > 1) {
+        dispatch(getPagination(obj));
+      }
+    }
+
+    setCount(listCount);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (invoice_list === null || listCount === null) return;
+
+    if (search.trim() === "") return;
+    let token = localStorage.getItem("token");
+
+    const obj = {
+      number: currentPage,
+      name: search,
+      token,
+    };
+
+    const timer = setTimeout(() => {
+      if (currentPage === 1) {
+        delete obj.number;
+
+        dispatch(searchData(obj));
+      } else {
+        dispatch(searchPagination(obj));
+      }
+    }, 1500);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, search, currentPage, invoice_list]);
+
+  useEffect(() => {
+    if (search !== "") {
       setCount(resultCount);
     } else {
-      return;
+      setCount(listCount);
     }
-  }, [dispatch, currentPage, search, resultCount, InvoiceListcount]);
-
+  }, [search, resultCount, listCount]);
   let invoiceItems;
 
-  if (invoices && search === "") {
-    invoiceItems = invoices.map((item) => (
+  // invoice List
+  if (invoice_list && search === "" && filter === "") {
+    invoiceItems = invoice_list.results.map((item) => (
       <InvoiceItem
         key={item.invoice_code}
         id={item.invoice_code}
@@ -70,8 +115,8 @@ const InvoiceBar = ({ search }) => {
       />
     ));
   }
-
-  if (searchResults && search !== "") {
+  // search pagination
+  if (search !== "" && searchResults && currentPage > 1) {
     invoiceItems = searchResults.map((item) => (
       <InvoiceItem
         key={item.invoice_code}
@@ -84,7 +129,29 @@ const InvoiceBar = ({ search }) => {
       />
     ));
   }
-  if (currentPage > 1 && currentPage !== 1 && nextPageData) {
+  // search result (first page)
+  if (search !== "" && searchFirstPage && currentPage === 1) {
+    invoiceItems = searchFirstPage.map((item) => (
+      <InvoiceItem
+        key={item.invoice_code}
+        id={item.invoice_code}
+        name={item.client_name}
+        items={item.items}
+        date={item.created_at}
+        status={item.status}
+        net_amount={item.get_net_amount}
+      />
+    ));
+  }
+  // invoice list (pages after the first)
+  if (
+    search === "" &&
+    currentPage > 1 &&
+    nextPageData &&
+    nextBtn !== null &&
+    filter === ""
+  ) {
+    console.log("true");
     invoiceItems = nextPageData.map((item) => (
       <InvoiceItem
         key={item.invoice_code}
@@ -97,10 +164,55 @@ const InvoiceBar = ({ search }) => {
       />
     ));
   }
+  if (filter !== "" && search === "" && filteredData) {
+    invoiceItems = filteredData.results.map((item) => (
+      <InvoiceItem
+        key={item.invoice_code}
+        id={item.invoice_code}
+        name={item.client_name}
+        items={item.items}
+        date={item.created_at}
+        status={item.status}
+        net_amount={item.get_net_amount}
+      />
+    ));
+  }
+  if (
+    filter !== "" &&
+    search !== "" &&
+    filterSearchFirstPage &&
+    currentPage === 1
+  ) {
+    invoiceItems = filterSearchFirstPage.results.map((item) => (
+      <InvoiceItem
+        key={item.invoice_code}
+        id={item.invoice_code}
+        name={item.client_name}
+        items={item.items}
+        date={item.created_at}
+        status={item.status}
+        net_amount={item.get_net_amount}
+      />
+    ));
+  }
 
+  // if (filter && search === "" && filteredDataNextPage && currentPage !== 1) {
+  //   invoiceItems = filteredDataNextPage.results.map((item) => (
+  //     <InvoiceItem
+  //       key={item.invoice_code}
+  //       id={item.invoice_code}
+  //       name={item.client_name}
+  //       items={item.items}
+  //       date={item.created_at}
+  //       status={item.status}
+  //       net_amount={item.get_net_amount}
+  //     />
+  //   ));
+  // }
   if (searchResults && searchResults.length === 0 && isLoading === false) {
     return <p className="not-found"> Not Found</p>;
   }
+  if (invoice_list === null || listCount === null) return;
   return (
     <Fragment>
       <ul className={classes.categories}>
@@ -119,6 +231,8 @@ const InvoiceBar = ({ search }) => {
           currentPage={currentPage}
           itemsPerPage={itemsPerPage}
           search={search}
+          searchNext={searchNextBtn}
+          filter={filter}
         />
       )}
     </Fragment>

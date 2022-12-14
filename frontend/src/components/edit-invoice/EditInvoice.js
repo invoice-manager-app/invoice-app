@@ -13,25 +13,10 @@ const EditInvoice = ({ id }) => {
   const editingInovoice = useSelector(
     (state) => state.invoiceInformationRed.invoice
   );
-  console.log(editingInovoice.items);
 
   const [selectedCompany, setSelectedCompany] = useState(
     editingInovoice.company.name
   );
-
-  const [invoiceInputs, setInvoiceInputs] = useState({
-    streetAddress: "",
-    city: "",
-    Zcode: "",
-    country: "",
-    client_name: editingInovoice.client_name,
-    clientMail: "",
-    address: "",
-    clientCity: "",
-    client_zipcode: "",
-    description: "",
-    paymentDue: 11,
-  });
 
   const { items } = editingInovoice;
 
@@ -44,34 +29,13 @@ const EditInvoice = ({ id }) => {
     }))
   );
 
-  console.log(inputFields);
-
   // Items state
-
-  const [dateTime] = useState(new Date());
-  const [payTerms, setPayTerms] = useState("--choose an option--");
-  const [dateNow, setDateNow] = useState();
 
   const editInvoiceHandeler = () => {
     dispatch(uiActions.toggleForm());
   };
 
-  return (
-    <Form
-      id={id}
-      invoiceInputs={invoiceInputs}
-      setInvoiceInputs={setInvoiceInputs}
-      payTerms={payTerms}
-      setPayTerms={setPayTerms}
-      setDateNow={setDateNow}
-      selectedCompany={selectedCompany}
-      setSelectedCompany={setSelectedCompany}
-      dateTime={dateTime}
-      inputFields={items}
-      setInputFields={setInputFields}
-      items={inputFields}
-    />
-  );
+  return <Form id={id} setInputFields={setInputFields} items={inputFields} />;
 };
 
 export default EditInvoice;

@@ -13,13 +13,14 @@ import { getInformation } from "../store/invoice-information";
 const InoviceInform = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const params = useParams();
+  const { invoiceId } = params;
+
   const invoiceDetail = useSelector(
       (state) => state.invoiceInformationRed.invoice
     ),
     isLoading = useSelector((state) => state.invoiceInformationRed.isLoading);
 
-  const params = useParams();
-  const { invoiceId } = params;
   //fetch invoice detail
   useEffect(() => {
     let token = localStorage.getItem("token");
@@ -41,6 +42,7 @@ const InoviceInform = () => {
   if (!invoiceDetail && !isLoading) {
     return <p className={classes.not_found}> No Invoice Found </p>;
   }
+
   return (
     <Fragment>
       {invoiceDetail && (

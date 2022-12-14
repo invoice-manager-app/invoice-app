@@ -5,7 +5,7 @@ export const getPagination = createAsyncThunk(
   async (arg, thunkApi) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/invoice/list/?page=${arg.num}`,
+        `http://localhost:8000/invoice/list/?page=${arg.number}`,
         {
           method: "GET",
           headers: {
@@ -51,7 +51,7 @@ const paginationSlice = createSlice({
     },
     [getPagination.rejected]: (state, action) => {
       state.isLoading = false;
-      //console.log(action);
+      console.log(action);
     },
   },
 });

@@ -1,0 +1,11 @@
+.filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-direction: column;
+}
+.filter select {
+  border: 1px solid #fff;
+  color: #fff;
+  background-color: transparent;
+}

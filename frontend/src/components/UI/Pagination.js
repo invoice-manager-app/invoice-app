@@ -2,6 +2,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { Pagination } from "antd";
 import { getPagination } from "../../store/pagination-slice";
 import { useEffect } from "react";
+import { searchPagination } from "../../store/search-pagination-slice";
+import { getInvoicList } from "../../store/get-invoice-slice";
+import { searchData } from "../../store/search-slice";
 
 const PaginationComponent = ({
   setCurrentPage,
@@ -9,33 +12,48 @@ const PaginationComponent = ({
   count,
   itemsPerPage,
   search,
+  filter,
 }) => {
   const dispatch = useDispatch();
-  const next = useSelector((state) => state.paginationReducer.next);
-  const previous = useSelector((state) => state.paginationReducer.previous);
-  let pageNums = [];
 
-  for (let i = 1; i <= Math.ceil(count / itemsPerPage); i++) {
-    pageNums.push(i);
-  }
+  // let pageNums = [];
+
+  // for (let i = 1; i <= Math.ceil(count / itemsPerPage); i++) {
+  //   pageNums.push(i);
+  // }
   useEffect(() => {
     if (search.trim() !== "") {
       setCurrentPage(1);
     }
   }, [search, setCurrentPage]);
-
   //paginations
   const paginationHandler = (number) => {
+    // store current page in session storage
+    sessionStorage.setItem("current-page", number);
+
     let token = localStorage.getItem("token");
 
-    if (number !== 1) {
-      const obj = {
-        num: number,
-        token,
-      };
+    const obj = {
+      number: number,
+      token,
+      name: search,
+    };
 
+    if (search === "" && number !== 1 && filter === "") {
+      delete obj.name;
       dispatch(getPagination(obj));
     }
+
+    // if (number === 1 && search === "" && filter === "") {
+    //   dispatch(getInvoicList(token));
+    // }
+    // if (number !== 1 && search !== "") {
+    //   dispatch(searchPagination(obj));
+    // }
+    // if (number === 1 && search !== "") {
+    //   delete obj.number;
+    //   dispatch(searchData(obj));
+    // }
     setCurrentPage(number);
   };
 

@@ -18,11 +18,7 @@
   align-items: center;
   gap: 30px;
 }
-.actions > div select {
-  background: transparent;
-  color: #fff;
-  border: none;
-}
+
 .actions > div select option {
   background-color: var(--secondary-color);
   padding: 10px;

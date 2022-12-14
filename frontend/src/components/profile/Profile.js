@@ -11,14 +11,17 @@ import EditIcon from "../icons/EditIcon";
 import Notification from "../UI/Notification";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Aside from "./Aside";
+import { getCompanies } from "../../store/company-slice";
 
 //get companies
-
 const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const data = useSelector((state) => state.companiesReducer.allCompanies);
 
+  console.log(data);
+  const CompanyId = data && data.map((el) => el.id);
   //user info after update
   const editedInfo = useSelector((state) => state.action.userInfo);
   //UI actions
@@ -39,6 +42,7 @@ const Profile = () => {
   };
 
   //switch into change password components
+  const { pathname } = location;
 
   const changePasswordHandler = useCallback(() => {
     dispatch(uiActions.togglePassword());
@@ -47,12 +51,19 @@ const Profile = () => {
   //switch into user Info
   const basicInfoHandler = useCallback(() => {
     navigate("/profile/user");
-  }, [navigate]);
+    if (pathname === "/profile/user") return;
+  }, [navigate, pathname]);
 
   //switch into company Info
   const companyInfoHandler = useCallback(() => {
+    if (data && CompanyId) {
+      for (let i = 0; i < CompanyId.length; i++) {
+        if (pathname.includes(CompanyId[i])) return;
+      }
+    }
+
     navigate("/profile/companies");
-  }, [navigate]);
+  }, [navigate, pathname, CompanyId, data]);
 
   const basicInfoBtnClass =
     location.pathname === "/profile/user" ? classes.active : "";

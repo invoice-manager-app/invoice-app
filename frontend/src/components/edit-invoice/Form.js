@@ -1,30 +1,21 @@
+import { useState } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 import { editInvoice } from "../../store/edit-invoice-slice";
 import { getInformation } from "../../store/invoice-information";
 import Input from "../UI/Inputs";
 import Items from "./Items";
-import SelectCompany from "./SelectCompany";
 import { token } from "../../helper/token-id";
 
 import classes from "./Form.module.css";
 import { BsPlusLg } from "react-icons/bs";
 
-import Date from "./Date";
 import { uiActions } from "../../store/Ui-slice";
 
 const Form = ({
   id,
-  invoiceInputs,
-  setInvoiceInputs,
-  payTerms,
-  setPayTerms,
-  setDateNow,
-  selectedCompany,
-  dateTime,
 
   setInputFields,
-  companies,
-  setSelectedCompany,
   items,
 }) => {
   const dispatch = useDispatch();
@@ -33,6 +24,38 @@ const Form = ({
   );
   //response message
   const responseMsg = useSelector((state) => state.ui.responseMsg);
+
+  //date now
+  const dateTime = "";
+  let dd = editingInovoice.created_at;
+  var cleanDate = new Date(dd.replace(/\./g, "/"));
+
+  // console.log(
+  //   cleanDate.getDate().toString() +
+  //     "/" +
+  //     (cleanDate.getMonth() + 1).toString() +
+  //     "/" +
+  //     cleanDate.getFullYear().toString()
+  // );
+  // date created
+  let created_at = new Date(dd).toISOString().slice(0, 10);
+  // today date
+  const todayDate = new Date().toISOString().slice(0, 10);
+  //set date
+  const [dateNow, setDateNow] = useState(todayDate);
+  const [invoiceInputs, setInvoiceInputs] = useState({
+    streetAddress: "",
+    city: "",
+    Zcode: "",
+    country: "",
+    client_name: editingInovoice.client_name,
+    clientMail: "",
+    address: "",
+    clientCity: "",
+    client_zipcode: "",
+    description: "",
+    due_after: "",
+  });
 
   //add new item
   const handleAddFields = () => {
@@ -47,6 +70,18 @@ const Form = ({
     ]);
   };
 
+  //date handler
+
+  const dateHandler = (e) => {
+    let date1 = new Date(e.target.value);
+    let date2 = new Date(dateNow);
+    const diffTime = Math.abs(date1 - date2);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    console.log(diffDays);
+    setDateNow(e.target.value);
+    setInvoiceInputs({ ...invoiceInputs, due_after: diffDays });
+  };
+
   //hide form
   const hideFromHandeler = () => {
     dispatch(uiActions.toggleForm());
@@ -59,21 +94,18 @@ const Form = ({
       token,
       id,
       invoiceInputs,
-      selectedCompany,
       items: items,
     };
 
     dispatch(editInvoice(obj));
     dispatch(uiActions.hideForm());
   };
-
   //form validation
   let form = true;
   if (
     isNaN(invoiceInputs.clientName) &&
     isNaN(invoiceInputs.clientMail) &&
-    isNaN(invoiceInputs.clientCity) &&
-    isNaN(selectedCompany)
+    isNaN(invoiceInputs.clientCity)
   ) {
     form = true;
   }
@@ -81,9 +113,9 @@ const Form = ({
   let showForm = useSelector((state) => state.ui.formIsVisible);
   let wrapperClass = `${classes.wrapper} ${showForm ? classes.active : ""} `;
   return (
-    <section className={wrapperClass}>
+    <div className={wrapperClass}>
       <form className={classes.form} onSubmit={submitHandeler}>
-        <h1>New Invoice</h1>
+        <h1>Edit Invoice</h1>
 
         <div>
           <h4>Bill to</h4>
@@ -117,11 +149,10 @@ const Form = ({
               })
             }
           />
-          {responseMsg &&
-            responseMsg.client_email &&
-            invoiceInputs.clientMail === "" && (
-              <p className="response-text"> Please Enter The Client Email </p>
-            )}
+          {(!invoiceInputs.clientMail.includes("@") ||
+            !invoiceInputs.clientMail.includes(".")) && (
+            <p className="response-text"> Please Enter a valid E-mail </p>
+          )}
           <Input
             type="text"
             id="client-address"
@@ -188,28 +219,17 @@ const Form = ({
               id="invoice-date"
               label="Invoice Date"
               disabled
-              value={dateTime.toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
+              value={created_at}
             />
             <Input
-              type="text"
+              type="date"
               id="pay-due"
               label="Payment Due"
-              readOnly
-              value={invoiceInputs.paymentDue}
+              value={dateNow}
+              onChange={dateHandler}
             />
           </div>
 
-          <Date
-            payTerms={payTerms}
-            setPayTerms={setPayTerms}
-            setDateNow={setDateNow}
-            invoiceInputs={invoiceInputs}
-            setInvoiceInputs={setInvoiceInputs}
-          />
           <Input
             type="text"
             id="p-description"
@@ -224,13 +244,7 @@ const Form = ({
           />
           <div className={classes.item}>
             <h3>Item List</h3>
-            {/* <ul>
-          <li>Item Name</li>
-          <li>Qty</li>
-          <li>Price</li>
-          <li>Tax</li>
-          <li>Total</li>
-        </ul> */}
+
             {items.map((inputField, index) => (
               <Items
                 key={index}
@@ -260,7 +274,7 @@ const Form = ({
           </div>
         </div>
       </form>
-    </section>
+    </div>
   );
 };
 

@@ -27,12 +27,12 @@ const invoiceListSlice = createSlice({
   name: "invoice",
   initialState: {
     invoice_list: null,
-    next: null,
-    previous: null,
-    currentPage: 1,
-    count: null,
-    isLoading: false,
-    data: null,
+    // next: null,
+    // previous: null,
+    // currentPage: 1,
+    // count: null,
+    // isLoading: false,
+    // data: null,
   },
   reducers: {
     addInvoices: (state, action) => {
@@ -45,10 +45,11 @@ const invoiceListSlice = createSlice({
     },
     [getInvoicList.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.invoice_list = action.payload.results;
-      state.count = action.payload.count;
-      state.next = action.payload.next;
-      state.previous = action.payload.previous;
+      state.invoice_list = action.payload;
+      // state.count = action.payload.count;
+      // state.next = action.payload.next;
+      // state.previous = action.payload.previous;
+      console.log(action);
     },
     [getInvoicList.pending]: (state, action) => {
       state.isLoading = false;

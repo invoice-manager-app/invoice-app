@@ -7,7 +7,6 @@ import { BsPlusLg } from "react-icons/bs";
 import { useLocation } from "react-router-dom";
 import { createInvoice } from "../../store/action-creator";
 import { getInvoicList } from "../../store/get-invoice-slice";
-import { getInvoiceCompany } from "../../store/get-invoice-detail";
 import AuthContext from "../../context/auth-context";
 import Items from "./Items";
 import SelectCompany from "./select-company/SelectCompany";
@@ -36,7 +35,7 @@ const Form = () => {
     clientZcode: "",
     clientCountry: "",
     productionDescription: "",
-    paymentDue: "",
+    paymentDue: 0,
   });
   const [inputFields, setInputFields] = useState([
     { title: "", quantity: "", unit_price: "", tax_rate: 0 },
@@ -46,6 +45,14 @@ const Form = () => {
 
   //logout
   const logoutRes = useSelector((state) => state.getInvoiceData.logout);
+  //selected Company Slug
+
+  const companySlug = useSelector(
+    (state) => state.getInvoiceData.selectCompany
+  );
+
+  const slug =
+    companySlug && companySlug.find((el) => el.name === selectedCompany);
 
   const { logout } = authCtx;
   useEffect(() => {
@@ -53,7 +60,6 @@ const Form = () => {
       logout();
     }
   }, [logout, logoutRes]);
-  console.log("ala1454aa".match(/\d+/)[0]);
   //hide form on route change
   useEffect(() => {
     dispatch(uiActions.hideForm());
@@ -70,13 +76,11 @@ const Form = () => {
     setInvoiceInputs({ ...invoiceInputs, paymentDue: diffDays });
   };
 
-  console.log(invoiceInputs.paymentDue);
-
   const submitHandeler = (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
 
-    dispatch(createInvoice(token, selectedCompany, invoiceInputs, inputFields));
+    dispatch(createInvoice(token, slug.slug, invoiceInputs, inputFields));
     dispatch(getInvoicList(token));
 
     dispatch(uiActions.hideForm());
@@ -96,10 +100,10 @@ const Form = () => {
   //actions
 
   //invoice list
-  useEffect(() => {
-    let token = localStorage.getItem("token");
-    dispatch(getInvoiceCompany(token));
-  }, [dispatch]);
+  // useEffect(() => {
+  //   let token = localStorage.getItem("token");
+  //   dispatch(getInvoiceCompany(token));
+  // }, [dispatch]);
 
   const hideFromHandeler = () => {
     dispatch(uiActions.toggleForm());
