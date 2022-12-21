@@ -38,9 +38,8 @@ const Items = ({ index, inputField, setInputFields, inputFields }) => {
             type="number"
             id="quantity"
             label="Quantity"
-            value={inputField.quantity}
+            value={inputField.quantity || 1}
             min="1"
-            required
             onChange={(event) => handleChangeInput(event, index)}
           />
         </li>
@@ -60,8 +59,9 @@ const Items = ({ index, inputField, setInputFields, inputFields }) => {
             type="number"
             id="tax_rate"
             min="0"
+            max="99"
             label="Tax"
-            value={inputField.tax_rate}
+            value={inputField.tax_rate || 0}
             onChange={(event) => handleChangeInput(event, index)}
           />
         </li>

@@ -18,8 +18,7 @@ export const searchPagination = createAsyncThunk(
         throw new Error(response.statusText || "Something Went Wrong!");
       }
       const data = await response.json();
-      console.log(data, "data");
-      console.log(arg.number, "number");
+
       return data;
     } catch (error) {
       console.log(error.message);

@@ -21,6 +21,7 @@ export const AuthContextProvider = (props) => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     sessionStorage.removeItem("current-page");
+    localStorage.removeItem("filter");
   }, []);
 
   const loginHandler = (token, data) => {
@@ -28,6 +29,7 @@ export const AuthContextProvider = (props) => {
     setUserInform(data);
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(data));
+    localStorage.removeItem("filter");
   };
 
   const updateToken = useCallback(() => {

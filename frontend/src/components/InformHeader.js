@@ -135,7 +135,8 @@ const InformHeader = ({ isPending, invoiceItem, id }) => {
 
   //edit form handler
   const editHandeler = () => {
-    dispatch(uiActions.toggleForm());
+    //dispatch(uiActions.toggleForm());
+    navigate(`/invoice/${id}/edit-form`);
   };
   //class switch
   const paidBtnClass = isPending === "pending" ? classes.paid : classes.pending;
@@ -163,13 +164,15 @@ const InformHeader = ({ isPending, invoiceItem, id }) => {
           <button className={paidBtnClass} onClick={statusHandeler}>
             {isPending === "pending" ? "Mark as Paid" : "Mark as Pending"}
           </button>
-          <button
-            disabled={isSending}
-            className={classes.reminderBtn}
-            onClick={resend}
-          >
-            {isSending ? "Sending..." : "Send Reminder"}
-          </button>
+          {isPending === "pending" && (
+            <button
+              disabled={isSending}
+              className={classes.reminderBtn}
+              onClick={resend}
+            >
+              {isSending ? "Sending..." : "Send Reminder"}
+            </button>
+          )}
           <button
             disabled={isPrinting}
             className={classes.printBtn}

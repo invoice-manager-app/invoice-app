@@ -14,14 +14,11 @@ const EditInvoice = ({ id }) => {
     (state) => state.invoiceInformationRed.invoice
   );
 
-  const [selectedCompany, setSelectedCompany] = useState(
-    editingInovoice.company.name
-  );
-
   const { items } = editingInovoice;
 
   const [inputFields, setInputFields] = useState(
     items.map(({ id, title, quantity, tax_rate, unit_price }) => ({
+      id: id,
       title,
       quantity: parseInt(quantity),
       tax_rate: parseInt(tax_rate),
@@ -35,7 +32,14 @@ const EditInvoice = ({ id }) => {
     dispatch(uiActions.toggleForm());
   };
 
-  return <Form id={id} setInputFields={setInputFields} items={inputFields} />;
+  return (
+    <Form
+      id={id}
+      setInputFields={setInputFields}
+      items={inputFields}
+      editingInovoice={editingInovoice}
+    />
+  );
 };
 
 export default EditInvoice;

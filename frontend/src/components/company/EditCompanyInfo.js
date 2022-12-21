@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useFormik } from "formik";
 import { userSchema } from "../../schemas/index";
 import { useDispatch } from "react-redux";
@@ -6,18 +6,24 @@ import Input from "../UI/Inputs";
 
 import classes from "./AddNewCompany.module.css";
 import { useNavigate } from "react-router-dom";
-import { uiActions } from "../../store/Ui-slice";
 import Avatar from "./Avatar";
 import { editCompanyFn } from "../../store/action-creator";
 import checkProperties from "../../util/check-objects-keys";
-import { token } from "../../helper/token-id";
+import AuthContext from "../../context/auth-context";
 
 const EditComapnyInfo = ({ companies, setShowCard }) => {
   const [image, setImage] = useState("");
   const [imgSrc, setImgSrc] = useState(companies.avatar);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const authCtx = useContext(AuthContext);
+  let token;
 
+  if (localStorage.getItem("token")) {
+    token = localStorage.getItem("token");
+  } else {
+    authCtx.logout();
+  }
   let formIsValid = false;
   const { values, errors, handleBlur, touched, handleChange } = useFormik({
     initialValues: {

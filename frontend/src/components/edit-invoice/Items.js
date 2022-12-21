@@ -1,26 +1,51 @@
 import Input from "../UI/Inputs";
 import { MdDelete } from "react-icons/md";
 import classes from "./Items.module.css";
-const Items = ({ setInputFields, inputField, inputFields, index }) => {
+const Items = ({
+  setInputFields,
+  inputField,
+  inputFields,
+  index,
+  setIsValid,
+}) => {
   const handleChangeInput = (e, index) => {
     const { id, value } = e.target;
-    const list = [...inputFields];
-    list[index][id] = parseInt(value);
-    list[index]["title"] = value;
+    console.log(id);
 
+    const list = [...inputFields];
+    if (!isNaN(list[index][id]) && id !== "title") {
+      list[index][id] = parseInt(value);
+    } else {
+      list[index][id] = value.toString();
+    }
+    setIsValid(true);
     setInputFields(list);
   };
 
   //remove handler
   const removeHandeler = (index) => {
     const list = [...inputFields];
-    list.splice(index, 1);
+    let arr = [];
+    list.map((el) => (el.delete === undefined ? arr.push(el) : ""));
+
+    if (arr.length === 1) return;
+
+    list[index].delete = true;
+
+    if (list[index].delete === true) {
+      setIsValid(true);
+    }
+
+    if (list[index].delete === undefined) {
+    }
+
     setInputFields(list);
   };
+  const deleteBtnDisbale = inputFields.length === 1 ? classes.disable : "";
 
   return (
-    <div>
-      <ul>
+    <div className={inputField.delete === true ? classes.deleted : ""}>
+      <ul className={classes.items}>
         <li>
           <Input
             type="text"
@@ -28,6 +53,7 @@ const Items = ({ setInputFields, inputField, inputFields, index }) => {
             label="Item Name"
             value={inputField.title}
             onChange={(event) => handleChangeInput(event, index)}
+            readOnly={inputField.delete === true ? true : false}
           />
         </li>
         <li>
@@ -38,6 +64,7 @@ const Items = ({ setInputFields, inputField, inputFields, index }) => {
             value={+inputField.quantity}
             min="1"
             onChange={(event) => handleChangeInput(event, index)}
+            readOnly={inputField.delete === true ? true : false}
           />
         </li>
         <li>
@@ -46,6 +73,7 @@ const Items = ({ setInputFields, inputField, inputFields, index }) => {
             id="unit_price"
             label="Price"
             min="1"
+            readOnly={inputField.delete === true ? true : false}
             value={+inputField.unit_price}
             onChange={(event) => handleChangeInput(event, index)}
           />
@@ -55,6 +83,8 @@ const Items = ({ setInputFields, inputField, inputFields, index }) => {
             type="number"
             id="tax_rate"
             min="0"
+            max="99"
+            readOnly={inputField.delete === true ? true : false}
             label="Tax"
             value={+inputField.tax_rate}
             onChange={(event) => handleChangeInput(event, index)}
@@ -74,7 +104,7 @@ const Items = ({ setInputFields, inputField, inputFields, index }) => {
         </li>
 
         <li className={classes.deleteBtn}>
-          <div>
+          <div className={deleteBtnDisbale}>
             <MdDelete onClick={() => removeHandeler(index)} />
           </div>
         </li>

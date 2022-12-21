@@ -1,5 +1,6 @@
 import React, { Suspense, useContext } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+import EditComapnyInfo from "../components/company/EditCompanyInfo";
 import LoadingSpinner from "../components/UI/LoadingSpinner";
 import AuthContext from "../context/auth-context";
 // import UserProfilePage from "./UserProfilePage";
@@ -39,7 +40,9 @@ const AllPages = () => {
             element={isLoggedIn ? <Invoices /> : <AuthPage />}
           />
           <Route path="/invoice/*" element={<Invoices />} />
-          <Route path="/invoice/:invoiceId/*" element={<InvoiceDetail />} />
+          <Route path="/invoice/:invoiceId/*" element={<InvoiceDetail />}>
+            <Route path="edit-form/" element={<EditComapnyInfo />} />
+          </Route>
           <Route path="/profile/*" element={<UserProfilePage />}>
             <Route path="companies/*" element={<CompanyListsPage />} />
             <Route path="user" element={<UserInfoPage />} />

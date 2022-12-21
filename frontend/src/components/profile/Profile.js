@@ -11,7 +11,6 @@ import EditIcon from "../icons/EditIcon";
 import Notification from "../UI/Notification";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Aside from "./Aside";
-import { getCompanies } from "../../store/company-slice";
 
 //get companies
 const Profile = () => {

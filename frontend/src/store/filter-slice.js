@@ -12,8 +12,11 @@ export const filterInvoice = createAsyncThunk(
           Authorization: `Bearer ${arg.token}`,
         },
       });
-
+      if (response.status === 401) {
+        localStorage.removeItem("token");
+      }
       const data = await response.json();
+      console.log(data);
       // if (data && data.next && arg.number > 1) {
       //   thunkApi.dispatch(invoicePagination(arg));
       // }

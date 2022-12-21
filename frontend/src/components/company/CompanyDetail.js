@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 import EditIcon from "../icons/EditIcon";
@@ -7,16 +7,23 @@ import classes from "./CompanyDetail.module.css";
 import EditComapnyInfo from "./EditCompanyInfo";
 import ConfirmationModel from "../UI/ConfirmationModel";
 import { uiActions } from "../../store/Ui-slice";
-import { token } from "../../helper/token-id";
 import { deleteCompany } from "../../store/action-creator";
 import { getCompanies } from "../../store/company-slice";
+import AuthContext from "../../context/auth-context";
 
 const CompanyDetail = ({ companies, getAllCompanies, setShowCard }) => {
   const [editForm, setEditForm] = useState(false);
   const dispatch = useDispatch();
   const params = useParams();
   const navigate = useNavigate();
+  const authCtx = useContext(AuthContext);
+  let token;
 
+  if (localStorage.getItem("token")) {
+    token = localStorage.getItem("token");
+  } else {
+    authCtx.logout();
+  }
   const editCompany = useSelector((state) => state.ui.editCompany);
 
   //confirmation Object

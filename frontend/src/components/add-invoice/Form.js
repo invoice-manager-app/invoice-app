@@ -10,6 +10,7 @@ import { getInvoicList } from "../../store/get-invoice-slice";
 import AuthContext from "../../context/auth-context";
 import Items from "./Items";
 import SelectCompany from "./select-company/SelectCompany";
+import { filterInvoice } from "../../store/filter-slice";
 
 const Form = () => {
   const dispatch = useDispatch();
@@ -74,6 +75,10 @@ const Form = () => {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     setDateNow(e.target.value);
     setInvoiceInputs({ ...invoiceInputs, paymentDue: diffDays });
+
+    console.log("diff", diffDays);
+    console.log("date2", date2);
+    console.log("date1", date1);
   };
 
   const submitHandeler = (e) => {
@@ -81,6 +86,14 @@ const Form = () => {
     const token = localStorage.getItem("token");
 
     dispatch(createInvoice(token, slug.slug, invoiceInputs, inputFields));
+    if (localStorage.getItem("filter")) {
+      const obj = {
+        token,
+        filter: localStorage.getItem("filter"),
+        number: sessionStorage.getItem("current-page"),
+      };
+      dispatch(filterInvoice(obj));
+    }
     dispatch(getInvoicList(token));
 
     dispatch(uiActions.hideForm());

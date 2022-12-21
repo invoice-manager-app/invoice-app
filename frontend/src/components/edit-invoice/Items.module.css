@@ -1,0 +1,52 @@
+.items {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  /* justify-content: center; */
+  gap: 16px;
+  font-size: 12px;
+}
+.items li input {
+  margin: 0;
+}
+.items li {
+  margin: 12px 0;
+}
+.items li:nth-child(1) {
+  flex-basis: 30%;
+}
+.items li:nth-child(2) {
+  flex-basis: 10%;
+}
+.items li:nth-child(3) {
+  flex-basis: 15%;
+}
+.items li:nth-child(4) {
+  flex-basis: 10%;
+}
+.items li:nth-child(5) {
+  flex-basis: 10%;
+}
+.items li:nth-child(6) {
+  flex-basis: fit-content;
+  cursor: pointer;
+}
+.deleteBtn svg {
+  font-size: 36px;
+}
+.deleted {
+  opacity: 0.2;
+  pointer-events: none;
+  user-select: none;
+}
+
+.item button svg {
+  color: var(--main-color);
+}
+.deleted input {
+  cursor: not-allowed;
+  user-select: none !important;
+}
+.disable {
+  opacity: 0.2;
+}

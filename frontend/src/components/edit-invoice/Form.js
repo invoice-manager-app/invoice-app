@@ -1,114 +1,206 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { editInvoice } from "../../store/edit-invoice-slice";
-import { getInformation } from "../../store/invoice-information";
 import Input from "../UI/Inputs";
 import Items from "./Items";
-import { token } from "../../helper/token-id";
-
 import classes from "./Form.module.css";
 import { BsPlusLg } from "react-icons/bs";
 
-import { uiActions } from "../../store/Ui-slice";
+import AuthContext from "../../context/auth-context";
+import { useNavigate } from "react-router-dom";
 
-const Form = ({
-  id,
+const Form = ({ id, setInputFields, items, editingInovoice }) => {
+  const navigate = useNavigate();
+  // today date
+  const todayDate = new Date().toISOString().slice(0, 10);
+  //form validation
+  const [isValid, setIsValid] = useState(false);
+  //set date
+  const [dateNow, setDateNow] = useState(todayDate);
 
-  setInputFields,
-  items,
-}) => {
+  const {
+    client_name,
+    client_email,
+    client_zipcode,
+    description,
+    due_after,
+    client_country,
+    client_address,
+    client_city,
+  } = editingInovoice;
+
+  const [invoiceInputs, setInvoiceInputs] = useState({
+    city: client_city,
+    Zcode: client_zipcode,
+    country: client_country,
+    client_name: client_name,
+    clientMail: client_email,
+    address: client_address,
+    client_zipcode: client_zipcode,
+    description,
+    due_after: due_after,
+  });
+
+  const [information] = items;
+  const [invoice_information] = editingInovoice.items;
+
+  //form validation
+  useEffect(() => {
+    if (
+      (invoiceInputs.clientMail.trim() !== "" &&
+        invoiceInputs.clientMail.includes("@") &&
+        invoiceInputs.clientMail !== client_email) ||
+      (invoiceInputs.client_name !== client_name &&
+        invoiceInputs.client_name.trim() !== "") ||
+      description !== invoiceInputs.description ||
+      (client_city !== invoiceInputs.city && invoiceInputs.city !== "") ||
+      client_zipcode !== invoiceInputs.Zcode ||
+      client_country !== invoiceInputs.country ||
+      (client_address !== "" && client_address !== invoiceInputs.address)
+    ) {
+      setIsValid(true);
+    } else {
+      setIsValid(false);
+    }
+
+    if (dateNow !== todayDate) {
+      setIsValid(true);
+    }
+  }, [
+    client_address,
+    client_city,
+    client_country,
+    client_email,
+    client_name,
+    client_zipcode,
+    dateNow,
+    description,
+    invoiceInputs.Zcode,
+    invoiceInputs.address,
+    invoiceInputs.city,
+    invoiceInputs.clientMail,
+    invoiceInputs.client_name,
+    invoiceInputs.country,
+    invoiceInputs.description,
+    todayDate,
+  ]);
+
+  //deleted items
+  const authCtx = useContext(AuthContext);
   const dispatch = useDispatch();
-  const editingInovoice = useSelector(
-    (state) => state.invoiceInformationRed.invoice
-  );
+
+  let token;
+
+  if (localStorage.getItem("token")) {
+    token = localStorage.getItem("token");
+  } else {
+    authCtx.logout();
+  }
   //response message
   const responseMsg = useSelector((state) => state.ui.responseMsg);
 
-  //date now
-  const dateTime = "";
-  let dd = editingInovoice.created_at;
-  var cleanDate = new Date(dd.replace(/\./g, "/"));
+  //date created at
 
-  // console.log(
-  //   cleanDate.getDate().toString() +
-  //     "/" +
-  //     (cleanDate.getMonth() + 1).toString() +
-  //     "/" +
-  //     cleanDate.getFullYear().toString()
-  // );
-  // date created
-  let created_at = new Date(dd).toISOString().slice(0, 10);
-  // today date
-  const todayDate = new Date().toISOString().slice(0, 10);
-  //set date
-  const [dateNow, setDateNow] = useState(todayDate);
-  const [invoiceInputs, setInvoiceInputs] = useState({
-    streetAddress: "",
-    city: "",
-    Zcode: "",
-    country: "",
-    client_name: editingInovoice.client_name,
-    clientMail: "",
-    address: "",
-    clientCity: "",
-    client_zipcode: "",
-    description: "",
-    due_after: "",
-  });
+  let created_at = editingInovoice.created_at;
+
+  let date_created = new Date(
+    created_at.substr(3, 2) +
+      "/" +
+      created_at.substr(0, 2) +
+      "/" +
+      created_at.substr(6, 4)
+  );
 
   //add new item
   const handleAddFields = () => {
     setInputFields([
       ...items,
-      {
-        title: "",
-        quantity: "",
-        unit_price: "",
-        tax_rate: "",
-      },
+      { title: "", quantity: "", unit_price: "", tax_rate: "" },
     ]);
   };
 
   //date handler
 
   const dateHandler = (e) => {
+    // payment due
     let date1 = new Date(e.target.value);
-    let date2 = new Date(dateNow);
+    // date created
+    let date2 = date_created;
     const diffTime = Math.abs(date1 - date2);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    console.log(diffDays);
     setDateNow(e.target.value);
     setInvoiceInputs({ ...invoiceInputs, due_after: diffDays });
   };
 
   //hide form
   const hideFromHandeler = () => {
-    dispatch(uiActions.toggleForm());
+    navigate(-1);
   };
 
+  function solve(myList1, myList2) {
+    for (let i = 0; i < myList1.length; i++) {
+      const obj1 = myList1[i];
+      const obj2 = myList2[i];
+      for (let key in obj2) {
+        if (key !== "id") {
+          if (obj2.hasOwnProperty(key) && obj1.hasOwnProperty(key)) {
+            if (
+              obj1[key] === obj2[key] ||
+              parseInt(obj1[key]) === parseInt(obj2[key])
+            ) {
+              delete obj1[key];
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // On Submit
   const submitHandeler = (e) => {
     e.preventDefault();
 
-    const obj = {
+    for (let key in invoiceInputs) {
+      for (let key2 in editingInovoice) {
+        if (invoiceInputs[key] === editingInovoice[key2])
+          delete invoiceInputs[key];
+      }
+    }
+
+    const filteredArr = items.filter(
+      (value) => Object.keys(value).length !== 0
+    );
+    // FILTER ARRAY
+    solve(filteredArr, editingInovoice.items);
+
+    let obj = {
       token,
       id,
       invoiceInputs,
-      items: items,
+      items: filteredArr,
     };
+    obj.items.map((el) => {
+      if (Object.keys(el).length === 1 && el.id) {
+        delete el.id;
+      }
+    });
+
+    const done = obj.items.filter(
+      (obj) => !(obj && Object.keys(obj).length === 0)
+    );
+
+    obj.items = done;
+    if (obj.items.length === 0) {
+      delete obj.items;
+    }
+
+    console.log(obj.items);
+    console.log(editingInovoice.items);
 
     dispatch(editInvoice(obj));
-    dispatch(uiActions.hideForm());
+    navigate(-1);
   };
-  //form validation
-  let form = true;
-  if (
-    isNaN(invoiceInputs.clientName) &&
-    isNaN(invoiceInputs.clientMail) &&
-    isNaN(invoiceInputs.clientCity)
-  ) {
-    form = true;
-  }
 
   let showForm = useSelector((state) => state.ui.formIsVisible);
   let wrapperClass = `${classes.wrapper} ${showForm ? classes.active : ""} `;
@@ -149,10 +241,10 @@ const Form = ({
               })
             }
           />
-          {(!invoiceInputs.clientMail.includes("@") ||
+          {/* {(!invoiceInputs.clientMail.includes("@") ||
             !invoiceInputs.clientMail.includes(".")) && (
             <p className="response-text"> Please Enter a valid E-mail </p>
-          )}
+          )} */}
           <Input
             type="text"
             id="client-address"
@@ -171,11 +263,11 @@ const Form = ({
               type="text"
               id="client-city"
               label="City"
-              value={invoiceInputs.clientCity}
+              value={invoiceInputs.city}
               onChange={(e) =>
                 setInvoiceInputs({
                   ...invoiceInputs,
-                  clientCity: e.target.value,
+                  city: e.target.value,
                 })
               }
             />
@@ -242,23 +334,29 @@ const Form = ({
               })
             }
           />
-          <div className={classes.item}>
+          <div>
             <h3>Item List</h3>
 
             {items.map((inputField, index) => (
               <Items
                 key={index}
+                editingInovoice={editingInovoice}
                 index={index}
                 inputField={inputField}
                 inputFields={items}
                 setInputFields={setInputFields}
+                setIsValid={setIsValid}
               />
             ))}
 
             {responseMsg && responseMsg.items && (
               <p className="response-text"> Please Enter at least one item </p>
             )}
-            <button type="button" onClick={handleAddFields}>
+            <button
+              className={classes.addItem}
+              type="button"
+              onClick={handleAddFields}
+            >
               <BsPlusLg /> Add New Item
             </button>
           </div>
@@ -270,7 +368,9 @@ const Form = ({
             </button>
           </div>
           <div>
-            <button type="submit">Edit</button>
+            <button disabled={!isValid} type="submit">
+              Edit
+            </button>
           </div>
         </div>
       </form>

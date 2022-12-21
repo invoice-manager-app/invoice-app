@@ -1,5 +1,12 @@
 import { Fragment, useState, useEffect } from "react";
-import { useParams, Link, useNavigate, Routes, Route } from "react-router-dom";
+import {
+  useParams,
+  Link,
+  useNavigate,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { AiOutlineLeft } from "react-icons/ai";
 
@@ -11,9 +18,11 @@ import LoadingSpinner from "./UI/LoadingSpinner";
 import { getInformation } from "../store/invoice-information";
 
 const InoviceInform = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const params = useParams();
+  const { pathname } = location;
   const { invoiceId } = params;
 
   const invoiceDetail = useSelector(
@@ -33,7 +42,7 @@ const InoviceInform = () => {
 
   //previous page
   const previousHandler = () => {
-    navigate(-1);
+    navigate("/invoice");
   };
 
   if (!invoiceDetail && isLoading) {
@@ -45,16 +54,16 @@ const InoviceInform = () => {
 
   return (
     <Fragment>
-      {invoiceDetail && (
-        <EditInvoice
-          id={invoiceDetail.invoice_code}
-          editingInovoice={invoiceDetail}
-        />
-      )}
+      {invoiceDetail &&
+        pathname === `/invoice/${invoiceDetail.invoice_code}/edit-form` && (
+          <EditInvoice
+            id={invoiceDetail.invoice_code}
+            editingInovoice={invoiceDetail}
+          />
+        )}
       <button className={classes.icon} onClick={previousHandler}>
         <AiOutlineLeft /> <span>Go Back</span>
       </button>
-
       <>
         <InformHeader
           isPending={invoiceDetail.status}

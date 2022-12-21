@@ -1,4 +1,4 @@
-import { Fragment, useState, useCallback, useEffect } from "react";
+import { Fragment, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classes from "./AllInvoices.module.css";
 import { IoIosAdd } from "react-icons/io";
@@ -8,14 +8,16 @@ import { getInvoiceCompany } from "../store/get-invoice-detail";
 import Notification from "./UI/Notification";
 import Search from "./UI/Search";
 import FilterInvoices from "./UI/FilterInvoices";
-import { filterInvoice, invoicePagination } from "../store/filter-slice";
-import { getFilteredSearch } from "../store/filter-search-slice";
+
 const AllInvoices = () => {
   let currentPageNum = parseInt(sessionStorage.getItem("current-page"));
 
   const [currentPage, setCurrentPage] = useState(currentPageNum || 1);
+  const [count, setCount] = useState(null);
 
-  const [selectInput, setSelectInput] = useState("");
+  const [selectInput, setSelectInput] = useState(
+    localStorage.getItem("filter") || ""
+  );
 
   const [search, setSearch] = useState("");
 
@@ -27,41 +29,6 @@ const AllInvoices = () => {
   const invoice_list = useSelector(
     (state) => state.invoiceListReducer.invoice_list
   );
-
-  //filter Data
-  useEffect(() => {
-    let token = localStorage.getItem("token");
-
-    if (selectInput && search === "") {
-      const obj = {
-        token,
-        filter: selectInput,
-        number: currentPage,
-      };
-      if (currentPage === 1) {
-        dispatch(filterInvoice(obj));
-      } else {
-        dispatch(invoicePagination(obj));
-      }
-    }
-  }, [selectInput, search, dispatch, currentPage]);
-
-  //filter Data with search
-  useEffect(() => {
-    let token = localStorage.getItem("token");
-
-    if (selectInput !== "" && search !== "") {
-      const obj = {
-        token,
-        filter: selectInput,
-        number: currentPage,
-        name: search,
-      };
-      if (currentPage === 1) {
-        dispatch(getFilteredSearch(obj));
-      }
-    }
-  }, [selectInput, search, dispatch, currentPage]);
 
   //toggle invoice form
   const formToggleHandeler = useCallback(() => {
@@ -90,6 +57,10 @@ const AllInvoices = () => {
             <FilterInvoices
               selectInput={selectInput}
               setSelectInput={setSelectInput}
+              currentPage={currentPage}
+              search={search}
+              setCount={setCount}
+              count={count}
             />
             <button onClick={formToggleHandeler} className={classes.button}>
               <span className={classes.icon}>
@@ -99,12 +70,20 @@ const AllInvoices = () => {
             </button>
           </div>
         </div>
-        <Search setSearch={setSearch} search={search} />
+        <Search
+          setSearch={setSearch}
+          search={search}
+          currentPage={currentPage}
+          filter={selectInput}
+          setCount={setCount}
+        />
         <InvoiceBar
           search={search}
           filter={selectInput}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
+          setCount={setCount}
+          count={count}
         />
       </div>
     </Fragment>

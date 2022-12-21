@@ -1,10 +1,8 @@
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Pagination } from "antd";
 import { getPagination } from "../../store/pagination-slice";
 import { useEffect } from "react";
-import { searchPagination } from "../../store/search-pagination-slice";
 import { getInvoicList } from "../../store/get-invoice-slice";
-import { searchData } from "../../store/search-slice";
 
 const PaginationComponent = ({
   setCurrentPage,
@@ -15,7 +13,7 @@ const PaginationComponent = ({
   filter,
 }) => {
   const dispatch = useDispatch();
-
+  console.log("pag", count);
   // let pageNums = [];
 
   // for (let i = 1; i <= Math.ceil(count / itemsPerPage); i++) {
@@ -44,16 +42,9 @@ const PaginationComponent = ({
       dispatch(getPagination(obj));
     }
 
-    // if (number === 1 && search === "" && filter === "") {
-    //   dispatch(getInvoicList(token));
-    // }
-    // if (number !== 1 && search !== "") {
-    //   dispatch(searchPagination(obj));
-    // }
-    // if (number === 1 && search !== "") {
-    //   delete obj.number;
-    //   dispatch(searchData(obj));
-    // }
+    if (number === 1 && filter === "" && search === "") {
+      dispatch(getInvoicList(token));
+    }
     setCurrentPage(number);
   };
 

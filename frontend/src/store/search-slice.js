@@ -48,7 +48,6 @@ const searchSlice = createSlice({
       state.searchData = action.payload.results;
       state.count = action.payload.count;
       state.nextBtn = action.payload.next;
-      console.log(action);
     },
     [searchData.rejected]: (state) => {
       state.isLoading = false;

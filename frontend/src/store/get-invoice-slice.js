@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { Async } from "react-async";
 
 export const getInvoicList = createAsyncThunk(
   "invoice/getInvoiceList",
@@ -12,8 +11,8 @@ export const getInvoicList = createAsyncThunk(
         },
       });
 
-      if (!response.ok) {
-        throw new Error(response.statusText);
+      if (response.status === 401) {
+        localStorage.removeItem("token");
       }
       const data = await response.json();
       return data;
@@ -27,12 +26,6 @@ const invoiceListSlice = createSlice({
   name: "invoice",
   initialState: {
     invoice_list: null,
-    // next: null,
-    // previous: null,
-    // currentPage: 1,
-    // count: null,
-    // isLoading: false,
-    // data: null,
   },
   reducers: {
     addInvoices: (state, action) => {
@@ -46,10 +39,6 @@ const invoiceListSlice = createSlice({
     [getInvoicList.fulfilled]: (state, action) => {
       state.isLoading = false;
       state.invoice_list = action.payload;
-      // state.count = action.payload.count;
-      // state.next = action.payload.next;
-      // state.previous = action.payload.previous;
-      console.log(action);
     },
     [getInvoicList.pending]: (state, action) => {
       state.isLoading = false;

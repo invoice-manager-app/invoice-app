@@ -9,3 +9,6 @@
   color: #fff;
   background-color: transparent;
 }
+.filter select[disabled] {
+  cursor: not-allowed;
+}
