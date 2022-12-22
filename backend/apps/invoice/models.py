@@ -188,12 +188,14 @@ class Item(models.Model):
 
     def save(self, *args, **kwargs):
         if self.tax_rate != 0:
-            tax_rate_calc = decimal.Decimal(self.tax_rate / 100 * (self.unit_price * self.quantity))
-            self.net_amount = (self.unit_price * self.quantity) + tax_rate_calc
+            tax_rate_calc = decimal.Decimal(
+                decimal.Decimal(self.tax_rate) / 100 * (decimal.Decimal(self.unit_price) * int(self.quantity))
+            )
+            self.net_amount = (decimal.Decimal(self.unit_price) * int(self.quantity)) + tax_rate_calc
         else:
-            self.net_amount = self.unit_price * self.quantity
+            self.net_amount = decimal.Decimal(self.unit_price) * int(self.quantity)
         super().save(*args, **kwargs)
 
     def get_gross_amount(self):
-        tax_rate = decimal.Decimal(self.tax_rate / 100)
+        tax_rate = decimal.Decimal(decimal.Decimal(self.tax_rate) / 100)
         return self.net_amount + (self.net_amount * tax_rate)
