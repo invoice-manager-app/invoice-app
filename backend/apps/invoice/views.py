@@ -75,7 +75,6 @@ class InvoiceViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
-        context = {}
         pk = kwargs.get("pk")
         data = request.data
         print(data)
@@ -85,9 +84,8 @@ class InvoiceViewSet(viewsets.ViewSet):
         serializer = InvoiceWriteSerializer(invoice, data=data, context=items_data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            context["response"] = "ok"
-            context["response_message"] = SUCCESS_UPDATE
-            return Response(context, status=status.HTTP_200_OK)
+            new_serializer = InvoiceRedSerializer(invoice, context={"request": request})
+            return Response(new_serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, *args, **kwargs):
