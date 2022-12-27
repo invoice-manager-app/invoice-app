@@ -106,7 +106,7 @@ class UserRegistrationSerializer(serializers.Serializer):
             email=email,
         )
         account.set_password(password)
-        account.is_active = False
+        account.is_active = True
         account.save()
         return account
 

@@ -77,9 +77,11 @@ def registerUser(request):
             response_data["email"] = user.email
             response_data["username"] = user.username
             response_data["pk"] = user.pk
+            response_status = status.HTTP_201_CREATED
         else:
             response_data = serializer.errors
-        return Response(response_data)
+            response_status = status.HTTP_400_BAD_REQUEST
+        return Response(response_data, status=response_status)
 
 
 @api_view(
@@ -132,28 +134,28 @@ def updateprofileUser(request):
 # http://127.0.0.1:8000/api/check_email/?email=www.karam777krm@gmail.com
 @api_view(
     [
-        "GET",
+        "POST",
     ]
 )
 @permission_classes([])
 @authentication_classes([])
 def does_account_exist_view(request):
-    if request.method == "GET":
+    if request.method == "POST":
         response_data = {}
         serializer = CheckAccountSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
+        if serializer.is_valid():
             email = serializer.validated_data["email"]
             if email:
-                response_data["response_msg"] = request.data["email"]
+                response_data["email"] = request.data["email"]
                 response_data["is_exists"] = True
                 response_status = status.HTTP_200_OK
             else:
                 response_data["response_msg"] = "There is no Account with this email"
                 response_data["is_exists"] = False
                 response_status = status.HTTP_404_NOT_FOUND
-        else:
-            response_data = serializer.errors
-            response_status = status.HTTP_400_BAD_REQUEST
+        # else:
+        #     response_data = serializer.errors
+        #     response_status = status.HTTP_400_BAD_REQUEST
         return Response(response_data, status=response_status)
 
 

@@ -17,8 +17,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(verbose_name="date joined", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="last update", auto_now=True)
 
-    is_active = models.BooleanField(default=False)
-    email_verified = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    email_verified = models.BooleanField(default=True)
 
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)

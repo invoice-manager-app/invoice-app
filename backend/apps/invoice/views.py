@@ -77,7 +77,6 @@ class InvoiceViewSet(viewsets.ViewSet):
     def update(self, request, *args, **kwargs):
         pk = kwargs.get("pk")
         data = request.data
-        print(data)
         request.user
         invoice = get_object_or_404(self.queryset, invoice_code=pk)
         items_data = {"items": data.get("items", None)}
