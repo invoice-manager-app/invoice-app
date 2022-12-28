@@ -3,6 +3,7 @@ from apps.account.models import Account
 
 # from django.test import Client
 from rest_framework.test import APIClient
+from tests.factories import AccountFactory
 
 client = APIClient()
 ## test impelement of the method 2 of creating factories
@@ -88,6 +89,9 @@ def test_create_account(email: str, username: str, password: str, confirm_passwo
 )
 @pytest.mark.django_db
 def test_login_account(email: str, password: str, validity: int):
+    print("test login called")
+    # account = account_factory.create()
+    # print(Account.objects.all().count())
     # Create an account
     data = {
         "email": "test@example.com",

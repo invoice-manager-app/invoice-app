@@ -6,12 +6,14 @@ fake = Faker()
 
 
 class AccountFactory(factory.django.DjangoModelFactory):
+    print("account created")
+
     class Meta:
         model = Account
 
-    username: str = "test"
-    email: str = "test@test.com"
-    password: str = "test"
+    username: str = "testuser"
+    email: str = "test@example.com"
+    password: str = "testpass"
     first_name: str = "firstname"
     last_name: str = "lastname"
     is_staff: bool = False
