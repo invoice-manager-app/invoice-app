@@ -10,7 +10,6 @@ import { getInvoicList } from "../../store/get-invoice-slice";
 import AuthContext from "../../context/auth-context";
 import Items from "./Items";
 import SelectCompany from "./select-company/SelectCompany";
-import { filterInvoice } from "../../store/filter-slice";
 
 const Form = () => {
   const dispatch = useDispatch();
@@ -86,14 +85,7 @@ const Form = () => {
     const token = localStorage.getItem("token");
 
     dispatch(createInvoice(token, slug.slug, invoiceInputs, inputFields));
-    if (localStorage.getItem("filter")) {
-      const obj = {
-        token,
-        filter: localStorage.getItem("filter"),
-        number: sessionStorage.getItem("current-page"),
-      };
-      dispatch(filterInvoice(obj));
-    }
+
     dispatch(getInvoicList(token));
 
     dispatch(uiActions.hideForm());

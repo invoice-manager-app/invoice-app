@@ -2,29 +2,25 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getInformation } from "./invoice-information";
 
 // Edit Status
-export const editStatus = createAsyncThunk(
-  "status/editStatus",
-  async (arg, thunkApi) => {
-    try {
-      const response = await fetch(`http://localhost:8000/invoice/${arg.id}/`, {
-        method: "PUT",
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${arg.token}`,
-        },
-        body: JSON.stringify({
-          status: arg.status,
-        }),
-      });
-      thunkApi.dispatch(getInformation(arg));
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {}
-  }
-);
+export const editStatus = createAsyncThunk("status/editStatus", async (arg) => {
+  try {
+    const response = await fetch(`http://localhost:8000/invoice/${arg.id}/`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${arg.token}`,
+      },
+      body: JSON.stringify({
+        status: arg.status,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {}
+});
 
 //Delete
 
@@ -66,8 +62,6 @@ export const editInvoice = createAsyncThunk(
       }
 
       const data = await response.json();
-      console.log(data);
-      dispatch(getInformation(arg));
 
       return data;
     } catch (error) {

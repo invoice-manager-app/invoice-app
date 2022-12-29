@@ -1,8 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import actionSlice from "./actions";
 import companySlice from "./company-slice";
-import filterSearchSlice from "./filter-search-slice";
-import dataFiltered from "./filter-slice";
+
 import getInvoices from "./get-invoice-detail";
 import invoiceListSlice from "./get-invoice-slice";
 import invoiceInformation from "./invoice-information";
@@ -22,8 +21,6 @@ const store = configureStore({
     searchReducer: searchSlice.reducer,
     invoiceInformationRed: invoiceInformation.reducer,
     paginationSearch: paginationSearch.reducer,
-    filteredReducer: dataFiltered.reducer,
-    searchFilter: filterSearchSlice.reducer,
   },
 });
 export default store;

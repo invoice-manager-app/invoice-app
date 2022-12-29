@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 import { uiActions } from "../../store/Ui-slice";
 import Notification from "../UI/Notification";
 import Avatar from "./Avatar";
-import { filterInvoice } from "../../store/filter-slice";
 
 const AddNewCompany = () => {
   const [image, setImage] = useState("");

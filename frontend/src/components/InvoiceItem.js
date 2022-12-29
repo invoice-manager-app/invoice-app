@@ -1,15 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import classes from "./InvoiceItem.module.css";
 import { AiOutlineRight } from "react-icons/ai";
 import ShowMoreIcon from "./icons/ShowMoreIcon";
 import ShowLessIcon from "./icons/ShowLessIcon";
-import { useSelector } from "react-redux";
-import LoadingSpinner from "./UI/LoadingSpinner";
 
 const InvoiceItem = ({ items, status, name, date, id, net_amount }) => {
   const [showItems, setShowItems] = useState(false);
-
+  console.log(items);
+  console.log(net_amount);
   const toggleItemHandeler = () => {
     setShowItems((prevState) => !prevState);
   };
@@ -55,7 +54,7 @@ const InvoiceItem = ({ items, status, name, date, id, net_amount }) => {
               return (
                 <ul key={i} className={classes.item}>
                   <li> {el.title} </li>
-                  <li> {el.unit_price}.00 </li>
+                  <li> {el.unit_price} </li>
                   <li> {el.quantity} </li>
                   <li> ${el.net_amount} </li>
                 </ul>

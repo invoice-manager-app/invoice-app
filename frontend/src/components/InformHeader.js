@@ -127,8 +127,7 @@ const InformHeader = ({ isPending, invoiceItem, id }) => {
   //Delete Inoice
   const deleteInvoiceHandler = () => {
     dispatch(deleteInvoice(invoice_code, token));
-    dispatch(uiActions.hideDeleteConfirm());
-    dispatch(getInvoicList(token));
+
     navigate("/");
     sessionStorage.removeItem("current-page");
   };

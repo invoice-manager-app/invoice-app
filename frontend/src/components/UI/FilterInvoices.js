@@ -1,103 +1,93 @@
-import { memo, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-
-import { filterInvoice, invoicePagination } from "../../store/filter-slice";
+import { memo, useEffect, useRef, useState } from "react";
+import { useQuery } from "react-query";
 import classes from "./FilterInvoice.module.css";
+import Search from "antd/es/transfer/search";
 const FilterInvoices = ({
+  currentPage,
   selectInput,
   setSelectInput,
-  currentPage,
+  invoiceDispatch,
   search,
-  setCount,
 }) => {
-  const dispatch = useDispatch();
-
-  //filtered-data with search
-  const searchFilteredData = useSelector((state) => state.searchFilter.data);
-  // search result count
-  //search results
-  const searchResultswithFilter = useSelector(
-    (state) => state.searchFilter.data
-  );
-  const resultsCount = searchResultswithFilter && searchResultswithFilter.count;
-  console.log(resultsCount);
-  console.log(searchResultswithFilter);
-
-  useEffect(() => {
-    if (
-      search !== "" &&
-      selectInput !== "" &&
-      searchResultswithFilter &&
-      searchResultswithFilter.count
-    ) {
-      setCount(searchResultswithFilter.count);
-      // console.log(resultsCount);
-    }
-  }, [resultsCount, search, searchResultswithFilter, selectInput, setCount]);
-
-  //invoice data
-  const response = useSelector(
-    (state) => state.invoiceListReducer.invoice_list
-  );
-  const results = response && response.results;
-
-  // filter invoices first page
-
-  useEffect(() => {
-    let token = localStorage.getItem("token");
-    const obj = {
-      token,
-      filter: selectInput,
-      number: currentPage,
-    };
-    if (
-      selectInput !== "" &&
-      search.trim() === "" &&
-      currentPage === 1 &&
-      results &&
-      results.length > 1
-    ) {
-      console.log("true");
-      dispatch(filterInvoice(obj));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, dispatch, search, selectInput]);
-
-  // filter invoices with pagination
-  useEffect(() => {
-    let token = localStorage.getItem("token");
-
-    const obj = {
-      token,
-      filter: selectInput,
-      number: currentPage,
-    };
-    if (results === null) return;
-
-    if (
-      selectInput !== "" &&
-      search === "" &&
-      currentPage > 1 &&
-      results.length > 1
-    ) {
-      dispatch(invoicePagination(obj));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, dispatch, search, selectInput]);
-
-  //filter Data with search
-  const filterSearchCount = searchFilteredData && searchFilteredData.count;
-
-  useEffect(() => {
-    if (search.trim() !== "" && currentPage === 1) {
-      setCount(filterSearchCount);
-    }
-  }, [filterSearchCount, search, setCount, currentPage]);
+  let token = localStorage.getItem("token");
 
   const selectHandeler = (e) => {
     setSelectInput(e.target.value);
     localStorage.setItem("filter", e.target.value);
   };
+  let baseUrl;
+
+  if (currentPage === 1 && setSelectInput !== "" && search.trim() === "") {
+    baseUrl = `http://localhost:8000/invoice/list/?ordering=${selectInput}`;
+  } else if (currentPage > 1 && setSelectInput !== "" && search.trim() === "") {
+    baseUrl = `http://localhost:8000/invoice/list/?ordering=${selectInput}&page=${currentPage}`;
+  } else if (
+    currentPage === 1 &&
+    setSelectInput !== "" &&
+    search.trim() !== ""
+  ) {
+    baseUrl = `http://localhost:8000/invoice/list/?search=${search}&ordering=${selectInput}`;
+  } else if (
+    currentPage >= 1 &&
+    setSelectInput !== "" &&
+    search.trim() !== ""
+  ) {
+    baseUrl = `http://localhost:8000/invoice/list/?ordering=${selectInput}&page=${currentPage}&search=${search}`;
+  } else {
+  }
+
+  //filter respose
+  const { isFetching: isFiltering, refetch: reFilter } = useQuery(
+    "filter/date",
+    async () => {
+      if (selectInput === "") return;
+
+      try {
+        const response = await fetch(baseUrl, {
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await response.json();
+        invoiceDispatch({
+          state: "FILTER",
+          data: data.results,
+          count: data.count,
+        });
+      } catch (error) {}
+    },
+    { refetchOnWindowFocus: false }
+  );
+
+  // filter invoices
+  useEffect(() => {
+    if (selectInput !== "") {
+      if (search.trim() === "") {
+        reFilter();
+      }
+    }
+
+    if (selectInput !== "" && search.trim() !== "") {
+      if (currentPage === 1) {
+        const timer = setTimeout(() => {
+          reFilter();
+        }, 1500);
+
+        return () => clearTimeout(timer);
+      } else {
+        reFilter();
+      }
+    }
+  }, [selectInput, reFilter, currentPage, search]);
+
+  // useEffect(() => {
+  //   if (selectInput !== "" && search.trim() !== "" && currentPage === 1) {
+  //     reFilter();
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [currentPage, reFilter, selectInput]);
 
   return (
     <div className={classes.filter}>
@@ -106,7 +96,7 @@ const FilterInvoices = ({
         id="filter"
         onChange={selectHandeler}
         value={selectInput}
-        disabled={results && results.length > 1 ? false : true}
+        // disabled={results && results.length > 1 ? false : true}
       >
         <option value="" disabled>
           --choose--
