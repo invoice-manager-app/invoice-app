@@ -1,24 +1,29 @@
-import { memo, useEffect, useState, useContext } from "react";
+import { memo, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { uiActions } from "../../store/Ui-slice";
 import Input from "../UI/Inputs";
-import classes from "./Form.module.css";
 import { BsPlusLg } from "react-icons/bs";
 import { useLocation } from "react-router-dom";
-import { createInvoice } from "../../store/action-creator";
-import { getInvoicList } from "../../store/get-invoice-slice";
+import { createInvoice } from "../../store/invoice-slice";
 import AuthContext from "../../context/auth-context";
 import Items from "./Items";
 import SelectCompany from "./select-company/SelectCompany";
 
+import classes from "./Form.module.css";
+
+// import { getInvoices } from "../../store/invoice-slice";
+
 const Form = () => {
+  let { token } = useSelector((state) => state.authReducer);
+
   const dispatch = useDispatch();
-  const authCtx = useContext(AuthContext);
 
   const responseMsg = useSelector((state) => state.ui.responseMsg);
 
   const location = useLocation();
+  let currentPageNum = parseInt(sessionStorage.getItem("current-page"));
 
+  const [currentPage, setCurrentPage] = useState(currentPageNum || 1);
   const [selectedCompany, setSelectedCompany] = useState("");
   // today date
   const dateTime = new Date().toISOString().slice(0, 10);
@@ -44,7 +49,6 @@ const Form = () => {
   // const [payTerms, setPayTerms] = useState("--choose an option--");
 
   //logout
-  const logoutRes = useSelector((state) => state.getInvoiceData.logout);
   //selected Company Slug
 
   const companySlug = useSelector(
@@ -54,12 +58,6 @@ const Form = () => {
   const slug =
     companySlug && companySlug.find((el) => el.name === selectedCompany);
 
-  const { logout } = authCtx;
-  useEffect(() => {
-    if (logoutRes) {
-      logout();
-    }
-  }, [logout, logoutRes]);
   //hide form on route change
   useEffect(() => {
     dispatch(uiActions.hideForm());
@@ -74,21 +72,25 @@ const Form = () => {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     setDateNow(e.target.value);
     setInvoiceInputs({ ...invoiceInputs, paymentDue: diffDays });
-
-    console.log("diff", diffDays);
-    console.log("date2", date2);
-    console.log("date1", date1);
   };
 
   const submitHandeler = (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
+    console.log(slug);
+    const obj = {
+      slug: slug.slug,
+      token,
+      invoiceInputs,
+      inputFields,
+      currentPage,
+    };
 
-    dispatch(createInvoice(token, slug.slug, invoiceInputs, inputFields));
+    dispatch(createInvoice(obj));
 
-    dispatch(getInvoicList(token));
+    // dispatch(getInvoicList(token));
 
-    dispatch(uiActions.hideForm());
+    //  dispatch(uiActions.hideForm());
   };
   let form = false;
   if (
@@ -103,12 +105,6 @@ const Form = () => {
   let showForm = useSelector((state) => state.ui.formIsVisible);
   let wrapperClass = `${classes.wrapper} ${showForm ? classes.active : ""} `;
   //actions
-
-  //invoice list
-  // useEffect(() => {
-  //   let token = localStorage.getItem("token");
-  //   dispatch(getInvoiceCompany(token));
-  // }, [dispatch]);
 
   const hideFromHandeler = () => {
     dispatch(uiActions.toggleForm());

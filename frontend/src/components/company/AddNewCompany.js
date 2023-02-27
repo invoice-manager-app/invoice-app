@@ -11,14 +11,13 @@ import Notification from "../UI/Notification";
 import Avatar from "./Avatar";
 
 const AddNewCompany = () => {
+  let { token } = useSelector((state) => state.authReducer);
+
   const [image, setImage] = useState("");
   const [imgSrc, setImgSrc] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  let token;
-  if (localStorage.getItem("token")) {
-    token = localStorage.getItem("token");
-  }
+
   //notification state
   const notification = useSelector((state) => state.ui.notification);
   //domain/company/ => Get All Companies

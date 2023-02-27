@@ -1,17 +1,18 @@
-import { Fragment, useCallback, useEffect } from "react";
+import { Fragment, useCallback } from "react";
 import { useQuery } from "react-query";
-import { uiActions } from "../store/Ui-slice";
+import { uiActions } from "../../../store/Ui-slice";
 import { useDispatch, useSelector } from "react-redux";
 import classes from "./InformHeader.module.css";
 import { useNavigate } from "react-router-dom";
-import { deleteInvoice } from "../store/action-creator";
+import { deleteInvoice } from "../../../store/action-creator";
 
-import ConfirmationModel from "./UI/ConfirmationModel";
-import { editStatus } from "../store/edit-invoice-slice";
-import { getInvoicList } from "../store/get-invoice-slice";
-import Notification from "./UI/Notification";
+import ConfirmationModel from "../../UI/ConfirmationModel";
+import { editStatus } from "../../../store/edit-invoice-slice";
+import Notification from "../../UI/Notification";
+
 const InformHeader = ({ isPending, invoiceItem, id }) => {
   /// const [invoiceStatus, setInvoiceStatus] = useState(isPending);
+  let { token } = useSelector((state) => state.authReducer);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -19,10 +20,7 @@ const InformHeader = ({ isPending, invoiceItem, id }) => {
   const deleteConfirmation = useSelector((state) => state.ui.deleteConfirm);
   //notification state
   const notification = useSelector((state) => state.ui.notification);
-  let token;
-  if (localStorage.getItem("token")) {
-    token = localStorage.getItem("token");
-  }
+
   const { invoice_code } = invoiceItem;
   // delete Confirmation
   const confirmationModel = () => {
@@ -34,7 +32,6 @@ const InformHeader = ({ isPending, invoiceItem, id }) => {
   };
   //status change
   const statusHandeler = useCallback(() => {
-    let token = localStorage.getItem("token"); // token
     let obj = {
       id,
       token,

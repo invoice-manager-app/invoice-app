@@ -1,24 +1,23 @@
-import { useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import classes from "./Header.module.css";
-import AuthContext from "../../context/auth-context";
-import { FaFileInvoiceDollar } from "react-icons/fa";
 import CaseIcon from "../icons/CaseIcon";
 import HomeIcon from "../icons/HomeIcon";
 import UserIcon from "../icons/UserIcon";
 import LogoutIcon from "../icons/LogoutIcon";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../store/authSlice";
 const Header = () => {
+  const { isAuth } = useSelector((state) => state.authReducer);
   const navigate = useNavigate();
-  const authCtx = useContext(AuthContext);
   const location = useLocation();
-  const { isLoggedIn, logout } = authCtx;
+  const dispatch = useDispatch();
 
   const homeDirectHandeler = () => {
     navigate("/invoice");
   };
   const logoutHandeler = () => {
-    logout();
+    dispatch(logout());
     //navigate("/auth", { replace: true });
   };
   //user profile navigate
@@ -42,7 +41,7 @@ const Header = () => {
       {/* <div className={classes.icon}>
         <FaFileInvoiceDollar />
       </div> */}
-      {isLoggedIn && (
+      {isAuth && (
         <nav className={classes.nav}>
           <ul>
             <li className={homeBtnActive}>

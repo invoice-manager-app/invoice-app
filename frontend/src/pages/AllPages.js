@@ -1,19 +1,18 @@
-import React, { Suspense, useContext } from "react";
+import React, { Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import EditComapnyInfo from "../components/company/EditCompanyInfo";
 import LoadingSpinner from "../components/UI/LoadingSpinner";
-import AuthContext from "../context/auth-context";
 // import UserProfilePage from "./UserProfilePage";
 // import AuthPage from "./AuthPage";
 // import Invoices from "./Invoices";
 import InvoiceDetail from "./InvoiceDetail";
 import ProtectedRoutes from "./ProtectedRoutes";
+import { useSelector } from "react-redux";
 // import CreateNewUserPage from "./CreateNewUserPage";
 // import CreateCompanyPage from "./CreateCompany";
 
 const AllPages = () => {
-  const authCtx = useContext(AuthContext);
-  const { isLoggedIn } = authCtx;
+  const { isAuth } = useSelector((state) => state.authReducer);
 
   const AuthPage = React.lazy(() => import("./AuthPage"));
   const Invoices = React.lazy(() => import("./Invoices"));
@@ -28,16 +27,16 @@ const AllPages = () => {
       <Routes>
         <Route
           path="/loggin"
-          element={isLoggedIn ? <Navigate to="/invoice" /> : <AuthPage />}
+          element={isAuth ? <Navigate to="/invoice" /> : <AuthPage />}
         />
         <Route
           path="/"
-          element={isLoggedIn ? <Navigate to="/invoice" /> : <AuthPage />}
+          element={isAuth ? <Navigate to="/invoice" /> : <AuthPage />}
         />
         <Route element={<ProtectedRoutes />}>
           <Route
             path="/invoice"
-            element={isLoggedIn ? <Invoices /> : <AuthPage />}
+            element={isAuth ? <Invoices /> : <AuthPage />}
           />
           <Route path="/invoice/*" element={<Invoices />} />
           <Route path="/invoice/:invoiceId/*" element={<InvoiceDetail />}>

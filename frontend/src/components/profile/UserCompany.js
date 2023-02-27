@@ -10,6 +10,8 @@ import { getCompanies } from "../../store/company-slice";
 import { uiActions } from "../../store/Ui-slice";
 import { deleteCompany } from "../../store/action-creator";
 const UserCompany = () => {
+  let { token } = useSelector((state) => state.authReducer);
+
   const [showCard, setShowCard] = useState(true);
 
   const navigate = useNavigate();
@@ -25,7 +27,6 @@ const UserCompany = () => {
 
   //get all companies
   useEffect(() => {
-    let token = localStorage.getItem("token");
     dispatch(getCompanies(token));
   }, [dispatch]);
 

@@ -9,10 +9,14 @@ import paginationSlice from "./pagination-slice";
 import paginationSearch from "./search-pagination-slice";
 import searchSlice from "./search-slice";
 import uiSlice from "./Ui-slice";
+import invoicesSlice from "./invoice-slice";
+import authSlice from "./authSlice";
 
 const store = configureStore({
   reducer: {
     ui: uiSlice.reducer,
+    authReducer: authSlice.reducer,
+    invoiceReducer: invoicesSlice.reducer,
     action: actionSlice.reducer,
     getInvoiceData: getInvoices.reducer,
     companiesReducer: companySlice.reducer,

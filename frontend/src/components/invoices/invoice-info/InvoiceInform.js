@@ -1,23 +1,18 @@
-import { Fragment, useState, useEffect } from "react";
-import {
-  useParams,
-  Link,
-  useNavigate,
-  Routes,
-  Route,
-  useLocation,
-} from "react-router-dom";
+import { Fragment, useEffect } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { AiOutlineLeft } from "react-icons/ai";
 
 import classes from "./InvoiceInform.module.css";
 
-import EditInvoice from "./edit-invoice/EditInvoice";
+import EditInvoice from "../../edit-invoice/EditInvoice";
 import InformHeader from "./InformHeader";
-import LoadingSpinner from "./UI/LoadingSpinner";
-import { getInformation } from "../store/invoice-information";
+import LoadingSpinner from "../../UI/LoadingSpinner";
+import { getInformation } from "../../../store/invoice-information";
 
 const InoviceInform = () => {
+  let { token } = useSelector((state) => state.authReducer);
+
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -32,7 +27,6 @@ const InoviceInform = () => {
 
   //fetch invoice detail
   useEffect(() => {
-    let token = localStorage.getItem("token");
     const obj = {
       token: token,
       id: invoiceId,

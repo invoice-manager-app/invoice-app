@@ -1,15 +1,9 @@
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
-import { uiActions } from "../../store/Ui-slice";
-
-import { getInformation } from "../../store/invoice-information";
-import { editInvoice } from "../../store/edit-invoice-slice";
 import Form from "./Form";
 
 const EditInvoice = ({ id }) => {
-  const dispatch = useDispatch();
-
   const editingInovoice = useSelector(
     (state) => state.invoiceInformationRed.invoice
   );
@@ -28,9 +22,9 @@ const EditInvoice = ({ id }) => {
 
   // Items state
 
-  const editInvoiceHandeler = () => {
-    dispatch(uiActions.toggleForm());
-  };
+  // const editInvoiceHandeler = () => {
+  //   dispatch(uiActions.toggleForm());
+  // };
 
   return (
     <Form

@@ -1,5 +1,4 @@
-import InvoiceInform from "../components/InvoiceInform";
-import Wrapper from "../components/UI/Wrapper";
+import InvoiceInform from "../components/invoices/invoice-info/InvoiceInform";
 const InvoiceDetail = () => {
   return <InvoiceInform />;
 };

@@ -1,5 +1,4 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getInformation } from "./invoice-information";
 
 // Edit Status
 export const editStatus = createAsyncThunk("status/editStatus", async (arg) => {

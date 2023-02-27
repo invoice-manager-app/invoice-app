@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import classes from "./InvoiceItem.module.css";
 import { AiOutlineRight } from "react-icons/ai";
-import ShowMoreIcon from "./icons/ShowMoreIcon";
-import ShowLessIcon from "./icons/ShowLessIcon";
+import ShowMoreIcon from "../../icons/ShowMoreIcon";
+import ShowLessIcon from "../../icons/ShowLessIcon";
 
 const InvoiceItem = ({ items, status, name, date, id, net_amount }) => {
   const [showItems, setShowItems] = useState(false);

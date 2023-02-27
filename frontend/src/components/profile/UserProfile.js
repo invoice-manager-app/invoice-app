@@ -6,6 +6,8 @@ import AuthContext from "../../context/auth-context";
 
 //start comonent
 const UserProfile = () => {
+  let { token } = useSelector((state) => state.authReducer);
+
   const [userData, setUserData] = useState([
     { username: "", first_name: "", last_name: "", email: "" },
   ]);
@@ -14,10 +16,6 @@ const UserProfile = () => {
 
   const { logout } = authContext;
   useEffect(() => {
-    let token;
-    if (localStorage.getItem("token")) {
-      token = localStorage.getItem("token");
-    }
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
     const requestOptions = {

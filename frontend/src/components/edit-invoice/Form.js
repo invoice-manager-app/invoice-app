@@ -1,16 +1,15 @@
-import { useState, useContext, useEffect } from "react";
-
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { editInvoice } from "../../store/edit-invoice-slice";
 import Input from "../UI/Inputs";
 import Items from "./Items";
 import classes from "./Form.module.css";
 import { BsPlusLg } from "react-icons/bs";
-
-import AuthContext from "../../context/auth-context";
 import { useNavigate } from "react-router-dom";
 
 const Form = ({ id, setInputFields, items, editingInovoice }) => {
+  let { token } = useSelector((state) => state.authReducer);
+
   const navigate = useNavigate();
   // today date
   const todayDate = new Date().toISOString().slice(0, 10);
@@ -87,16 +86,8 @@ const Form = ({ id, setInputFields, items, editingInovoice }) => {
   ]);
 
   //deleted items
-  const authCtx = useContext(AuthContext);
   const dispatch = useDispatch();
 
-  let token;
-
-  if (localStorage.getItem("token")) {
-    token = localStorage.getItem("token");
-  } else {
-    authCtx.logout();
-  }
   //response message
   const responseMsg = useSelector((state) => state.ui.responseMsg);
 

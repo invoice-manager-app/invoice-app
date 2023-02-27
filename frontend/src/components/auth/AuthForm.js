@@ -1,5 +1,5 @@
-import { Fragment, useState, useContext } from "react";
-import { useSelector } from "react-redux";
+import { Fragment, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Notification from "../UI/Notification";
 import useHttp from "../../hooks/use-http";
 //styles
@@ -7,9 +7,10 @@ import classes from "./AuthForm.module.css";
 import ForgetPassword from "./ForgetPassword";
 import CreateNewAccount from "./CreateNewAccount";
 import Login from "./Login";
-import AuthContext from "../../context/auth-context";
+import { login } from "../../store/authSlice";
 
 const AuthForm = () => {
+  const dispatch = useDispatch();
   //form value
   const [values, setValues] = useState({
     email: "",
@@ -24,7 +25,6 @@ const AuthForm = () => {
   const [forgetPassword, setForgetPassword] = useState(false);
 
   //auth context
-  const authCtx = useContext(AuthContext);
 
   //notification
   const notification = useSelector((state) => state.ui.notification);
@@ -49,57 +49,66 @@ const AuthForm = () => {
     resetHandler();
   };
   //Registration
-  const register = async () => {
-    let url, imformation;
-    if (isLogin) {
-      url = "http://127.0.0.1:8000/account/login_token/";
-      imformation = {
-        email: values.email,
-        password: values.password,
-      };
-    } else {
-      url = "http://127.0.0.1:8000/account/register/";
-      imformation = {
-        username: values.username,
-        email: values.email,
-        password: values.password,
-        confirm_password: values.confirmPassword,
-      };
-    }
-    responseMessage("pending", null);
+  const register = () => {
+    const obj = {
+      username: values.username,
+      email: values.email,
+      password: values.password,
+      confirm_password: values.confirmPassword,
+      isLogin,
+    };
+    console.log(obj);
+    dispatch(login(obj));
 
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(imformation),
-        headers: {
-          "Content-type": "Application/json",
-        },
-      });
+    // if (isLogin) {
+    //   url = `${window.domain}/account/login_token/`;
+    //   imformation = {
+    //     email: values.email,
+    //     password: values.password,
+    //   };
+    // } else {
+    //   url = "http://127.0.0.1:8000/account/register/";
+    //   imformation = {
+    //     username: values.username,
+    //     email: values.email,
+    //     password: values.password,
+    //     confirm_password: values.confirmPassword,
+    //   };
+    // }
+    // responseMessage("pending", null);
 
-      const data = await response.json();
-      responseMessage("succeed", data.message);
-      setResponseMsg(data);
-      if (!response.ok) {
-        throw new Error(
-          data.detail || `something went wrong ${response.status}`
-        );
-      }
-      if (!isLogin && response.status === 200 && data.message) {
-        setIsLogin(true);
-      }
+    // try {
+    //   const response = await fetch(url, {
+    //     method: "POST",
+    //     body: JSON.stringify(imformation),
+    //     headers: {
+    //       "Content-type": "Application/json",
+    //     },
+    //   });
 
-      let token = data.access;
-      if (isLogin) {
-        authCtx.login(token, data);
-      }
-    } catch (error) {
-      if (!isLogin) {
-        setIsLogin(false);
-      }
+    //   const data = await response.json();
+    //   responseMessage("succeed", data.message);
+    //   setResponseMsg(data);
+    //   if (!response.ok) {
+    //     throw new Error(
+    //       data.detail || `something went wrong ${response.status}`
+    //     );
+    //   }
+    //   if (!isLogin && response.status === 200 && data.message) {
+    //     setIsLogin(true);
+    //   }
 
-      responseMessage("error", null);
-    }
+    //   let token = data.access;
+    //   if (isLogin) {
+    //     authCtx.login(token, data);
+    //   }
+    // } catch (error) {
+    //   if (!isLogin) {
+    //     setIsLogin(false);
+    //   }
+
+    //   responseMessage("error", null);
+    // }
   };
 
   //change password

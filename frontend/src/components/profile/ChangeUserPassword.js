@@ -14,7 +14,7 @@ const ChangeUserPassword = () => {
   const [resMsg, setResMsg] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const token = localStorage.getItem("token");
+  let { token } = useSelector((state) => state.authReducer);
 
   //notification state
   const notification = useSelector((state) => state.ui.notification);
