@@ -21,7 +21,6 @@ export const login = createAsyncThunk(
       };
     }
 
-    console.log(body);
     try {
       const response = await fetch(url, {
         method: "POST",

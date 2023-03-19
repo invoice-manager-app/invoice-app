@@ -1,10 +1,8 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { uiActions } from "../store/Ui-slice";
 import { useDispatch } from "react-redux";
-import AuthContext from "../context/auth-context";
 
 const useHttp = () => {
-  const authCtx = useContext(AuthContext);
   const dispatchRedux = useDispatch();
 
   //states
@@ -115,10 +113,6 @@ const useHttp = () => {
         setIsLogin(true);
       }
 
-      let token = data.access;
-      if (isLogin) {
-        authCtx.login(token, data);
-      }
       responses(data);
     } catch (error) {
       if (!isLogin) {

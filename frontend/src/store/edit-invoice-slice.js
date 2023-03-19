@@ -1,25 +1,32 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import getInvoices from "./get-invoice-detail";
 
 // Edit Status
-export const editStatus = createAsyncThunk("status/editStatus", async (arg) => {
-  try {
-    const response = await fetch(`http://localhost:8000/invoice/${arg.id}/`, {
-      method: "PUT",
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${arg.token}`,
-      },
-      body: JSON.stringify({
-        status: arg.status,
-      }),
-    });
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {}
-});
+export const editStatus = createAsyncThunk(
+  "status/editStatus",
+  async (arg, ThunkAPI) => {
+    try {
+      const response = await fetch(`http://localhost:8000/invoice/${arg.id}/`, {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${arg.token}`,
+        },
+        body: JSON.stringify({
+          status: arg.status,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      if (response.ok) {
+        ThunkAPI.dispatch(getInvoices({ token: arg.token, currentPage: 1 }));
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {}
+  }
+);
 
 //Delete
 
@@ -61,7 +68,9 @@ export const editInvoice = createAsyncThunk(
       }
 
       const data = await response.json();
-
+      if (response.ok) {
+        return dispatch(getInvoices({ token: arg.token, currentPage: 1 }));
+      }
       return data;
     } catch (error) {
       rejectWithValue(error.message);

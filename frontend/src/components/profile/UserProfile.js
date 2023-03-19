@@ -1,8 +1,8 @@
-import { useEffect, useContext, useState } from "react";
+import { useEffect, useState } from "react";
 import { invoiceAction } from "../../store/actions";
 import { useSelector, useDispatch } from "react-redux/es/exports";
 import classes from "./UserProfile.module.css";
-import AuthContext from "../../context/auth-context";
+import { logout } from "../../store/authSlice";
 
 //start comonent
 const UserProfile = () => {
@@ -12,9 +12,7 @@ const UserProfile = () => {
     { username: "", first_name: "", last_name: "", email: "" },
   ]);
   const dispatch = useDispatch();
-  const authContext = useContext(AuthContext);
 
-  const { logout } = authContext;
   useEffect(() => {
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
@@ -34,7 +32,7 @@ const UserProfile = () => {
       const { email, first_name, last_name, username } = data;
 
       if (response.status === 401) {
-        logout();
+        dispatch(logout());
       }
 
       dispatch(
@@ -53,7 +51,7 @@ const UserProfile = () => {
       });
     };
     userInfo();
-  }, [dispatch, logout, setUserData]);
+  }, [dispatch, setUserData]);
   console.log("fetched");
   const userInfo = useSelector((state) => state.action.userInfo);
   return (

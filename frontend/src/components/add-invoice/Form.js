@@ -5,7 +5,6 @@ import Input from "../UI/Inputs";
 import { BsPlusLg } from "react-icons/bs";
 import { useLocation } from "react-router-dom";
 import { createInvoice } from "../../store/invoice-slice";
-import AuthContext from "../../context/auth-context";
 import Items from "./Items";
 import SelectCompany from "./select-company/SelectCompany";
 
@@ -14,8 +13,6 @@ import classes from "./Form.module.css";
 // import { getInvoices } from "../../store/invoice-slice";
 
 const Form = () => {
-  let { token } = useSelector((state) => state.authReducer);
-
   const dispatch = useDispatch();
 
   const responseMsg = useSelector((state) => state.ui.responseMsg);
@@ -77,7 +74,6 @@ const Form = () => {
   const submitHandeler = (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
-    console.log(slug);
     const obj = {
       slug: slug.slug,
       token,
@@ -90,7 +86,7 @@ const Form = () => {
 
     // dispatch(getInvoicList(token));
 
-    //  dispatch(uiActions.hideForm());
+    dispatch(uiActions.hideForm());
   };
   let form = false;
   if (

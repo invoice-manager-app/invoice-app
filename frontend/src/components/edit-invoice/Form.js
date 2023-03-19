@@ -41,9 +41,6 @@ const Form = ({ id, setInputFields, items, editingInovoice }) => {
     due_after: due_after,
   });
 
-  const [information] = items;
-  const [invoice_information] = editingInovoice.items;
-
   //form validation
   useEffect(() => {
     if (
@@ -185,9 +182,6 @@ const Form = ({ id, setInputFields, items, editingInovoice }) => {
     if (obj.items.length === 0) {
       delete obj.items;
     }
-
-    console.log(obj.items);
-    console.log(editingInovoice.items);
 
     dispatch(editInvoice(obj));
     navigate(-1);

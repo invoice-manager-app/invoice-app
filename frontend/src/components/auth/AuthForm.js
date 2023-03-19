@@ -57,58 +57,7 @@ const AuthForm = () => {
       confirm_password: values.confirmPassword,
       isLogin,
     };
-    console.log(obj);
     dispatch(login(obj));
-
-    // if (isLogin) {
-    //   url = `${window.domain}/account/login_token/`;
-    //   imformation = {
-    //     email: values.email,
-    //     password: values.password,
-    //   };
-    // } else {
-    //   url = "http://127.0.0.1:8000/account/register/";
-    //   imformation = {
-    //     username: values.username,
-    //     email: values.email,
-    //     password: values.password,
-    //     confirm_password: values.confirmPassword,
-    //   };
-    // }
-    // responseMessage("pending", null);
-
-    // try {
-    //   const response = await fetch(url, {
-    //     method: "POST",
-    //     body: JSON.stringify(imformation),
-    //     headers: {
-    //       "Content-type": "Application/json",
-    //     },
-    //   });
-
-    //   const data = await response.json();
-    //   responseMessage("succeed", data.message);
-    //   setResponseMsg(data);
-    //   if (!response.ok) {
-    //     throw new Error(
-    //       data.detail || `something went wrong ${response.status}`
-    //     );
-    //   }
-    //   if (!isLogin && response.status === 200 && data.message) {
-    //     setIsLogin(true);
-    //   }
-
-    //   let token = data.access;
-    //   if (isLogin) {
-    //     authCtx.login(token, data);
-    //   }
-    // } catch (error) {
-    //   if (!isLogin) {
-    //     setIsLogin(false);
-    //   }
-
-    //   responseMessage("error", null);
-    // }
   };
 
   //change password

@@ -19,7 +19,6 @@ const Profile = () => {
   const location = useLocation();
   const data = useSelector((state) => state.companiesReducer.allCompanies);
 
-  console.log(data);
   const CompanyId = data && data.map((el) => el.id);
   //user info after update
   const editedInfo = useSelector((state) => state.action.userInfo);

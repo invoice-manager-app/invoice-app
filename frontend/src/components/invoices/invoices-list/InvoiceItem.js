@@ -7,8 +7,7 @@ import ShowLessIcon from "../../icons/ShowLessIcon";
 
 const InvoiceItem = ({ items, status, name, date, id, net_amount }) => {
   const [showItems, setShowItems] = useState(false);
-  console.log(items);
-  console.log(net_amount);
+
   const toggleItemHandeler = () => {
     setShowItems((prevState) => !prevState);
   };
@@ -16,7 +15,7 @@ const InvoiceItem = ({ items, status, name, date, id, net_amount }) => {
   return (
     <div className={classes.bar}>
       <ul>
-        <li> #{id} </li>
+        <li> #{id.substring(0, 6)} </li>
         <li> {date} </li>
         <li> {name} </li>
         <li>${net_amount} </li>

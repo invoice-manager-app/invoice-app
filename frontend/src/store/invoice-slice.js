@@ -28,7 +28,7 @@ export const createInvoice = createAsyncThunk(
         }
       );
       if (response.status === 201) {
-        ThunkAPI.dispatch(getInvoices(arg.token));
+        ThunkAPI.dispatch(getInvoices({ token: arg.token, currentPage: 1 }));
       }
     } catch (err) {
       console.log(err);
@@ -54,30 +54,11 @@ export const getInvoices = createAsyncThunk(
           Authorization: `Bearer ${arg.token}`,
         },
       });
-
+      console.log(arg.token);
       return response.data;
     } catch (err) {}
   }
 );
-
-//invoice pagination
-// export const getInvoicePagination = createAsyncThunk(
-//   "invoice/getInvoicePagination",
-//   async (arg, thunkApi) => {
-//     try {
-//       const response = await axios.get(
-//         `${window.domain}/invoice/invoice/list/?page=${arg.currentPage}`,
-//         {
-//           headers: {
-//             Authorization: `Bearer ${arg.token}`,
-//           },
-//         }
-//       );
-
-//       return response.data;
-//     } catch (err) {}
-//   }
-// );
 
 //slice create
 const invoicesSlice = createSlice({

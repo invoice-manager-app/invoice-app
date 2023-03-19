@@ -34,64 +34,9 @@ const AllInvoices = () => {
       currentPage,
     };
     dispatch(getInvoices(obj));
-  }, [currentPage]);
-
-  // const invoice_list_api = useRef(
-  //   currentPage > 1
-  //     ? `http://localhost:8000/invoice/list/?page=${currentPage}`
-  //     : "http://localhost:8000/invoice/list/"
-  // );
+  }, [currentPage, dispatch]);
 
   const notification = useSelector((state) => state.ui.notification);
-
-  // const { isFetching: getInvoices, refetch: gettingInvoices } = useQuery(
-  //   "getInvoice/list",
-
-  //   async () => {
-  //     if (search.trim() !== "" || selectInput !== "") return;
-  //     try {
-  //       const response = await fetch(invoice_list_api.current, {
-  //         method: "GET",
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       });
-
-  //       if (response.status === 401) {
-  //         authCtx.logout();
-  //       }
-
-  //       const data = await response.json();
-
-  //       invoiceDispatch({
-  //         state: "SUCCESS",
-  //         data: data.results,
-  //         count: data.count,
-  //       });
-  //     } catch (error) {
-  //       invoiceDispatch({
-  //         state: "ERROR",
-  //         responseMsg: error.message,
-  //       });
-  //     }
-  //   },
-  //   { refetchOnWindowFocus: false }
-  // );
-
-  // useEffect(() => {
-  //   if (currentPage > 1 && search.trim() === "" && selectInput === "") {
-  //     invoice_list_api.current = `http://localhost:8000/invoice/list/?page=${currentPage}`;
-  //   } else if (
-  //     currentPage === 1 &&
-  //     search.trim() === "" &&
-  //     selectInput === ""
-  //   ) {
-  //     invoice_list_api.current = `http://localhost:8000/invoice/list/`;
-  //   } else {
-  //     return;
-  //   }
-  //   gettingInvoices();
-  // }, [currentPage, gettingInvoices, search, selectInput]);
 
   //count of first render invoice
   const invoice_list = useSelector(
@@ -145,11 +90,13 @@ const AllInvoices = () => {
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
         />
-        <InvoiceBar
-          search={search}
-          currentPage={currentPage}
-          invoices={invoices.results}
-        />
+        {invoices && (
+          <InvoiceBar
+            search={search}
+            currentPage={currentPage}
+            invoices={invoices.results}
+          />
+        )}
         {invoices && invoices.count > 10 && (
           <PaginationComponent
             count={invoices.count}

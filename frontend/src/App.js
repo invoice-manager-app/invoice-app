@@ -4,7 +4,6 @@ import Header from "./components/layout/Header";
 import Wrapper from "./components/UI/Wrapper";
 import Layout from "./components/layout/Layout";
 import AllPages from "./pages/AllPages";
-import AuthContext from "./context/auth-context";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, updateToken } from "./store/authSlice";
 
