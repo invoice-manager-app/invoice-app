@@ -1,6 +1,6 @@
 # Invoice-App Backend Project 🖥️
 
-**Invoice-App** isn't confined to frontend magic alone; its foundation is fortified by a robust backend powered by **Express.js**, **MongoDB**, and fortified with **JWT token**. This backend framework serves as the bedrock of the application, enabling it to masterfully manage data storage, deliver secure user authentication, and orchestrate efficient API interactions.
+**Invoice-App** its foundation is fortified by a robust backend powered by **Express.js**, **MongoDB**, and fortified with **JWT token**. This backend framework serves as the bedrock of the application, enabling it to masterfully manage data storage, deliver secure user authentication, and orchestrate efficient API interactions.
 
 ## Backend Highlights
 
