@@ -65,3 +65,4 @@ uritools==4.0.0
 urllib3==1.26.7
 webencodings==0.5.1
 xhtml2pdf==0.2.8
+python-dotenv==1.0.1
