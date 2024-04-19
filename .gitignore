@@ -12,9 +12,10 @@ env
 tox.ini
 # Unittest reports
 .coverage*
-
+update.txt
 # Logs
 *.log
+.gitignore
 
 # PyEnv version selector
 .python-version
